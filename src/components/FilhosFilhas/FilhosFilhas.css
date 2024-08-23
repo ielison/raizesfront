@@ -1,0 +1,109 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; /* Modal above other contents */
+}
+
+.modal-content-filhos__filhas {
+  display: flex;
+  flex-direction: row;
+  background: #fff;
+  border-radius: 8px;
+  width: 760px; /* Set modal width */
+  height: 650px; /* Set modal height */
+  overflow: hidden; /* Hide overflow for fixed layout */
+}
+
+.sidebar-container {
+  width: 25%; /* Set sidebar width */
+  background: #f8f9fa; /* Optional sidebar background color */
+  border-right: 1px solid #ddd; /* Add border between sidebar and form */
+  height: 100%;
+  overflow-y: auto; /* Add scroll if needed */
+  padding: 10px; /* Add padding */
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  width: 75%; /* Set form width */
+  padding: 20px;
+  height: 100%; /* Align height */
+  overflow-y: auto; /* Add scroll if needed */
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background: transparent;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 1100; /* Ensure close button is above other modal content */
+  color: #333; /* Make close button visible */
+}
+
+h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+input[type="number"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+button {
+  background-color: #007bff; /* Default button color */
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+button.btn-add {
+  background: #28a745; /* Green color for add button */
+}
+
+button.btn-back,
+button.btn-next {
+  background: #007bff; /* Blue color for navigation buttons */
+  color: #fff; /* White text */
+  border: none; /* No border */
+  padding: 10px 15px; /* Button padding */
+  font-size: 16px; /* Button text size */
+  cursor: pointer; /* Pointer cursor */
+  border-radius: 5px; /* Rounded corners */
+}
+
+button.btn-back {
+  background: #6c757d; /* Gray color for back button */
+}
+
+.ff-form-buttons {
+  display: flex; /* Use flexbox for horizontal layout */
+  justify-content: space-between; /* Align buttons evenly */
+  margin-top: 20px; /* Keep top margin */
+}

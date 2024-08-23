@@ -1,0 +1,87 @@
+.r2modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Sufficiently high z-index to overlay other content */
+}
+
+.r2modal-content {
+  background: white;
+  border-radius: 8px;
+  width: 760px; /* Width of the modal */
+  max-height: 90%; /* Maximum height to prevent overflow */
+  height: auto; /* Height of the modal will adjust based on content */
+  padding: 20px;
+  overflow-y: auto; /* Enables vertical scrolling if content overflows */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+}
+
+.register-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-button {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.stepper {
+  display: flex;
+  margin: 20px 0;
+}
+
+.step {
+  margin-right: 10px;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.active {
+  background-color: #e0e0e0; /* Color for active steps */
+}
+
+.dotted-line {
+  border-bottom: 2px dotted #ccc;
+  width: 20px;
+  position: relative;
+  top: 10px; /* Adjust for centering with the text */
+}
+
+.confirmation-table {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.terms-section {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.terms-box {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+  height: 100px; /* Fixed height for terms box */
+  overflow-y: auto; /* Enables scrolling within terms box */
+}
+
+.buttons-section {
+  display: flex;
+  justify-content: space-between;
+}

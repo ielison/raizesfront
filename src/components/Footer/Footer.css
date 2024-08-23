@@ -1,0 +1,18 @@
+footer {
+  background-color: var(--primary-500);
+  padding: 1.5rem 5rem;
+  width: 100vw;
+  height: 7rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--white);
+}
+
+.logo-footer {
+  height: 4rem;
+}
+
+.instagram {
+  height: 3rem;
+}

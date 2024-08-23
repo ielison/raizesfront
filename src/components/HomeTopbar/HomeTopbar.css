@@ -1,0 +1,185 @@
+.header-home__topbar {
+  background-color: var(--white);
+  padding: 3rem 5rem;
+  width: 100vw;
+  height: 6rem;
+  display: flex;
+  justify-content: space-between;
+  /* Alinha os itens com o mesmo espaçamento */
+  align-items: center;
+  font: var(--font);
+}
+
+.header-home__topbar .logo {
+  height: 3rem;
+}
+
+.logo:hover {
+  cursor: pointer;
+}
+
+.header-home__topbar .links-uteis__hometopbar {
+  list-style-type: none;
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.header-home__topbar a:link {
+  text-decoration: none;
+  color: var(--primary-500);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.header-home__topbar a:hover {
+  color: var(--secondary-500);
+}
+
+.header-home__topbar a:active {
+  color: var(--tertiary-500);
+}
+
+.header-home__topbar .hometopbar-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.header-home__topbar .meus-pacientes {
+  border-radius: 4px;
+  width: 166px;
+  height: 40px;
+  padding: 8px 20px;
+  color: var(--white);
+  background-color: var(--primary-500);
+  border-style: none;
+  font: var(--font);
+}
+
+.header-home__topbar .meus-pacientes:hover {
+  background-color: var(--secondary-500);
+  cursor: pointer;
+}
+
+.header-home__topbar .meus-pacientes:active {
+  background-color: var(--tertiary-500);
+}
+
+.header-home__topbar .cadastrar-paciente {
+  border-radius: 4px;
+  width: 208px;
+  height: 40px;
+  padding: 8px 20px;
+  color: var(--primary-500);
+  background-color: var(--white);
+  border-style: solid;
+  border-color: var(--primary-500);
+  font: var(--font);
+}
+
+.header-home__topbar .cadastrar-paciente:hover {
+  color: var(--secondary-500);
+  border-color: var(--secondary-500);
+  cursor: pointer;
+}
+
+.header-home__topbar .cadastrar-paciente:active {
+  color: var(--tertiary-500);
+  border-color: var(--tertiary-500);
+}
+
+header {
+  background-color: var(--white);
+  padding: 3rem 5rem;
+  width: 100vw;
+  height: 6rem;
+  display: flex;
+  justify-content: space-between;
+  /* Alinha os itens com o mesmo espaçamento */
+  align-items: center;
+  font: var(--font);
+}
+
+header .logo {
+  height: 3rem;
+}
+
+header nav ul {
+  list-style-type: none;
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+header a:link {
+  text-decoration: none;
+  color: var(--primary-500);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+header a:hover {
+  color: var(--secondary-500);
+}
+
+header a:active {
+  color: var(--tertiary-500);
+}
+
+header div {
+  display: flex;
+  gap: 1rem;
+}
+
+header .login {
+  border-radius: 4px;
+  width: 88px;
+  height: 40px;
+  padding: 8px 20px;
+  color: var(--white);
+  background-color: var(--primary-500);
+  border-style: none;
+  font: var(--font);
+}
+
+header .login:hover {
+  background-color: var(--secondary-500);
+  cursor: pointer;
+}
+
+header .login:active {
+  background-color: var(--tertiary-500);
+}
+
+header .register {
+  border-radius: 4px;
+  width: 7rem;
+  height: 40px;
+  padding: 8px 20px;
+  color: var(--primary-500);
+  background-color: var(--white);
+  border-style: solid;
+  border-color: var(--primary-500);
+  font: var(--font);
+  justify-content: center;
+  align-items: center;
+}
+
+header .register:hover {
+  color: var(--secondary-500);
+  border-color: var(--secondary-500);
+  cursor: pointer;
+}
+
+header .register:active {
+  color: var(--tertiary-500);
+  border-color: var(--tertiary-500);
+}
+
+/* Add this at the end of your HomeTopbar.css */
+/* Add this at the end of your HomeTopbar.css */
+
+.links-uteis__hometopbar .underline {
+
+  text-decoration: underline !important;
+}

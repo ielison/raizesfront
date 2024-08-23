@@ -1,0 +1,98 @@
+.linksuteis__container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.linksuteis__search-wrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.linksuteis__search-field {
+  width: 100%;
+  padding: 10px 40px 10px 10px; /* Adiciona espaço para o ícone na direita */
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box; /* Inclui o padding na largura total do campo */
+}
+
+.linksuteis__search-icon {
+  position: absolute;
+  right: 10px; /* Mova o ícone para o lado direito */
+  width: 20px;
+  height: 20px;
+  pointer-events: none; /* Evita que o ícone receba cliques */
+}
+
+
+.linksuteis__tabs {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.linksuteis__tab {
+  flex: 1;
+  padding: 10px;
+  cursor: pointer;
+  text-align: center;
+  background-color: transparent;
+  /* Torna o fundo transparente */
+  border: none;
+  font-weight: normal;
+}
+
+.linksuteis__tab.active {
+  font-weight: bold;
+  text-decoration: underline;
+  /* Sublinha o texto quando ativo */
+  color: #007bff;
+  /* Cor do texto ativo */
+}
+
+.linksuteis__tab-content {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  /* Espaçamento entre os itens */
+}
+
+.linksuteis__link-item,
+.linksuteis__service-item {
+  margin-bottom: 16px;
+  /* Espaçamento entre os itens */
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.linksuteis__link-item img {
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+}
+
+.linksuteis__pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.linksuteis__pagination button {
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+.linksuteis__pagination button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}

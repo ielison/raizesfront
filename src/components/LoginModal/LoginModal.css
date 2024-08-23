@@ -1,0 +1,115 @@
+.login-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  /* Fundo escurecido */
+  display: flex;
+  justify-content: center;
+  /* Centraliza horizontalmente */
+  align-items: center;
+  /* Centraliza verticalmente */
+}
+
+.login-modal-content {
+  width: 760px;
+  /* Largura fixa do modal */
+  height: 650px;
+  /* Altura fixa do modal */
+  background: white;
+  /* Fundo branco do modal */
+  border-radius: 8px;
+  /* Bordas arredondadas */
+  padding: 2rem;
+  /* Espaçamento interno */
+  position: relative;
+  /* Para o posicionamento do botão de fechar */
+  display: flex;
+  /* Usando flexbox para o layout */
+  flex-direction: column;
+  /* Colocar os elementos em coluna */
+}
+
+.login-modal-close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: black;
+}
+
+.login-modal-form-group {
+  margin-bottom: 1rem;
+  /* Espaço entre os grupos de formulário */
+}
+
+.login-modal-form-group label {
+  display: block;
+  /* Tornar labels elementos de bloco */
+  margin-bottom: 0.5rem;
+  /* Espaço abaixo das labels */
+}
+
+.login-modal-form-group input {
+  width: 100%;
+  /* Largura total para inputs */
+  padding: 0.5rem;
+  /* Padding para inputs */
+  border: 1px solid #ccc;
+  /* Borda para inputs */
+  border-radius: 4px;
+  /* Cantos arredondados para inputs */
+}
+
+.login-modal-forgot-password {
+  display: block;
+  /* Exibir o link de esquecer a senha como bloco */
+  margin-top: 0.5rem;
+  /* Margem acima do link */
+  color: var(--primary-500);
+  text-align: right;
+  /* Alinhar à direita */
+}
+
+.login-modal-submit-button-container {
+  display: flex;
+  justify-content: center;
+}
+
+.login-modal-submit-button {
+
+  margin: 1.5rem 0;
+  /* Espaçamento acima e abaixo do botão */
+  padding: 0.75rem 2rem;
+  /* Padding para o botão */
+  background-color: var(--primary-500);
+  /* Cor de fundo do botão */
+  color: white;
+  /* Cor do texto do botão */
+  border: none;
+  /* Sem borda */
+  border-radius: 4px;
+  /* Cantos arredondados */
+  cursor: pointer;
+  /* Cursor de ponteiro ao passar o mouse */
+  align-self: center;
+  /* Centraliza o botão horizontalmente */
+}
+
+.login-modal-register-prompt {
+  text-align: center;
+  /* Centraliza o prompt de registro */
+  margin-top: auto;
+  /* Empurra para o fundo */
+}
+
+.login-modal-register-link {
+  color: var(--secondary-500);
+  /* Cor diferente para o link de registro */
+  cursor: pointer;
+}

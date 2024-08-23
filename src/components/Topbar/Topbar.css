@@ -1,0 +1,98 @@
+.topbar__header {
+  background-color: var(--white);
+  padding: 3rem 5rem;
+  width: 100vw;
+  height: 6rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font: var(--font);
+}
+
+.topbar__logo {
+  height: 3rem;
+}
+
+.topbar__logo:hover {
+  cursor: pointer;
+}
+
+.topbar__nav ul {
+  list-style-type: none;
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.topbar__nav a:link {
+  text-decoration: none;
+  color: var(--primary-500);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* .link-active {
+  text-decoration: underline;
+} */
+
+
+.topbar__nav a:hover {
+  color: var(--secondary-500);
+}
+
+.topbar__nav a:active {
+  color: var(--tertiary-500);
+}
+
+.topbar__div {
+  display: flex;
+  gap: 1rem;
+}
+
+.topbar__login {
+  border-radius: 4px;
+  width: 88px;
+  height: 40px;
+  padding: 8px 20px;
+  color: var(--white);
+  background-color: var(--primary-500);
+  border-style: none;
+  font: var(--font);
+}
+
+.topbar__login:hover {
+  background-color: var(--secondary-500);
+  cursor: pointer;
+}
+
+.topbar__login:active {
+  background-color: var(--tertiary-500);
+}
+
+.topbar__register {
+  display: flex; /* Adicionado para permitir o alinhamento flexível */
+  justify-content: center; /* Centraliza o texto horizontalmente */
+  align-items: center; /* Centraliza o texto verticalmente */
+  border-radius: 4px;
+  width: 8rem; /* Certifique-se de que a largura seja suficiente */
+  height: 40px;
+  padding: 8px 20px;
+  color: var(--primary-500);
+  background-color: var(--white);
+  border-style: solid;
+  border-color: var(--primary-500);
+  font: var(--font);
+  text-align: center; /* Adicionado para garantir que o texto esteja centralizado */
+}
+
+
+.topbar__register:hover {
+  color: var(--secondary-500);
+  border-color: var(--secondary-500);
+  cursor: pointer;
+}
+
+.topbar__register:active {
+  color: var(--tertiary-500);
+  border-color: var(--tertiary-500);
+}

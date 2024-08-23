@@ -1,0 +1,60 @@
+.hero-container {
+  background-image: url('../../assets/background.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: calc(100vh - 98px); /* Adjust based on your header height */
+  display: flex; /* Flexbox layout */
+  align-items: center; /* Vertically center the content */
+  justify-content: flex-start; /* Align items to the left */
+  padding-left: 4rem; /* Padding to control the space from the left side */
+}
+
+.hero-content {
+  color: var(--white);
+  width: 30rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align text to the left */
+  justify-content: center; /* Center content vertically within the container */
+}
+
+.hero-title {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.hero-paragraph {
+  font-size: 1.125rem;
+  margin-bottom: 2rem;
+  color: var(--white); /* Ensure white text color */
+}
+
+.hero-list {
+  display: flex;
+  flex-direction: column;
+  padding-left: 2rem;
+  margin-bottom: 2rem;
+}
+
+.hero-list-item {
+  margin-bottom: 1rem;
+}
+
+.hero-startButton {
+  border-radius: 4px;
+  width: 15rem;
+  height: 48px;
+  padding: 8px 20px;
+  color: var(--primary-700);
+  background-color: var(--white);
+  border-style: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font: var(--font);
+  cursor: pointer;
+}
+
+.hero-startButton:hover {
+  color: var(--secondary-500);
+}
