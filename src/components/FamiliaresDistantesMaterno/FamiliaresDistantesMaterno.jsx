@@ -40,14 +40,14 @@ export default function FamiliaresDistantesMaterno({ onClose, onBack, onAdvance 
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+    <div className="fdm-modal-overlay" onClick={onClose}>
+      <div className="fdm-modal-content" onClick={(e) => e.stopPropagation()}>
         <Sidebar activeEtapa="etapa2" />
-        <button className="close-button" onClick={onClose}>
+        <button className="fdm-close-button" onClick={onClose}>
           &times;
         </button>
-        <div className="grupo">
-        <h2>Etapa 2 - Familiares Distantes</h2>
+        <div className="fdm-form-container">
+        <h2 className="fdm-title">Etapa 2 - Familiares Distantes</h2>
         
         <label>
           Algum outro familiar do seu lado materno já teve câncer?
@@ -159,7 +159,7 @@ export default function FamiliaresDistantesMaterno({ onClose, onBack, onAdvance 
           </>
         )}
 
-        <div className="form-buttons">
+        <div className="fdm-form-buttons">
           <button className="btn-back" onClick={handleBackClick}>
             Voltar
           </button>

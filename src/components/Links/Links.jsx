@@ -5,10 +5,42 @@ import { servicosPublicos } from "../../data/servicos";
 import LinkImage from "../../assets/link.svg";
 import SearchIcon from "../../assets/search-icon.svg"; // Novo ícone de busca
 
+// List of Brazilian states
+const estadosBrasileiros = [
+  { sigla: "AC", nome: "Acre" },
+  { sigla: "AL", nome: "Alagoas" },
+  { sigla: "AP", nome: "Amapá" },
+  { sigla: "AM", nome: "Amazonas" },
+  { sigla: "BA", nome: "Bahia" },
+  { sigla: "CE", nome: "Ceará" },
+  { sigla: "DF", nome: "Distrito Federal" },
+  { sigla: "ES", nome: "Espírito Santo" },
+  { sigla: "GO", nome: "Goiás" },
+  { sigla: "MA", nome: "Maranhão" },
+  { sigla: "MT", nome: "Mato Grosso" },
+  { sigla: "MS", nome: "Mato Grosso do Sul" },
+  { sigla: "MG", nome: "Minas Gerais" },
+  { sigla: "PA", nome: "Pará" },
+  { sigla: "PB", nome: "Paraíba" },
+  { sigla: "PR", nome: "Paraná" },
+  { sigla: "PE", nome: "Pernambuco" },
+  { sigla: "PI", nome: "Piauí" },
+  { sigla: "RJ", nome: "Rio de Janeiro" },
+  { sigla: "RN", nome: "Rio Grande do Norte" },
+  { sigla: "RS", nome: "Rio Grande do Sul" },
+  { sigla: "RO", nome: "Rondônia" },
+  { sigla: "RR", nome: "Roraima" },
+  { sigla: "SC", nome: "Santa Catarina" },
+  { sigla: "SP", nome: "São Paulo" },
+  { sigla: "SE", nome: "Sergipe" },
+  { sigla: "TO", nome: "Tocantins" },
+];
+
 function Links() {
   const [activeTab, setActiveTab] = useState("linksUteis");
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedState, setSelectedState] = useState("todos");
   const itemsPerPage = 15;
 
   const handleTabChange = (tab) => {
@@ -21,11 +53,16 @@ function Links() {
     setCurrentPage(1); // Reset to the first page when changing search term
   };
 
+  const handleStateChange = (e) => {
+    setSelectedState(e.target.value);
+    setCurrentPage(1); // Reset to the first page when changing state
+  };
+
   const normalizeText = (text) => {
     return text
-      .normalize("NFD") // Decomposição de caracteres
-      .replace(/[\u0300-\u036f]/g, "") // Remove os acentos
-      .toLowerCase(); // Converte para minúsculas
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
   };
 
   const filteredLinksUteis = linksUteis.filter((link) =>
@@ -34,13 +71,20 @@ function Links() {
 
   const filteredServicosPublicos = servicosPublicos.filter((servico) => {
     const normalizedSearch = normalizeText(searchTerm);
+    const isInState =
+      selectedState === "todos" ||
+      normalizeText(servico.cityState.split("/")[1].trim()).includes(
+        normalizeText(selectedState)
+      );
+
     return (
-      normalizeText(servico.name).includes(normalizedSearch) ||
-      normalizeText(servico.address).includes(normalizedSearch) ||
-      normalizeText(servico.cityState).includes(normalizedSearch) ||
-      normalizeText(servico.responsible).includes(normalizedSearch) ||
-      normalizeText(servico.email).includes(normalizedSearch) ||
-      normalizeText(servico.phone).includes(normalizedSearch)
+      isInState &&
+      (normalizeText(servico.name).includes(normalizedSearch) ||
+        normalizeText(servico.address).includes(normalizedSearch) ||
+        normalizeText(servico.cityState).includes(normalizedSearch) ||
+        normalizeText(servico.responsible).includes(normalizedSearch) ||
+        normalizeText(servico.email).includes(normalizedSearch) ||
+        normalizeText(servico.phone).includes(normalizedSearch))
     );
   });
 
@@ -100,10 +144,13 @@ function Links() {
               filteredLinksUteis.map((link, index) => (
                 <div className="linksuteis__link-item" key={index}>
                   <a href={link.url} target="_blank" rel="noopener noreferrer">
-                    <span>{link.name}</span> {/* Exibe o nome do link */}
-                    <img src={LinkImage} alt="Link Icon" />
-                    <span className="url">{link.url}</span>{" "}
-                    {/* Exibe o endereço do link */}
+                    <div>
+                      <span>{link.name}</span>
+                    </div>
+                    <div>
+                      <img src={LinkImage} alt="Link Icon" />
+                      <span className="url">{link.url}</span>
+                    </div>
                   </a>
                 </div>
               ))
@@ -115,6 +162,24 @@ function Links() {
 
         {activeTab === "servicosPublicos" && (
           <div className="linksuteis__tab-content">
+            {/* Dropdown for State Filter */}
+            <div className="linksuteis__state-filter">
+              <label htmlFor="state-select">Filtrar por Estado:</label>
+              <select
+                id="state-select"
+                value={selectedState}
+                onChange={handleStateChange}
+                className="linksuteis__state-dropdown"
+              >
+                <option value="todos">Todos</option>
+                {estadosBrasileiros.map((estado) => (
+                  <option key={estado.sigla} value={estado.sigla}>
+                    {estado.nome}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             {paginatedServicosPublicos.length > 0 ? (
               paginatedServicosPublicos.map((servico, index) => (
                 <div className="linksuteis__service-item" key={index}>

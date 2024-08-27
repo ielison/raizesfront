@@ -13,18 +13,18 @@ export default function Etapa3Modal({ onClose, onBack, onAdvance }) {
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div className="etapa3-modal-overlay" onClick={onClose}>
       <div className="modal-content-etapa3" onClick={(e) => e.stopPropagation()}>
-        <button className="close-button" onClick={onClose}>
+        <button className="close-button-etapa3" onClick={onClose}>
           &times;
         </button>
         <h2>Etapa3 - Análise da Família Paterna</h2>
         <p>Nesta fase iremos analisar sua família paterna.</p>
-        <div className="form-buttons">
-          <button className="btn-back" onClick={handleBackClick}>
+        <div className="em3-form-buttons">
+          <button className="btn-back-em3" onClick={handleBackClick}>
             Voltar
           </button>
-          <button className="btn-next" onClick={handleAdvanceClick}>
+          <button className="btn-next-em3" onClick={handleAdvanceClick}>
             Avançar
           </button>
         </div>

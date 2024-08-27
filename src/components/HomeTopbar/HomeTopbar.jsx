@@ -37,6 +37,9 @@ export default function Topbar() {
       <nav>
         <ul className="links-uteis__hometopbar">
           <li>
+            <a href="#">Sobre nós</a>
+          </li>
+          <li>
             <a
               href="/linksuteis" // Set href for proper semantic navigation
               onClick={handleLinksUteisClick}

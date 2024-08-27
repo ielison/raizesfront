@@ -11,7 +11,7 @@ export default function SobrinhosSobrinhas({ onClose, onAdvance }) {
     sobrinhos: "",
     meioSobrinhos: "",
   });
-  const [hasCancer, setHasCancer] = useState(null); // null to handle both "Sim" and "Não"
+  const [hasCancer, setHasCancer] = useState(null);
   const [cancerDetails, setCancerDetails] = useState([
     { type: [], gender: "", age: "" },
   ]);
@@ -31,12 +31,10 @@ export default function SobrinhosSobrinhas({ onClose, onAdvance }) {
   };
 
   const handleBackClick = () => {
-    console.log("Back button clicked");
     onClose();
   };
 
   const handleAdvanceClick = () => {
-    console.log("Advance button clicked");
     onAdvance();
   };
 
@@ -45,17 +43,23 @@ export default function SobrinhosSobrinhas({ onClose, onAdvance }) {
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content-sobrinhos__sobrinhas" onClick={(e) => e.stopPropagation()}>
+    <div className="sobrinhos-sobrinhas-modal-overlay" onClick={onClose}>
+      <div
+        className="sobrinhos-sobrinhas-modal-content"
+        onClick={(e) => e.stopPropagation()}
+      >
         <Sidebar activeEtapa="etapa1" />
-        <div className="form-container">
-          <button className="close-button" onClick={onClose}>
+        <div className="sobrinhos-sobrinhas-form-container">
+          <button
+            className="sobrinhos-sobrinhas-close-button"
+            onClick={onClose}
+          >
             &times;
           </button>
           <h2>Etapa 1 - Sobrinhos e Sobrinhas</h2>
           <label>
             Quantos filhos que os irmãos ou meio-irmãos possuem?
-            <div className="quantity-group">
+            <div className="sobrinhos-sobrinhas-quantity-group">
               <label>
                 Sobrinhos
                 <input
@@ -80,7 +84,7 @@ export default function SobrinhosSobrinhas({ onClose, onAdvance }) {
           </label>
           <label>
             Algum dos seus sobrinhos já teve câncer?
-            <div className="checkbox-group">
+            <div className="sobrinhos-sobrinhas-checkbox-group">
               <label>
                 <input
                   type="checkbox"
@@ -88,7 +92,7 @@ export default function SobrinhosSobrinhas({ onClose, onAdvance }) {
                   checked={hasCancer === true}
                   onChange={() => handleCancerCheckboxChange("alguns")}
                 />
-                Algum sobrinho ou meio sobrinho já foi acometido
+                Sim
               </label>
               <label>
                 <input
@@ -97,7 +101,7 @@ export default function SobrinhosSobrinhas({ onClose, onAdvance }) {
                   checked={hasCancer === false}
                   onChange={() => handleCancerCheckboxChange("nenhum")}
                 />
-                Nenhum sobrinho ou meio-sobrinho já foi acometido
+                Não
               </label>
             </div>
           </label>
@@ -108,6 +112,7 @@ export default function SobrinhosSobrinhas({ onClose, onAdvance }) {
                   <label>
                     Tipo de câncer
                     <Select
+                      placeholder="Selecione o tipo de câncer"
                       isMulti
                       options={cancerOptions}
                       value={detail.type}
@@ -133,45 +138,52 @@ export default function SobrinhosSobrinhas({ onClose, onAdvance }) {
                       <option value="feminino">Feminino</option>
                     </select>
                   </label>
-                  <label>
-                    Idade
-                    {showAgeDropdown ? (
-                      <Select
-                        options={ageOptions}
-                        value={detail.age}
-                        onChange={(selectedOption) => {
-                          const newDetails = [...cancerDetails];
-                          newDetails[index].age = selectedOption;
-                          setCancerDetails(newDetails);
-                        }}
-                      />
-                    ) : (
-                      <input
-                        type="number"
-                        value={detail.age}
-                        onChange={(e) => {
-                          const newDetails = [...cancerDetails];
-                          newDetails[index].age = e.target.value;
-                          setCancerDetails(newDetails);
-                        }}
-                      />
-                    )}
-                    <button type="button" onClick={handleAgeToggle}>
+                  <label className="ii-idade">
+                    <div className="ii-idade-div">
+                      Idade
+                      {showAgeDropdown ? (
+                        <Select
+                          placeholder="Selecione a idade"
+                          options={ageOptions}
+                          value={detail.age}
+                          onChange={(selectedOption) => {
+                            const newDetails = [...cancerDetails];
+                            newDetails[index].age = selectedOption;
+                            setCancerDetails(newDetails);
+                          }}
+                        />
+                      ) : (
+                        <input
+                          type="number"
+                          value={detail.age}
+                          onChange={(e) => {
+                            const newDetails = [...cancerDetails];
+                            newDetails[index].age = e.target.value;
+                            setCancerDetails(newDetails);
+                          }}
+                        />
+                      )}
+                    </div>
+                    <button
+                      className="btn-naosei"
+                      type="button"
+                      onClick={handleAgeToggle}
+                    >
                       {showAgeDropdown ? "Digitar idade" : "Não sei"}
                     </button>
                   </label>
                 </div>
               ))}
-              <button className="btn-add" onClick={handleAddCancerDetail}>
+              <button className="ss-btn-add" onClick={handleAddCancerDetail}>
                 Informar +
               </button>
             </>
           )}
-          <div className="form-buttons">
-            <button className="btn-back" onClick={handleBackClick}>
+          <div className="ss-form-buttons">
+            <button className="ss-btn-back" onClick={handleBackClick}>
               Voltar
             </button>
-            <button className="btn-next" onClick={handleAdvanceClick}>
+            <button className="ss-btn-next" onClick={handleAdvanceClick}>
               Avançar
             </button>
           </div>

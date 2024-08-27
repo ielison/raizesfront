@@ -1,4 +1,4 @@
-.modal-overlay {
+.ff-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -8,7 +8,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000; /* Modal above other contents */
+  z-index: 1000; /* Modal acima de outros conteúdos */
 }
 
 .modal-content-filhos__filhas {
@@ -16,27 +16,27 @@
   flex-direction: row;
   background: #fff;
   border-radius: 8px;
-  width: 760px; /* Set modal width */
-  height: 650px; /* Set modal height */
-  overflow: hidden; /* Hide overflow for fixed layout */
+  width: 760px; /* Largura do modal */
+  height: 650px; /* Altura do modal */
+  overflow: hidden; /* Esconder overflow para layout fixo */
 }
 
 .sidebar-container {
-  width: 25%; /* Set sidebar width */
-  background: #f8f9fa; /* Optional sidebar background color */
-  border-right: 1px solid #ddd; /* Add border between sidebar and form */
+  width: 25%; /* Largura da sidebar */
+  background: #f8f9fa; /* Cor de fundo opcional da sidebar */
+  border-right: 1px solid #ddd; /* Borda entre sidebar e formulário */
   height: 100%;
-  overflow-y: auto; /* Add scroll if needed */
-  padding: 10px; /* Add padding */
+  overflow-y: auto; /* Adicionar scroll se necessário */
+  padding: 10px; /* Adicionar padding */
 }
 
-.form-container {
+.ff-form-container {
   display: flex;
   flex-direction: column;
-  width: 75%; /* Set form width */
+  width: 75%; /* Largura do formulário */
   padding: 20px;
-  height: 100%; /* Align height */
-  overflow-y: auto; /* Add scroll if needed */
+  height: 100%; /* Alinhar altura */
+  overflow-y: auto; /* Adicionar scroll se necessário */
 }
 
 .close-button {
@@ -47,8 +47,8 @@
   background: transparent;
   font-size: 24px;
   cursor: pointer;
-  z-index: 1100; /* Ensure close button is above other modal content */
-  color: #333; /* Make close button visible */
+  z-index: 1100; /* Garantir que o botão de fechar esteja acima do conteúdo do modal */
+  color: #333; /* Tornar botão de fechar visível */
 }
 
 h2 {
@@ -68,42 +68,128 @@ input[type="number"] {
   border-radius: 4px;
 }
 
-input[type="checkbox"] {
-  margin-right: 10px;
-}
-
-button {
-  background-color: #007bff; /* Default button color */
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 5px;
-  margin-right: 10px;
-}
-
-button.btn-add {
-  background: #28a745; /* Green color for add button */
-}
-
-button.btn-back,
-button.btn-next {
-  background: #007bff; /* Blue color for navigation buttons */
-  color: #fff; /* White text */
-  border: none; /* No border */
-  padding: 10px 15px; /* Button padding */
-  font-size: 16px; /* Button text size */
-  cursor: pointer; /* Pointer cursor */
-  border-radius: 5px; /* Rounded corners */
-}
-
-button.btn-back {
-  background: #6c757d; /* Gray color for back button */
-}
-
 .ff-form-buttons {
-  display: flex; /* Use flexbox for horizontal layout */
-  justify-content: space-between; /* Align buttons evenly */
-  margin-top: 20px; /* Keep top margin */
+  display: flex; /* Usar flexbox para layout horizontal */
+  justify-content: space-between; /* Alinhar botões uniformemente */
+  margin-top: 20px; /* Manter margem superior */
+}
+
+.ff-btn-add {
+  background: none; /* Sem fundo */
+  color: rgb(119, 119, 119); /* Cor cinza */
+  border: none; /* Sem borda */
+  padding: 5px; /* Espaçamento reduzido */
+  cursor: pointer; /* Cursor pointer */
+  font-size: 16px; /* Tamanho do texto */
+  font-weight: bold; /* Peso do texto */
+  align-self: flex-end; /* Alinhamento ao final do container */
+}
+
+.ff-idade {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.ff-idade button[type="button"] {
+  background: #f8f9fa;
+  color: var(--primary-500);
+  border: 1px solid var(--primary-500);
+  padding: 5px 10px;
+  margin-top: 5px;
+  width: 124px;
+  height: 32px;
+}
+
+.ff-idade button[type="button"]:hover {
+  background: var(--secondary-500);
+  color: black;
+  border-color: white;
+}
+
+.ff-btn-back,
+.ff-btn-next {
+  background: var(--primary-500); /* Cor azul */
+  color: #fff; /* Texto branco */
+  border: none; /* Sem borda */
+  padding: 10px 15px; /* Espaçamento dos botões */
+  font-size: 16px; /* Tamanho do texto */
+  cursor: pointer; /* Cursor pointer */
+  border-radius: 4px; /* Bordas arredondadas */
+}
+
+.ff-btn-back {
+  background: white;
+  border: 1px solid var(--primary-500);
+  border-radius: 4px;
+  color: var(--primary-500);
+}
+
+.ff-btn-next:hover {
+  background-color: var(--primary-700);
+}
+
+.ff-btn-back:hover {
+  background: var(--secondary-500);
+  color: black;
+  border-color: white;
+}
+
+.qtd-filhos {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+}
+
+.checkbox-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.checkbox-group input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: #ECECEC;
+  border: 2px solid #8c8c8c;
+  padding: 6px;
+  border-radius: 4px;
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+}
+
+.checkbox-group input[type="radio"]:checked {
+  background-color: #0e76a8;
+  border-color: #0e76a8;
+}
+
+.checkbox-group input[type="radio"]:checked::after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 2px;
+  left: 6px;
+  width: 4px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.checkbox-group input[type="radio"]:focus {
+  outline: none;
+  box-shadow: 0 0 2px 2px rgba(14, 118, 168, 0.4);
 }

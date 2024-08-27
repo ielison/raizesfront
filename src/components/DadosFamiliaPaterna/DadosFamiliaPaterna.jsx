@@ -51,35 +51,37 @@ export default function DadosFamiliaPaterna({ onClose, onBack, onAdvance }) {
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+    <div className="dfp-modal-overlay" onClick={onClose}>
+      <div className="dfp-modal-content" onClick={(e) => e.stopPropagation()}>
         <Sidebar activeEtapa="etapa3" />
-        <div className="form-container">
-          <button className="close-button" onClick={onClose}>
+        <div className="dfp-form-container">
+          <button className="dfp-close-button" onClick={onClose}>
             &times;
           </button>
-          <h2>Etapa 3 - Dados da família paterna</h2>
+          <h2 className="dfp-title">Etapa 3 - Dados da família paterna</h2>
 
-          <label>
+          <label className="dfp-label">
             <input
               type="checkbox"
               checked={noKnowledge}
               onChange={handleNoKnowledgeChange}
+              className="dfp-checkbox"
             />
             Não tenho conhecimento da saúde e família do meu pai biológico.
           </label>
 
           {!noKnowledge && (
             <>
-              <label>
+              <label className="dfp-label">
                 O pai do Sr(a) já teve câncer?
-                <div className="checkbox-group">
+                <div className="dfp-checkbox-group">
                   <label>
                     <input
                       type="checkbox"
                       value="sim"
                       checked={fatherHadCancer === true}
                       onChange={() => handleFatherHadCancerChange("sim")}
+                      className="dfp-checkbox"
                     />
                     Sim
                   </label>
@@ -89,6 +91,7 @@ export default function DadosFamiliaPaterna({ onClose, onBack, onAdvance }) {
                       value="não"
                       checked={fatherHadCancer === false}
                       onChange={() => handleFatherHadCancerChange("não")}
+                      className="dfp-checkbox"
                     />
                     Não
                   </label>
@@ -97,7 +100,7 @@ export default function DadosFamiliaPaterna({ onClose, onBack, onAdvance }) {
 
               {fatherHadCancer && (
                 <>
-                  <label>
+                  <label className="dfp-label">
                     Qual foi o tipo de câncer que ele teve?
                     <Select
                       options={cancerOptions}
@@ -108,10 +111,11 @@ export default function DadosFamiliaPaterna({ onClose, onBack, onAdvance }) {
                           type: selectedOption,
                         }));
                       }}
+                      className="dfp-select"
                     />
                   </label>
 
-                  <label>
+                  <label className="dfp-label">
                     Idade
                     {showAgeDropdown ? (
                       <Select
@@ -123,6 +127,7 @@ export default function DadosFamiliaPaterna({ onClose, onBack, onAdvance }) {
                             age: selectedOption,
                           }));
                         }}
+                        className="dfp-select"
                       />
                     ) : (
                       <input
@@ -134,24 +139,30 @@ export default function DadosFamiliaPaterna({ onClose, onBack, onAdvance }) {
                             age: e.target.value,
                           }))
                         }
+                        className="dfp-input"
                       />
                     )}
-                    <button type="button" onClick={handleAgeToggle}>
+                    <button
+                      type="button"
+                      onClick={handleAgeToggle}
+                      className="dfp-toggle-button"
+                    >
                       {showAgeDropdown ? "Digitar idade" : "Não sei"}
                     </button>
                   </label>
                 </>
               )}
 
-              <label>
+              <label className="dfp-label">
                 O Sr(a) tem tios e tias por parte de pai?
-                <div className="checkbox-group">
+                <div className="dfp-checkbox-group">
                   <label>
                     <input
                       type="checkbox"
                       value="sim"
                       checked={hasPaternalUnclesAunts === true}
                       onChange={() => setHasPaternalUnclesAunts(true)}
+                      className="dfp-checkbox"
                     />
                     Sim
                   </label>
@@ -161,6 +172,7 @@ export default function DadosFamiliaPaterna({ onClose, onBack, onAdvance }) {
                       value="não"
                       checked={hasPaternalUnclesAunts === false}
                       onChange={() => setHasPaternalUnclesAunts(false)}
+                      className="dfp-checkbox"
                     />
                     Não
                   </label>
@@ -169,7 +181,7 @@ export default function DadosFamiliaPaterna({ onClose, onBack, onAdvance }) {
 
               {hasPaternalUnclesAunts && (
                 <>
-                  <label>
+                <label className="dfp-label">
                     Quantos tios?
                     <input
                       type="number"
@@ -181,10 +193,11 @@ export default function DadosFamiliaPaterna({ onClose, onBack, onAdvance }) {
                         }))
                       }
                       placeholder="Quantidade"
+                      className="dfp-input"
                     />
                   </label>
 
-                  <label>
+                  <label className="dfp-label">
                     Quantas tias?
                     <input
                       type="number"
@@ -196,18 +209,20 @@ export default function DadosFamiliaPaterna({ onClose, onBack, onAdvance }) {
                         }))
                       }
                       placeholder="Quantidade"
+                      className="dfp-input"
                     />
                   </label>
 
-                  <label>
+                  <label className="dfp-label">
                     Algum deles já teve câncer?
-                    <div className="checkbox-group">
+                    <div className="dfp-checkbox-group">
                       <label>
                         <input
                           type="checkbox"
                           value="sim"
                           checked={uncleAuntCancer === true}
                           onChange={() => handleUncleAuntCancerChange("sim")}
+                          className="dfp-checkbox"
                         />
                         Sim
                       </label>
@@ -217,6 +232,7 @@ export default function DadosFamiliaPaterna({ onClose, onBack, onAdvance }) {
                           value="não"
                           checked={uncleAuntCancer === false}
                           onChange={() => handleUncleAuntCancerChange("não")}
+                          className="dfp-checkbox"
                         />
                         Não
                       </label>
@@ -225,7 +241,7 @@ export default function DadosFamiliaPaterna({ onClose, onBack, onAdvance }) {
 
                   {uncleAuntCancer && (
                     <>
-                      <label>
+                    <label className="dfp-label">
                         Quantos tios tiveram câncer?
                         <input
                           type="number"
@@ -237,10 +253,11 @@ export default function DadosFamiliaPaterna({ onClose, onBack, onAdvance }) {
                             }))
                           }
                           placeholder="Quantidade"
+                          className="dfp-input"
                         />
                       </label>
 
-                      <label>
+                      <label className="dfp-label">
                         Quantas tias tiveram câncer?
                         <input
                           type="number"
@@ -252,6 +269,7 @@ export default function DadosFamiliaPaterna({ onClose, onBack, onAdvance }) {
                             }))
                           }
                           placeholder="Quantidade"
+                          className="dfp-input"
                         />
                       </label>
                     </>
@@ -261,11 +279,11 @@ export default function DadosFamiliaPaterna({ onClose, onBack, onAdvance }) {
             </>
           )}
 
-          <div className="form-buttons">
-            <button className="btn-back" onClick={handleBackClick}>
+          <div className="dfp-form-buttons">
+            <button className="dfp-btn-back" onClick={handleBackClick}>
               Voltar
             </button>
-            <button className="btn-next" onClick={handleAdvanceClick}>
+            <button className="dfp-btn-next" onClick={handleAdvanceClick}>
               Avançar
             </button>
           </div>

@@ -52,35 +52,37 @@ export default function DadosFamiliaMaterna({ onClose, onBack, onAdvance }) {
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+    <div className="dfm-modal-overlay" onClick={onClose}>
+      <div className="dfm-modal-content" onClick={(e) => e.stopPropagation()}>
         <Sidebar activeEtapa="etapa2" />
-        <div className="form-container">
-          <button className="close-button" onClick={onClose}>
+        <div className="dfm-form-container">
+          <button className="dfm-close-button" onClick={onClose}>
             &times;
           </button>
-          <h2>Etapa 2 - Dados da família materna</h2>
+          <h2 className="dfm-title">Etapa 2 - Dados da família materna</h2>
 
-          <label>
+          <label className="dfm-label">
             <input
               type="checkbox"
               checked={noKnowledge}
               onChange={handleNoKnowledgeChange}
+              className="dfm-checkbox"
             />
             Não tenho conhecimento da saúde e família da minha mãe biológica.
           </label>
 
           {!noKnowledge && (
             <>
-              <label>
+              <label className="dfm-label">
                 A mãe do Sr(a) já teve câncer?
-                <div className="checkbox-group">
+                <div className="dfm-checkbox-group">
                   <label>
                     <input
                       type="checkbox"
                       value="sim"
                       checked={motherHadCancer === true}
                       onChange={() => handleMotherHadCancerChange("sim")}
+                      className="dfm-checkbox"
                     />
                     Sim
                   </label>
@@ -90,6 +92,7 @@ export default function DadosFamiliaMaterna({ onClose, onBack, onAdvance }) {
                       value="não"
                       checked={motherHadCancer === false}
                       onChange={() => handleMotherHadCancerChange("não")}
+                      className="dfm-checkbox"
                     />
                     Não
                   </label>
@@ -98,9 +101,10 @@ export default function DadosFamiliaMaterna({ onClose, onBack, onAdvance }) {
 
               {motherHadCancer && (
                 <>
-                  <label>
+                  <label className="dfm-label">
                     Qual foi o tipo de câncer que ela teve?
                     <Select
+                    placeholder="Selecione o tipo de câncer"
                       options={cancerOptions}
                       value={motherCancerDetails.type}
                       onChange={(selectedOption) => {
@@ -109,13 +113,17 @@ export default function DadosFamiliaMaterna({ onClose, onBack, onAdvance }) {
                           type: selectedOption,
                         }));
                       }}
+                      className="dfm-select"
                     />
                   </label>
 
-                  <label>
+                  <label className="dfm-label">
+                  <div className="dfm-idade">
+                  <span>
                     Idade
                     {showAgeDropdown ? (
                       <Select
+                      placeholder="Selecione a idade"
                         options={ageOptions}
                         value={motherCancerDetails.age}
                         onChange={(selectedOption) => {
@@ -124,6 +132,7 @@ export default function DadosFamiliaMaterna({ onClose, onBack, onAdvance }) {
                             age: selectedOption,
                           }));
                         }}
+                        className="dfm-select"
                       />
                     ) : (
                       <input
@@ -135,24 +144,32 @@ export default function DadosFamiliaMaterna({ onClose, onBack, onAdvance }) {
                             age: e.target.value,
                           }))
                         }
+                        className="dfm-input"
                       />
                     )}
-                    <button type="button" onClick={handleAgeToggle}>
+                    </span>
+                    <button
+                      type="button"
+                      onClick={handleAgeToggle}
+                      className="dfm-toggle-button"
+                    >
                       {showAgeDropdown ? "Digitar idade" : "Não sei"}
                     </button>
+                    </div>
                   </label>
                 </>
               )}
 
-              <label>
+              <label className="dfm-label">
                 O Sr(a) tem tios e tias por parte de mãe?
-                <div className="checkbox-group">
+                <div className="dfm-checkbox-group">
                   <label>
                     <input
                       type="checkbox"
                       value="sim"
                       checked={hasMaternalUnclesAunts === true}
                       onChange={() => setHasMaternalUnclesAunts(true)}
+                      className="dfm-checkbox"
                     />
                     Sim
                   </label>
@@ -162,6 +179,7 @@ export default function DadosFamiliaMaterna({ onClose, onBack, onAdvance }) {
                       value="não"
                       checked={hasMaternalUnclesAunts === false}
                       onChange={() => setHasMaternalUnclesAunts(false)}
+                      className="dfm-checkbox"
                     />
                     Não
                   </label>
@@ -170,7 +188,7 @@ export default function DadosFamiliaMaterna({ onClose, onBack, onAdvance }) {
 
               {hasMaternalUnclesAunts && (
                 <>
-                  <label>
+                  <label className="dfm-label">
                     Quantos tios?
                     <input
                       type="number"
@@ -182,10 +200,11 @@ export default function DadosFamiliaMaterna({ onClose, onBack, onAdvance }) {
                         }))
                       }
                       placeholder="Quantidade"
+                      className="dfm-input"
                     />
                   </label>
 
-                  <label>
+                  <label className="dfm-label">
                     Quantas tias?
                     <input
                       type="number"
@@ -197,18 +216,20 @@ export default function DadosFamiliaMaterna({ onClose, onBack, onAdvance }) {
                         }))
                       }
                       placeholder="Quantidade"
+                      className="dfm-input"
                     />
                   </label>
 
-                  <label>
+                  <label className="dfm-label">
                     Algum deles já teve câncer?
-                    <div className="checkbox-group">
+                    <div className="dfm-checkbox-group">
                       <label>
                         <input
                           type="checkbox"
                           value="sim"
                           checked={uncleAuntCancer === true}
                           onChange={() => handleUncleAuntCancerChange("sim")}
+                          className="dfm-checkbox"
                         />
                         Sim
                       </label>
@@ -218,6 +239,7 @@ export default function DadosFamiliaMaterna({ onClose, onBack, onAdvance }) {
                           value="não"
                           checked={uncleAuntCancer === false}
                           onChange={() => handleUncleAuntCancerChange("não")}
+                          className="dfm-checkbox"
                         />
                         Não
                       </label>
@@ -226,7 +248,7 @@ export default function DadosFamiliaMaterna({ onClose, onBack, onAdvance }) {
 
                   {uncleAuntCancer && (
                     <>
-                      <label>
+                      <label className="dfm-label">
                         Quantos tios tiveram câncer?
                         <input
                           type="number"
@@ -238,10 +260,11 @@ export default function DadosFamiliaMaterna({ onClose, onBack, onAdvance }) {
                             }))
                           }
                           placeholder="Quantidade"
+                          className="dfm-input"
                         />
                       </label>
 
-                      <label>
+                      <label className="dfm-label">
                         Quantas tias tiveram câncer?
                         <input
                           type="number"
@@ -253,6 +276,7 @@ export default function DadosFamiliaMaterna({ onClose, onBack, onAdvance }) {
                             }))
                           }
                           placeholder="Quantidade"
+                          className="dfm-input"
                         />
                       </label>
                     </>
@@ -262,11 +286,11 @@ export default function DadosFamiliaMaterna({ onClose, onBack, onAdvance }) {
             </>
           )}
 
-          <div className="form-buttons">
-            <button className="btn-back" onClick={handleBackClick}>
+          <div className="dfm-form-buttons">
+            <button className="dfm-btn-back" onClick={handleBackClick}>
               Voltar
             </button>
-            <button className="btn-next" onClick={handleAdvanceClick}>
+            <button className="dfm-btn-next" onClick={handleAdvanceClick}>
               Avançar
             </button>
           </div>

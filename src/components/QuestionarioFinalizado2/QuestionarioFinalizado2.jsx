@@ -40,7 +40,7 @@ export default function QuestionarioFinalizado2({ onClose, onOpenReport, onDownl
           Continue monitorando e incentivando hábitos de vida saudáveis em seus pacientes, pois isso
           desempenha um papel significativo na prevenção do câncer e na promoção da saúde.
         </p>
-        <div className="form-buttons">
+        <div className="qf2-form-buttons">
           <button className="btn-open-report" onClick={handleOpenReportClick}>
             Abrir relatório detalhado
           </button>

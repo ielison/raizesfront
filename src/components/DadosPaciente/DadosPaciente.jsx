@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import { useState } from "react";
 import "./DadosPaciente.css";
 import Select from "react-select";
@@ -36,17 +36,21 @@ export default function DadosPaciente({ onClose, onAdvance }) {
             &times;
           </button>
           <h2>Etapa 1 - Dados do Paciente</h2>
-          
-          <label>
-            Qual o nome do paciente?
-            <input type="text" />
+
+          <label className="nome-paciente">
+            <span>Qual o nome do paciente?</span>
+            <input type="text" placeholder="Informe o nome do paciente" />
           </label>
-          
-          <div className="dp-row"> {/* Flex container for side by side */}
-            <label style={{ flex: 1, marginRight: '10px' }}>
+
+          <div className="dp-row">
+            {" "}
+            {/* Flex container for side by side */}
+            <label className="sexo-paciente" style={{ flex: 1, marginRight: "10px" }}>
               Sexo biológico
               <select defaultValue="">
-                <option value="" disabled>Selecione</option>
+                <option value="" disabled>
+                  Selecione
+                </option>
                 <option value="feminino">Feminino</option>
                 <option value="masculino">Masculino</option>
               </select>
@@ -56,37 +60,37 @@ export default function DadosPaciente({ onClose, onAdvance }) {
               <input type="number" />
             </label>
           </div>
-          
+
           <label>
             O Sr(a) já teve câncer?
             <div className="checkbox-group">
               <label>
-                <input 
-                  type="checkbox" 
-                  name="hasCancer" 
-                  value="sim" 
+                <input
+                  type="checkbox"
+                  name="hasCancer"
+                  value="sim"
                   checked={hasCancer}
-                  onChange={() => setHasCancer(!hasCancer)} 
+                  onChange={() => setHasCancer(!hasCancer)}
                 />
                 Sim
               </label>
               <label>
-                <input 
-                  type="checkbox" 
-                  name="hasCancer" 
-                  value="nao" 
+                <input
+                  type="checkbox"
+                  name="hasCancer"
+                  value="nao"
                   checked={!hasCancer}
-                  onChange={() => setHasCancer(false)} 
+                  onChange={() => setHasCancer(false)}
                 />
                 Não
               </label>
             </div>
           </label>
-  
+
           {hasCancer && (
             <>
               <div className="dp-row">
-                <label style={{ flex: 1, marginRight: '10px' }}>
+                <label style={{ flex: 1, marginRight: "10px" }}>
                   Qual tipo de câncer o Sr(a) teve?
                   <Select isMulti options={cancerOptions} />
                 </label>
@@ -95,27 +99,27 @@ export default function DadosPaciente({ onClose, onAdvance }) {
                   <input type="number" />
                 </label>
               </div>
-  
+
               <label>
                 O Sr(a) recebeu algum outro diagnóstico de câncer?
                 <div className="checkbox-group">
                   <label>
-                    <input 
-                      type="checkbox" 
-                      name="hasOtherDiagnosis" 
-                      value="sim" 
+                    <input
+                      type="checkbox"
+                      name="hasOtherDiagnosis"
+                      value="sim"
                       checked={hasOtherDiagnosis}
-                      onChange={handleOtherDiagnosisChange} 
+                      onChange={handleOtherDiagnosisChange}
                     />
                     Sim
                   </label>
                   <label>
-                    <input 
-                      type="checkbox" 
-                      name="hasOtherDiagnosis" 
-                      value="nao" 
+                    <input
+                      type="checkbox"
+                      name="hasOtherDiagnosis"
+                      value="nao"
                       checked={!hasOtherDiagnosis}
-                      onChange={handleOtherDiagnosisChange} 
+                      onChange={handleOtherDiagnosisChange}
                     />
                     Não
                   </label>
@@ -126,11 +130,11 @@ export default function DadosPaciente({ onClose, onAdvance }) {
                   {diagnoses.map((_, index) => (
                     <div key={index}>
                       <div className="dp-row">
-                        <label style={{ flex: 1, marginRight: '10px' }}>
+                        <label style={{ flex: 1, marginRight: "10px" }}>
                           Tipo de câncer
-                          <Select 
-                            isMulti 
-                            options={cancerOptions} 
+                          <Select
+                            isMulti
+                            options={cancerOptions}
                             value={diagnoses[index].type}
                             onChange={(selectedOptions) => {
                               const newDiagnoses = [...diagnoses];
@@ -141,8 +145,8 @@ export default function DadosPaciente({ onClose, onAdvance }) {
                         </label>
                         <label style={{ flex: 1 }}>
                           Idade
-                          <input 
-                            type="number" 
+                          <input
+                            type="number"
                             value={diagnoses[index].age}
                             onChange={(e) => {
                               const newDiagnoses = [...diagnoses];
@@ -154,21 +158,27 @@ export default function DadosPaciente({ onClose, onAdvance }) {
                       </div>
                     </div>
                   ))}
-                  <button className="dp-btn-add" onClick={handleAddDiagnosis}>+</button>
+                  <button className="dp-btn-add" onClick={handleAddDiagnosis}>
+                    Informar +
+                  </button>
                 </>
               )}
             </>
           )}
-  
+
           <div className="dp-form-buttons">
-            <button className="dp-btn-back" onClick={handleBackClick}>Voltar</button>
-            <button className="dp-btn-next" onClick={handleAdvanceClick}>Avançar</button>
+            <button className="dp-btn-back" onClick={handleBackClick}>
+              Voltar
+            </button>
+            <button className="dp-btn-next" onClick={handleAdvanceClick}>
+              Avançar
+            </button>
           </div>
         </div>
       </div>
     </div>
   );
-}  
+}
 
 DadosPaciente.propTypes = {
   onClose: PropTypes.func.isRequired,

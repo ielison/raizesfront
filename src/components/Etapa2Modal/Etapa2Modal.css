@@ -1,4 +1,4 @@
-.modal-overlay {
+.etapa2-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -13,13 +13,14 @@
 .modal-content-etapa2 {
   background: #fff;
   border-radius: 8px;
-  width: 60%;
-  max-width: 800px;
-  height: 40vh;
+  width: 600px;
+  height: 212px;
   padding: 20px;
   position: relative;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .close-button {
@@ -44,6 +45,7 @@ p {
 
 .form-buttons {
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
   margin-top: 20px;
 }
@@ -59,10 +61,31 @@ button {
   margin-right: 10px;
 }
 
-button.btn-back {
-  background: #6c757d;
+button.btn-back-em2 {
+  background: white;
+  width: 180px;
+  color: var(--primary-500);
 }
 
-button.btn-next {
-  background: #007bff;
+button.btn-back-em2:hover {
+  background: var(--secondary-500);
+  color: black;
+  border: none;
+}
+
+
+button.btn-next-em2 {
+  background: var(--primary-500);
+  width: 180px;
+}
+
+button.btn-next-em2:hover {
+  background: var(--primary-700);
+}
+
+.em2-form-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  flex-direction: row;
 }

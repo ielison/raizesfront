@@ -1,4 +1,4 @@
-.modal-overlay {
+.etapa3-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -13,16 +13,17 @@
 .modal-content-etapa3 {
   background: #fff;
   border-radius: 8px;
-  width: 60%;
-  max-width: 800px;
-  height: 40vh;
+  width: 600px;
+  height: 212px;
   padding: 20px;
   position: relative;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-.close-button {
+.close-button-etapa3 {
   position: absolute;
   top: 10px;
   right: 10px;
@@ -42,7 +43,7 @@ p {
   font-size: 16px;
 }
 
-.form-buttons {
+.em3-form-buttons {
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
@@ -59,10 +60,10 @@ button {
   margin-right: 10px;
 }
 
-button.btn-back {
+button.btn-back-em3 {
   background: #6c757d;
 }
 
-button.btn-next {
+button.btn-next-em3 {
   background: #007bff;
 }

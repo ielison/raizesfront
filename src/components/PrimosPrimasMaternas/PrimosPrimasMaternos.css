@@ -1,6 +1,6 @@
 /* PrimosPrimasMaternos.css */
 
-.modal-overlay {
+.ppm-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -12,19 +12,20 @@
   justify-content: center;
 }
 
-.modal-content {
+.ppm-modal-content {
   display: flex;
   flex-direction: row;
   background: #fff;
   border-radius: 8px;
-  width: 80%;
-  max-width: 1200px;
-  height: 80vh;
+  width: 760px;
+  /* Largura fixa */
+  height: 650px;
+  /* Altura fixa */
   overflow: hidden;
-  position: relative;
+  /* Esconde o conteúdo que ultrapassar */
 }
 
-.sidebar-container {
+.ppm-sidebar-container {
   width: 25%;
   background: #f8f9fa;
   border-right: 1px solid #ddd;
@@ -33,7 +34,7 @@
   padding: 10px;
 }
 
-.form-container {
+.ppm-form-container {
   display: flex;
   flex-direction: column;
   width: 75%;
@@ -41,7 +42,7 @@
   overflow-y: auto;
 }
 
-.close-button {
+.ppm-close-button {
   position: absolute;
   top: 10px;
   right: 10px;
@@ -51,51 +52,40 @@
   cursor: pointer;
 }
 
-h2 {
+.ppm-title {
   margin-top: 0;
   margin-bottom: 20px;
 }
 
-label {
+.ppm-label {
   display: block;
   margin-bottom: 10px;
 }
 
-input[type="number"] {
+.ppm-input[type="number"] {
   width: 100%;
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
 
-input[type="checkbox"] {
+.ppm-checkbox {
   margin-right: 10px;
 }
 
-button {
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 5px;
-  margin-right: 10px;
-}
-
-button.btn-add {
+.ppm-btn-add {
   background: #28a745;
 }
 
-button.btn-back {
+.ppm-btn-back {
   background: #6c757d;
 }
 
-button.btn-next {
+.ppm-btn-next {
   background: #007bff;
 }
 
-button[type="button"] {
+.ppm-toggle-button {
   background: #f8f9fa;
   color: #007bff;
   border: 1px solid #007bff;
@@ -103,27 +93,27 @@ button[type="button"] {
   margin-top: 5px;
 }
 
-button[type="button"]:hover {
+.ppm-toggle-button:hover {
   background: #007bff;
   color: #fff;
 }
 
-.form-buttons {
+.ppm-form-buttons {
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
 }
 
-.checkbox-group {
+.ppm-checkbox-group {
   display: flex;
   flex-wrap: wrap;
 }
 
-.checkbox-group label {
+.ppm-checkbox-group label {
   margin-right: 15px;
 }
 
-.grupo {
+.ppm-grupo {
   display: flex;
   flex-direction: column;
 }

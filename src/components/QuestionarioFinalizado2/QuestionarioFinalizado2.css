@@ -59,11 +59,12 @@ p {
   text-align: justify;
 }
 
-.form-buttons {
+.qf2-form-buttons {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   margin-top: 30px;
+  gap:16px;
 }
 
 .btn-open-report,

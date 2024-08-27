@@ -1,5 +1,6 @@
-/* Estilização geral do modal */
-.modal-overlay {
+/* FamiliaresDistantesMaterno.css */
+
+.fdp-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -11,126 +12,113 @@
   justify-content: center;
 }
 
-.modal-content {
+.fdp-modal-content {
   display: flex;
   flex-direction: row;
   background: #fff;
   border-radius: 8px;
-  width: 775px; /* Largura fixa */
-  height: 650px; /* Altura fixa */
-  overflow: hidden; /* Esconde o conteúdo que ultrapassar */
+  width: 760px;
+  /* Largura fixa */
+  height: 650px;
+  /* Altura fixa */
+  overflow: hidden;
+  /* Esconde o conteúdo que ultrapassar */
 }
 
-.sidebar {
+.fdp-sidebar-container {
   width: 25%;
+  /* Proporção semelhante à do arquivo de primos/primas */
   background: #f8f9fa;
   border-right: 1px solid #ddd;
   height: 100%;
-  overflow-y: auto; /* Permite rolagem caso o conteúdo exceda a altura */
+  overflow-y: auto;
   padding: 10px;
 }
 
-.content {
-  flex: 1;
-  padding: 20px;
+.fdp-form-container {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  width: 75%;
+  padding: 20px;
+  overflow-y: auto;
 }
 
-.close-button {
+.fdp-form-container {
+  display: flex;
+  flex-direction: column;
+  width: 75%;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.fdp-close-button {
   position: absolute;
   top: 10px;
   right: 10px;
-  background: none;
   border: none;
+  background: transparent;
   font-size: 24px;
   cursor: pointer;
 }
 
-h2 {
+.fdp-title {
   margin-top: 0;
-}
-
-.checkbox-group {
   margin-bottom: 20px;
 }
 
-.checkbox-group label {
+.fdp-label {
   display: block;
   margin-bottom: 10px;
-  font-size: 16px;
 }
 
-.checkbox-group input[type="checkbox"] {
+.fdp-input[type="number"],
+.fdp-input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.fdp-checkbox {
   margin-right: 10px;
 }
 
-label {
-  display: block;
-  margin-bottom: 10px;
+.fdp-btn-add {
+  background: #28a745;
 }
 
-input[type="text"],
-input[type="number"],
-.react-select__control {
-  width: 100%;
+.fdp-btn-back {
+  background: #6c757d;
+}
+
+.fdp-btn-next {
+  background: #007bff;
+}
+
+.fdp-toggle-button {
+  background: #f8f9fa;
+  color: #007bff;
+  border: 1px solid #007bff;
+  padding: 5px 10px;
   margin-top: 5px;
-  padding: 8px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
 }
 
-.react-select__control {
-  margin-top: 5px;
+.fdp-toggle-button:hover {
+  background: #007bff;
+  color: #fff;
 }
 
-button[type="button"] {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-  margin-top: 10px;
-}
-
-button[type="button"]:hover {
-  background-color: #0056b3;
-}
-
-.btn-add {
-  background-color: #28a745;
-}
-
-.btn-add:hover {
-  background-color: #218838;
-}
-
-.form-buttons {
+.fdp-form-buttons {
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
 }
 
-.btn-back,
-.btn-next {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.btn-back:hover {
-  background-color: #0056b3;
-}
-
-
-.grupo {
+.fdp-checkbox-group {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.fdp-checkbox-group label {
+  margin-right: 15px;
 }

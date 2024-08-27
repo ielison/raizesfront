@@ -25,6 +25,10 @@
   gap: 2rem;
 }
 
+.links-uteis__hometopbar a{
+  color: var(--primary-500);
+}
+
 .header-home__topbar a:link {
   text-decoration: none;
   color: var(--primary-500);
@@ -180,6 +184,6 @@ header .register:active {
 /* Add this at the end of your HomeTopbar.css */
 
 .links-uteis__hometopbar .underline {
-
+  color: var(--primary-500);
   text-decoration: underline !important;
 }

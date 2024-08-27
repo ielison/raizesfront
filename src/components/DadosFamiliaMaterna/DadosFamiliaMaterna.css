@@ -1,4 +1,4 @@
-.modal-overlay {
+.dfm-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -10,28 +10,29 @@
   justify-content: center;
 }
 
-.modal-content {
+.dfm-modal-content {
   display: flex;
   flex-direction: row;
   background: #fff;
   border-radius: 8px;
-  width: 80%;
-  max-width: 1200px;
-  height: 80vh;
+  width: 760px;
+  /* Largura fixa */
+  height: 650px;
+  /* Altura fixa */
   overflow: hidden;
-  position: relative;
+  /* Esconde o conteúdo que ultrapassar */
 }
 
-.sidebar-container {
+.dfm-sidebar-container {
   width: 25%;
   background: #f8f9fa;
   border-right: 1px solid #ddd;
   height: 100%;
-  overflow-y: auto; /* Permite rolagem caso o conteúdo exceda a altura */
+  overflow-y: auto;
   padding: 10px;
 }
 
-.form-container {
+.dfm-form-container {
   display: flex;
   flex-direction: column;
   width: 75%;
@@ -39,7 +40,7 @@
   overflow-y: auto;
 }
 
-.close-button {
+.dfm-close-button {
   position: absolute;
   top: 10px;
   right: 10px;
@@ -49,81 +50,87 @@
   cursor: pointer;
 }
 
-h2 {
+.dfm-title {
   margin-top: 0;
   margin-bottom: 20px;
+  color: #000;
 }
 
-label {
+.dfm-label {
   display: block;
   margin-bottom: 10px;
+  color: #000;
 }
 
-input[type="number"] {
+.dfm-input[type="number"] {
   width: 100%;
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
 
-input[type="checkbox"] {
+.dfm-checkbox {
   margin-right: 10px;
 }
 
-button {
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 5px;
-  margin-right: 10px;
+.dfm-btn-back {
+  background: white;
+  border: 1px solid var(--primary-500);
+  border-radius: 4px;
+  color: var(--primary-500);
+
 }
 
-button.btn-add {
-  background: #28a745;
+.dfm-btn-back:hover {
+
+  background: var(--secondary-500);
+  color: black;
+  border-color: white;
 }
 
-button.btn-back {
-  background: #6c757d;
+.dfm-btn-next {
+  background: var(--primary-500);
 }
 
-button.btn-next {
-  background: #007bff;
+.dfm-btn-next:hover {
+  background: var(--primary-700);
 }
 
-button[type="button"] {
-  background: #f8f9fa;
-  color: #007bff;
-  border: 1px solid #007bff;
+.dfm-toggle-button {
+  background: white;
+  color: var(--primary-500);
+  border: 1px solid var(--primary-500);
   padding: 5px 10px;
   margin-top: 5px;
 }
 
-button[type="button"]:hover {
+.dfm-toggle-button:hover {
   background: #007bff;
   color: #fff;
 }
 
-.form-buttons {
+.dfm-form-buttons {
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
 }
 
-.checkbox-group {
+.dfm-checkbox-group {
   display: flex;
   flex-wrap: wrap;
 }
 
-.checkbox-group label {
+.dfm-checkbox-group label {
   margin-right: 15px;
 }
-h2 {
-  color: #000; /* Defina a cor do título */
+
+.dfm-idade {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
 }
 
-label {
-  color: #000; /* Defina a cor das labels */
+.dfm-idade span {
+  display: flex;
+  flex-direction: column;
 }

@@ -30,11 +30,11 @@ export default function NetosNetas({ onClose, onAdvance }) {
     onAdvance();
   };
 
-  const handleGrandchildrenCheckboxChange = (value) => {
+  const handleGrandchildrenRadioChange = (value) => {
     setHasGrandchildren(value === "sim");
   };
 
-  const handleCancerCheckboxChange = (value) => {
+  const handleCancerRadioChange = (value) => {
     setHasCancer(value === "sim");
   };
 
@@ -52,20 +52,22 @@ export default function NetosNetas({ onClose, onAdvance }) {
           <h2>Etapa 1 - Netos e Netas</h2>
           <label>
             O Sr(a) tem netos e netas?
-            <div className="checkbox-group">
+            <div className="radio-group">
               <label>
                 <input
-                  type="checkbox"
+                  type="radio"
+                  name="hasGrandchildren"
                   checked={hasGrandchildren === true}
-                  onChange={() => handleGrandchildrenCheckboxChange("sim")}
+                  onChange={() => handleGrandchildrenRadioChange("sim")}
                 />
                 Sim
               </label>
               <label>
                 <input
-                  type="checkbox"
+                  type="radio"
+                  name="hasGrandchildren"
                   checked={hasGrandchildren === false}
-                  onChange={() => handleGrandchildrenCheckboxChange("nao")}
+                  onChange={() => handleGrandchildrenRadioChange("nao")}
                 />
                 Não
               </label>
@@ -83,20 +85,22 @@ export default function NetosNetas({ onClose, onAdvance }) {
               </label>
               <label>
                 Algum deles já teve câncer?
-                <div className="checkbox-group">
+                <div className="radio-group">
                   <label>
                     <input
-                      type="checkbox"
+                      type="radio"
+                      name="hasCancer"
                       checked={hasCancer === true}
-                      onChange={() => handleCancerCheckboxChange("sim")}
+                      onChange={() => handleCancerRadioChange("sim")}
                     />
                     Sim
                   </label>
                   <label>
                     <input
-                      type="checkbox"
+                      type="radio"
+                      name="hasCancer"
                       checked={hasCancer === false}
-                      onChange={() => handleCancerCheckboxChange("nao")}
+                      onChange={() => handleCancerRadioChange("nao")}
                     />
                     Não
                   </label>
@@ -127,45 +131,49 @@ export default function NetosNetas({ onClose, onAdvance }) {
                           }}
                         />
                       </label>
-                      <label>
-                        Idade
-                        {showAgeDropdown ? (
-                          <Select
-                            options={ageOptions}
-                            value={grandchild.age}
-                            onChange={(selectedOption) => {
-                              const newGrandchildren = [...grandchildren];
-                              newGrandchildren[index].age = selectedOption;
-                              setGrandchildren(newGrandchildren);
-                            }}
-                          />
-                        ) : (
-                          <input
-                            type="number"
-                            value={grandchild.age}
-                            onChange={(e) => {
-                              const newGrandchildren = [...grandchildren];
-                              newGrandchildren[index].age = e.target.value;
-                              setGrandchildren(newGrandchildren);
-                            }}
-                          />
-                        )}
+                      <label className="nn-idade">
+                        <div className="nn">
+                          Idade
+                          {showAgeDropdown ? (
+                            <Select
+                              options={ageOptions}
+                              value={grandchild.age}
+                              onChange={(selectedOption) => {
+                                const newGrandchildren = [...grandchildren];
+                                newGrandchildren[index].age = selectedOption;
+                                setGrandchildren(newGrandchildren);
+                              }}
+                            />
+                          ) : (
+                            <input
+                              type="number"
+                              value={grandchild.age}
+                              onChange={(e) => {
+                                const newGrandchildren = [...grandchildren];
+                                newGrandchildren[index].age = e.target.value;
+                                setGrandchildren(newGrandchildren);
+                              }}
+                            />
+                          )}
+                        </div>
                         <button type="button" onClick={handleAgeToggle}>
                           {showAgeDropdown ? "Digitar idade" : "Não sei"}
                         </button>
                       </label>
                     </div>
                   ))}
-                  <button onClick={handleAddGrandchild}>Informar +</button>
+                  <button className="nn-btn-add" onClick={handleAddGrandchild}>
+                    Informar +
+                  </button>
                 </>
               )}
             </>
           )}
-          <div className="form-buttons">
-            <button className="btn-back" onClick={handleBackClick}>
+          <div className="nn-form-buttons">
+            <button className="nn-btn-back" onClick={handleBackClick}>
               Voltar
             </button>
-            <button className="btn-next" onClick={handleAdvanceClick}>
+            <button className="nn-btn-next" onClick={handleAdvanceClick}>
               Avançar
             </button>
           </div>

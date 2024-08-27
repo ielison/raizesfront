@@ -8,7 +8,7 @@ import "./FilhosFilhas.css";
 
 export default function FilhosFilhas({ onClose, onAdvance }) {
   const [hasChildren, setHasChildren] = useState(null); // Alterado para null
-  const [hasCancer, setHasCancer] = useState(false);
+  const [hasCancer, setHasCancer] = useState(false); // 'Não' marcado por padrão
   const [children, setChildren] = useState([{ type: "", age: "" }]);
   const [showAgeDropdown, setShowAgeDropdown] = useState(false);
 
@@ -29,23 +29,24 @@ export default function FilhosFilhas({ onClose, onAdvance }) {
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div className="ff-modal-overlay" onClick={onClose}>
       <div
         className="modal-content-filhos__filhas"
         onClick={(e) => e.stopPropagation()}
       >
         <Sidebar activeEtapa="etapa1" />
-        <div className="form-container">
+        <div className="ff-form-container">
           <button className="close-button" onClick={onClose}>
             &times;
           </button>
           <h2>Etapa 1 - Filhos e Filhas</h2>
+          
           <label>
             O Sr(a) tem filhos e filhas?
             <div className="checkbox-group">
               <label>
                 <input
-                  type="checkbox"
+                  type="radio"
                   name="hasChildren"
                   value="sim"
                   checked={hasChildren === true}
@@ -55,7 +56,7 @@ export default function FilhosFilhas({ onClose, onAdvance }) {
               </label>
               <label>
                 <input
-                  type="checkbox"
+                  type="radio"
                   name="hasChildren"
                   value="nao"
                   checked={hasChildren === false}
@@ -65,24 +66,46 @@ export default function FilhosFilhas({ onClose, onAdvance }) {
               </label>
             </div>
           </label>
+
           {hasChildren && (
             <>
-              <label>
-                Quantidade de filhos
-                <input type="number" />
-              </label>
-              <label>
-                Quantidade de filhas
-                <input type="number" />
-              </label>
+              <div className="qtd-filhos">
+                <label>
+                  Quantidade de filhos
+                  <input type="number" />
+                </label>
+                <label>
+                  Quantidade de filhas
+                  <input type="number" />
+                </label>
+              </div>
+
               <label>
                 Algum deles já teve câncer?
-                <input
-                  type="checkbox"
-                  checked={hasCancer}
-                  onChange={() => setHasCancer(!hasCancer)}
-                />
+                <div className="checkbox-group">
+                  <label>
+                    <input
+                      type="radio"
+                      name="hasCancer"
+                      value="sim"
+                      checked={hasCancer === true}
+                      onChange={() => setHasCancer(true)}
+                    />
+                    Sim
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="hasCancer"
+                      value="nao"
+                      checked={hasCancer === false}
+                      onChange={() => setHasCancer(false)}
+                    />
+                    Não
+                  </label>
+                </div>
               </label>
+
               {hasCancer && (
                 <>
                   <label>
@@ -97,7 +120,7 @@ export default function FilhosFilhas({ onClose, onAdvance }) {
                     <div key={index}>
                       <label>Filho {index + 1}</label>
                       <label>
-                        Tipo
+                        Tipo de câncer
                         <Select
                           options={cancerOptions}
                           value={child.type}
@@ -108,45 +131,50 @@ export default function FilhosFilhas({ onClose, onAdvance }) {
                           }}
                         />
                       </label>
-                      <label>
-                        Idade
-                        {showAgeDropdown ? (
-                          <Select
-                            options={ageOptions}
-                            value={child.age}
-                            onChange={(selectedOption) => {
-                              const newChildren = [...children];
-                              newChildren[index].age = selectedOption;
-                              setChildren(newChildren);
-                            }}
-                          />
-                        ) : (
-                          <input
-                            type="number"
-                            value={child.age}
-                            onChange={(e) => {
-                              const newChildren = [...children];
-                              newChildren[index].age = e.target.value;
-                              setChildren(newChildren);
-                            }}
-                          />
-                        )}
+                      <label className="ff-idade">
+                        <div className="ff">
+                          Idade
+                          {showAgeDropdown ? (
+                            <Select
+                              options={ageOptions}
+                              value={child.age}
+                              onChange={(selectedOption) => {
+                                const newChildren = [...children];
+                                newChildren[index].age = selectedOption;
+                                setChildren(newChildren);
+                              }}
+                            />
+                          ) : (
+                            <input
+                              type="number"
+                              value={child.age}
+                              onChange={(e) => {
+                                const newChildren = [...children];
+                                newChildren[index].age = e.target.value;
+                                setChildren(newChildren);
+                              }}
+                            />
+                          )}
+                        </div>
                         <button type="button" onClick={handleAgeToggle}>
                           {showAgeDropdown ? "Digitar idade" : "Não sei"}
                         </button>
                       </label>
                     </div>
                   ))}
-                  <button onClick={handleAddChild}>Informar +</button>
+                  <button className="ff-btn-add" onClick={handleAddChild}>
+                    Informar +
+                  </button>
                 </>
               )}
             </>
           )}
+
           <div className="ff-form-buttons">
-            <button className="btn-back" onClick={handleBackClick}>
+            <button className="ff-btn-back" onClick={handleBackClick}>
               Voltar
             </button>
-            <button className="btn-next" onClick={handleAdvanceClick}>
+            <button className="ff-btn-next" onClick={handleAdvanceClick}>
               Avançar
             </button>
           </div>

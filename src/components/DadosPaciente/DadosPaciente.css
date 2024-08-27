@@ -9,7 +9,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000; /* Coloca o modal acima de outros conteúdos */
+  z-index: 1000;
+  /* Coloca o modal acima de outros conteúdos */
 }
 
 /* Container do conteúdo do modal */
@@ -18,9 +19,12 @@
   flex-direction: row;
   background: #fff;
   border-radius: 8px;
-  width: 775px; /* Largura fixa */
-  height: 650px; /* Altura fixa */
-  overflow: hidden; /* Esconde o conteúdo que ultrapassar */
+  width: 760px;
+  /* Largura fixa */
+  height: 650px;
+  /* Altura fixa */
+  overflow: hidden;
+  /* Esconde o conteúdo que ultrapassar */
 }
 
 .dp-sidebar-container {
@@ -28,7 +32,8 @@
   background: #f8f9fa;
   border-right: 1px solid #ddd;
   height: 100%;
-  overflow-y: auto; /* Permite rolagem caso o conteúdo exceda a altura */
+  overflow-y: auto;
+  /* Permite rolagem caso o conteúdo exceda a altura */
   padding: 10px;
 }
 
@@ -37,8 +42,10 @@
   flex-direction: column;
   width: 75%;
   padding: 20px;
-  height: 100%; /* Alinhamento da altura */
-  overflow-y: auto; /* Permite rolagem caso o conteúdo exceda a altura */
+  height: 100%;
+  /* Alinhamento da altura */
+  overflow-y: auto;
+  /* Permite rolagem caso o conteúdo exceda a altura */
 }
 
 .dp-close-button {
@@ -49,8 +56,10 @@
   background: transparent;
   font-size: 24px;
   cursor: pointer;
-  z-index: 1100; /* Assegura que o botão esteja acima de outros conteúdos dentro do modal */
-  color: #333; /* Torna o botão de fechar visível */
+  z-index: 1100;
+  /* Assegura que o botão esteja acima de outros conteúdos dentro do modal */
+  color: #333;
+  /* Torna o botão de fechar visível */
 }
 
 .dp-form-group {
@@ -66,17 +75,26 @@
 .dp-row {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 15px; /* Espaçamento entre as linhas */
+  margin-bottom: 15px;
+  /* Espaçamento entre as linhas */
 }
 
 .dp-btn-add {
-  background: none; /* Sem fundo */
-  color: gray; /* Cor cinza */
-  border: none; /* Sem borda */
-  padding: 5px; /* Espaçamento reduzido */
-  cursor: pointer; /* Cursor pointer */
-  font-size: 18px; /* Tamanho do texto */
-  align-self: flex-end; /* Alinhamento ao final do container */
+  background: none;
+  /* Sem fundo */
+  color: rgb(119, 119, 119);
+  /* Cor cinza */
+  border: none;
+  /* Sem borda */
+  padding: 5px;
+  /* Espaçamento reduzido */
+  cursor: pointer;
+  /* Cursor pointer */
+  font-size: 24x;
+  font-weight: bold;
+  /* Tamanho do texto */
+  align-self: flex-end;
+  /* Alinhamento ao final do container */
 }
 
 .dp-form-buttons {
@@ -87,15 +105,88 @@
 
 .dp-btn-back,
 .dp-btn-next {
-  background: #007bff; /* Cor azul */
-  color: #fff; /* Texto branco */
-  border: none; /* Sem borda */
-  padding: 10px 15px; /* Espaçamento dos botões */
-  font-size: 16px; /* Tamanho do texto */
-  cursor: pointer; /* Cursor pointer */
-  border-radius: 5px; /* Bordas arredondadas */
+  background: var(--primary-500);
+  /* Cor azul */
+  color: #fff;
+  /* Texto branco */
+  border: none;
+  /* Sem borda */
+  padding: 10px 15px;
+  /* Espaçamento dos botões */
+  font-size: 16px;
+  /* Tamanho do texto */
+  cursor: pointer;
+  /* Cursor pointer */
+  border-radius: 4px;
+  /* Bordas arredondadas */
 }
 
 .dp-btn-back {
-  background: #6c757d; /* Cor cinza */
+  background: white;
+  border: 1px solid var(--primary-500);
+  border-radius: 4px;
+  color: var(--primary-500);
+  /* Cor cinza */
+}
+
+.dp-btn-next:hover{
+  background-color: var(--primary-700);
+}
+.dp-btn-back:hover {
+  background: var(--secondary-500);
+  border-radius: 4px;
+  color: black;
+  border-color: white;
+}
+
+.nome-paciente {
+  display: flex;
+  flex-direction: column;
+}
+
+.nome-paciente span {
+  color: #797979;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.nome-paciente input {
+  height: 32px;
+  border-radius: 4px;
+  padding: 4px;
+  border: 1px solid #ddd;
+}
+
+.sexo-paciente {
+  display: flex;
+  flex-direction: column;
+}
+
+.sexo-paciente select {
+  height: 32px;
+  border-radius: 4px;
+  border: 1px solid hsl(0, 0%, 80%);
+  /* Adiciona uma borda para combinar com o input */
+  padding: 0 8px;
+  /* Adiciona padding para um melhor espaçamento interno */
+}
+
+.checkbox-group {
+  height: 32px;
+  align-items: baseline;
+}
+
+.checkbox-group input[type="checkbox"] {
+  border: 0.2px solid #ccc;
+  border-radius: 4px;
+  height: 24px;
+  width: 24px;
+  font-size: 24px;
+}
+
+.checkbox-group label {
+  margin-right: 15px;
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
 }
