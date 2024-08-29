@@ -1,4 +1,5 @@
 import "./Hero.css";
+import Instagram from "../../assets/instagram.svg";
 
 export default function Hero() {
   return (
@@ -21,6 +22,9 @@ export default function Hero() {
           </li>
         </ul>
         <button className="hero-startButton">Começar avaliação</button>
+      </div>
+      <div>
+      <img className="instagram" src={Instagram} alt="instagram raízes" />
       </div>
     </div>
   );

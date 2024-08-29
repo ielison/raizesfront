@@ -6,7 +6,8 @@
   display: flex; /* Flexbox layout */
   align-items: center; /* Vertically center the content */
   justify-content: flex-start; /* Align items to the left */
-  padding-left: 4rem; /* Padding to control the space from the left side */
+  padding-left: 4rem;
+  position: relative;
 }
 
 .hero-content {
@@ -57,4 +58,12 @@
 
 .hero-startButton:hover {
   color: var(--secondary-500);
+}
+
+.instagram {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  height: 3rem;
+  filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.3)); /* Adds drop shadow to the icon */
 }

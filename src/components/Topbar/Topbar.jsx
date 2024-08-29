@@ -12,7 +12,7 @@ export default function Topbar() {
   const location = useLocation(); // Obtendo a localização atual
 
   const handleLoginClick = () => {
-    setIsLoginModalOpen(true);
+    setIsLoginModalOpen(true); // Use o nome correto da função de estado
   };
 
   const handleCloseLoginModal = () => {
@@ -20,7 +20,9 @@ export default function Topbar() {
   };
 
   const handleRegisterClick = () => {
+    handleCloseLoginModal(); // Fecha o modal de login ao abrir o de registro
     setIsRegisterModalOpen(true);
+    console.log("Abrindo modal de registro...");
   };
 
   const handleCloseRegisterModal = () => {
@@ -29,7 +31,14 @@ export default function Topbar() {
 
   const handleLinksUteisClick = (e) => {
     e.preventDefault();
-    navigate("/links");
+    navigate("/linksuteis");
+  };
+
+  const handleSobreClick = (e) => {
+    e.preventDefault();
+    console.log("valeu");
+
+    navigate("/sobre");
   };
 
   const handleLogoClick = () => {
@@ -48,7 +57,16 @@ export default function Topbar() {
       <nav className="topbar__nav">
         <ul>
           <li>
-            <a href="#">Sobre nós</a>
+            <a
+              href=""
+              onClick={handleSobreClick}
+              style={{
+                textDecoration:
+                  location.pathname === "/sobre" ? "underline" : "none", // Aplica o sublinhado condicionalmente
+              }}
+            >
+              Sobre nós
+            </a>
           </li>
           <li>
             <a
@@ -56,7 +74,7 @@ export default function Topbar() {
               onClick={handleLinksUteisClick}
               style={{
                 textDecoration:
-                  location.pathname === "/links" ? "underline" : "none", // Aplica o sublinhado condicionalmente
+                  location.pathname === "/linksuteis" ? "underline" : "none", // Aplica o sublinhado condicionalmente
               }}
             >
               Links úteis
@@ -72,7 +90,11 @@ export default function Topbar() {
           Entrar
         </button>
       </div>
-      <LoginModal isOpen={isLoginModalOpen} onClose={handleCloseLoginModal} />
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onClose={handleCloseLoginModal}
+        handleRegisterClick={handleRegisterClick} // Certifique-se de passar a função aqui
+      />
       <Register1
         isOpen={isRegisterModalOpen}
         onClose={handleCloseRegisterModal}

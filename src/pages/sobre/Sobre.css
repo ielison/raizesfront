@@ -1,0 +1,54 @@
+.sobre-container {
+  padding: 80px;
+  background: linear-gradient(90deg, #0E1736 -0.01%, #4FBCCD 73.49%, #87D1DD 99.99%);
+  width: 100%;
+}
+
+.logo-sobre {
+  width: 300px;
+  margin-right: 148px;
+}
+
+.sobre-section1 {
+  margin-top: 42px;
+  display: flex;
+  gap: 64px;
+}
+
+.h2-sobre{
+  color: white;
+}
+
+p,
+li {
+  color: white;
+}
+
+.section1-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.sobre-section2 {
+  margin-top: 48px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 80px;
+}
+
+.register-button {
+  color: white;
+  text-decoration: underline;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-size: inherit;
+  font-family: inherit;
+}
+
+.register-button:hover {
+  color: var(--primary-500);
+}

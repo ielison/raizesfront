@@ -11,6 +11,7 @@
   /* Centraliza horizontalmente */
   align-items: center;
   /* Centraliza verticalmente */
+  z-index: 1000;
 }
 
 .login-modal-content {

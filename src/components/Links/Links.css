@@ -13,6 +13,8 @@ body {
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed; 
+  
+  height: calc(100vh - 96px);
 }
 
 .linksuteis__search-wrapper {

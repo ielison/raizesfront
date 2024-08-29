@@ -7,6 +7,7 @@
   justify-content: space-between;
   align-items: center;
   font: var(--font);
+  box-shadow: 0px 5px 10px 4px rgba(0, 0, 0, 0.2);
 }
 
 .topbar__logo {
@@ -22,7 +23,7 @@
   display: flex;
   justify-content: space-between;
   gap: 2rem;
-  
+
 }
 
 .topbar__nav a:link {
@@ -71,11 +72,15 @@
 }
 
 .topbar__register {
-  display: flex; /* Adicionado para permitir o alinhamento flexível */
-  justify-content: center; /* Centraliza o texto horizontalmente */
-  align-items: center; /* Centraliza o texto verticalmente */
+  display: flex;
+  /* Adicionado para permitir o alinhamento flexível */
+  justify-content: center;
+  /* Centraliza o texto horizontalmente */
+  align-items: center;
+  /* Centraliza o texto verticalmente */
   border-radius: 4px;
-  width: 8rem; /* Certifique-se de que a largura seja suficiente */
+  width: 8rem;
+  /* Certifique-se de que a largura seja suficiente */
   height: 40px;
   padding: 8px 20px;
   color: var(--primary-500);
@@ -83,7 +88,8 @@
   border-style: solid;
   border-color: var(--primary-500);
   font: var(--font);
-  text-align: center; /* Adicionado para garantir que o texto esteja centralizado */
+  text-align: center;
+  /* Adicionado para garantir que o texto esteja centralizado */
 }
 
 
@@ -99,6 +105,6 @@
 }
 
 
-.topbar__nav li a{
+.topbar__nav li a {
   color: var(--primary-500);
 }

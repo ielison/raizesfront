@@ -150,10 +150,10 @@ export default function PrimosPrimasMaternos({ onClose, onBack, onAdvance }) {
             )}
 
             <div className="ppm-form-buttons">
-              <button className="btn-back" onClick={handleBackClick}>
+              <button className="ff-btn-back" onClick={handleBackClick}>
                 Voltar
               </button>
-              <button className="btn-next" onClick={handleAdvanceClick}>
+              <button className="ff-btn-next" onClick={handleAdvanceClick}>
                 Avançar
               </button>
             </div>

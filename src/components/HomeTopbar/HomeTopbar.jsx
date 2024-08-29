@@ -3,11 +3,18 @@ import Logo from "../../assets/logo.svg";
 import "./HomeTopbar.css";
 import Etapa1Modal from "../Etapa1Modal/Etapa1Modal";
 import { useNavigate, useLocation } from "react-router-dom"; // Import useLocation
+import { useAuth } from "../../context/AuthContext";
 
 export default function Topbar() {
   const { openModal, closeModal, currentModal } = useModals();
   const navigate = useNavigate();
   const location = useLocation(); // Get the current location
+  const { logout } = useAuth();
+
+  const handleLogout = () => {
+    logout(); // Call the logout function
+    navigate("/");
+  };
 
   const handleStartClick = () => {
     openModal("Etapa1Modal");
@@ -26,6 +33,12 @@ export default function Topbar() {
     navigate("/home"); // Navigate to /home when the logo is clicked
   };
 
+  const handleSobreClick = (e) => {
+    e.preventDefault();
+    
+    navigate("/sobre");
+  };
+
   return (
     <header className="header-home__topbar">
       <img
@@ -37,7 +50,16 @@ export default function Topbar() {
       <nav>
         <ul className="links-uteis__hometopbar">
           <li>
-            <a href="#">Sobre nós</a>
+            <a
+              href=""
+              onClick={handleSobreClick}
+              style={{
+                textDecoration:
+                  location.pathname === "/sobre" ? "underline" : "none", // Aplica o sublinhado condicionalmente
+              }}
+            >
+              Sobre nós
+            </a>
           </li>
           <li>
             <a
@@ -55,6 +77,7 @@ export default function Topbar() {
           Cadastrar Paciente
         </button>
         <button className="meus-pacientes">Meus Pacientes</button>
+        <button onClick={handleLogout}>Logout</button>
       </div>
       {currentModal === "Etapa1Modal" && (
         <Etapa1Modal onClose={handleCloseModal} />
