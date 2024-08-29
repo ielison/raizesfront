@@ -25,7 +25,7 @@
   gap: 2rem;
 }
 
-.links-uteis__hometopbar a{
+.links-uteis__hometopbar a {
   color: var(--primary-500);
 }
 
@@ -135,7 +135,8 @@ header div {
   gap: 1rem;
 }
 
-header .login {
+header .login,
+header .logout {
   border-radius: 4px;
   width: 88px;
   height: 40px;
@@ -146,7 +147,8 @@ header .login {
   font: var(--font);
 }
 
-header .login:hover {
+header .login:hover,
+header .logout:hover {
   background-color: var(--secondary-500);
   cursor: pointer;
 }

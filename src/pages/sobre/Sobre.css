@@ -15,14 +15,11 @@
   gap: 64px;
 }
 
-.h2-sobre{
+.h2-sobre, .p-sobre, .li-sobre{
   color: white;
 }
 
-p,
-li {
-  color: white;
-}
+
 
 .section1-text {
   display: flex;

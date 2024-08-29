@@ -77,7 +77,7 @@ export default function Topbar() {
           Cadastrar Paciente
         </button>
         <button className="meus-pacientes">Meus Pacientes</button>
-        <button onClick={handleLogout}>Logout</button>
+        <button className="logout" onClick={handleLogout}>Sair</button>
       </div>
       {currentModal === "Etapa1Modal" && (
         <Etapa1Modal onClose={handleCloseModal} />
