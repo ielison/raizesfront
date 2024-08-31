@@ -1,8 +1,10 @@
 body {
   margin: 0;
   padding: 0;
-  overflow-x: hidden; /* Evita o scroll horizontal */
-  font-family: Arial, sans-serif; /* Fonte padrão */
+  overflow-x: hidden;
+  /* Prevent horizontal scrolling */
+  font-family: Arial, sans-serif;
+  /* Default font */
 }
 
 .linksuteis__container {
@@ -12,9 +14,14 @@ body {
   background-image: url('../../assets/background.png');
   background-size: cover;
   background-repeat: no-repeat;
-  background-attachment: fixed; 
-  
+  background-attachment: fixed;
   height: calc(100vh - 96px);
+}
+
+.linksuteis__content {
+  width: 60%;
+  height: 100%;
+  overflow-y: auto;
 }
 
 .linksuteis__search-wrapper {
@@ -26,21 +33,24 @@ body {
 
 .linksuteis__search-field {
   width: 100%;
-  padding: 10px 40px 10px 10px; /* Adiciona espaço para o ícone na direita */
+  padding: 10px 40px 10px 10px;
+  /* Adds space for the icon on the right */
   font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  box-sizing: border-box; /* Inclui o padding na largura total do campo */
+  box-sizing: border-box;
+  /* Include padding in the total width */
 }
 
 .linksuteis__search-icon {
   position: absolute;
-  right: 10px; /* Mova o ícone para o lado direito */
+  right: 10px;
+  /* Move the icon to the right side */
   width: 20px;
   height: 20px;
-  pointer-events: none; /* Evita que o ícone receba cliques */
+  pointer-events: none;
+  /* Prevent clicks on the icon */
 }
-
 
 .linksuteis__tabs {
   display: flex;
@@ -53,7 +63,7 @@ body {
   cursor: pointer;
   text-align: center;
   background-color: transparent;
-  /* Torna o fundo transparente */
+  /* Makes background transparent */
   border: none;
   font-weight: normal;
 }
@@ -61,9 +71,9 @@ body {
 .linksuteis__tab.active {
   font-weight: bold;
   text-decoration: underline;
-  /* Sublinha o texto quando ativo */
+  /* Underline the text when active */
   color: #007bff;
-  /* Cor do texto ativo */
+  /* Color of the active text */
 }
 
 .linksuteis__tab-content {
@@ -73,13 +83,13 @@ body {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  max-width: 100%; 
+  max-width: 100%;
 }
 
 .linksuteis__link-item,
 .linksuteis__service-item {
   margin-bottom: 16px;
-  /* Espaçamento entre os itens */
+  /* Spacing between items */
   padding: 10px;
   border-bottom: 1px solid #ddd;
 }
@@ -126,3 +136,100 @@ body {
   border-radius: 4px;
 }
 
+/* Responsive Styles */
+@media (max-width: 1024px) {
+
+  /* Tablets */
+  .linksuteis__content {
+    width: 80%;
+    /* Increase width for tablets */
+  }
+
+  .linksuteis__search-field {
+    font-size: 14px;
+    /* Slightly smaller font for tablets */
+  }
+
+  .linksuteis__tab-content {
+    padding: 15px;
+    /* Reduced padding for tablet view */
+  }
+
+  .linksuteis__pagination {
+    flex-direction: column;
+    /* Stack pagination buttons vertically */
+    align-items: flex-start;
+    /* Align items to start */
+  }
+}
+
+@media (max-width: 768px) {
+
+  /* Mobile devices */
+  .linksuteis__container {
+    padding: 10px;
+    /* Reduced padding for mobile */
+  }
+
+  .linksuteis__content {
+    width: 100%;
+    /* Full width on mobile */
+    height: auto;
+    /* Ensure height adapts to content */
+  }
+
+  .linksuteis__search-field {
+    font-size: 14px;
+    /* Smaller font for mobile */
+    width: 100%;
+    /* Ensure the search field also occupies 100% */
+  }
+
+  .linksuteis__tabs {
+    flex-direction: column;
+    /* Stack tabs vertically */
+    width: 100%;
+    /* Ensure tabs occupy full width */
+  }
+
+  .linksuteis__tab {
+    padding: 8px;
+    /* Reduced padding for mobile tabs */
+    text-align: left;
+    /* Align text to left */
+    width: 100%;
+    /* Make each tab occupy full width */
+  }
+
+  .linksuteis__tab-content {
+    padding: 10px;
+    /* Reduced padding for mobile tab content */
+    width: 100%;
+    /* Make tab content occupy full width */
+  }
+
+  .linksuteis__link-item,
+  .linksuteis__service-item {
+    width: 100%;
+    /* Ensure items occupy full width */
+  }
+
+  .linksuteis__pagination {
+    flex-direction: column;
+    /* Stack pagination buttons vertically */
+    align-items: flex-start;
+    /* Align items to start */
+    width: 100%;
+    /* Ensure pagination occupies full width */
+  }
+
+  .linksuteis__state-filter {
+    width: 100%;
+    /* Ensure state filter occupies full width */
+  }
+
+  .linksuteis__state-dropdown {
+    width: 100%;
+    /* Make dropdown occupy full width */
+  }
+}

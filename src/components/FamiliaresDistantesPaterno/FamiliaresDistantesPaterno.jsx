@@ -4,32 +4,63 @@ import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
 import Sidebar from "../Sidebar/Sidebar";
-import "./FamiliaresDistantesPaterno.css";
+import "./FamiliaresDistantesPaterno.css"; // Update the CSS file name
+
+const relationshipOptions = [
+  { value: "mãe", label: "Mãe" },
+  { value: "pai", label: "Pai" },
+  { value: "filho", label: "Filho" },
+  { value: "filha", label: "Filha" },
+  { value: "irmão", label: "Irmão" },
+  { value: "irmã", label: "Irmã" },
+  { value: "meio-irmão paterno", label: "Meio-Irmão Paterno" },
+  { value: "meia-irmã paterna", label: "Meia-Irmã Paterna" },
+  { value: "sobrinho", label: "Sobrinho" },
+  { value: "sobrinha", label: "Sobrinha" },
+  { value: "tio paterno", label: "Tio Paterno" },
+  { value: "tia paterna", label: "Tia Paterna" },
+  { value: "avô paterno", label: "Avô Paterno" },
+  { value: "avó paterna", label: "Avó Paterna" },
+  { value: "neto", label: "Neto" },
+  { value: "neta", label: "Neta" },
+  { value: "bisavô paterno", label: "Bisavô Paterno" },
+  { value: "bisavó paterna", label: "Bisavó Paterna" },
+  { value: "bisneto", label: "Bisneto" },
+  { value: "bisneta", label: "Bisneta" },
+  { value: "outro", label: "Outro" },
+];
 
 export default function FamiliaresDistantesPaterno({
   onClose,
   onBack,
   onAdvance,
 }) {
-  const [noKnowledge, setNoKnowledge] = useState(false);
-  const [distantesHadCancer, setDistantesHadCancer] = useState(false);
+  const [distantesHadCancer, setDistantesHadCancer] = useState(null);
   const [distantesDetails, setDistantesDetails] = useState([
-    { relationship: "", gender: "", type: null, age: "" },
+    { relationship: "", type: null, age: "", showAgeDropdown: false },
   ]);
-  const [showAgeDropdown, setShowAgeDropdown] = useState(false);
 
-  const handleNoKnowledgeChange = () => {
-    setNoKnowledge(!noKnowledge);
+  const handleDistantesHadCancerChange = (value) => {
+    setDistantesHadCancer(value);
+
+    // Clear selections if "Sim" or "Não" is selected
+    if (value === false) {
+      setDistantesDetails([
+        { relationship: "", type: null, age: "", showAgeDropdown: false },
+      ]);
+    }
   };
 
-  const handleAgeToggle = () => {
-    setShowAgeDropdown(!showAgeDropdown);
+  const handleAgeToggle = (index) => {
+    const newDetails = [...distantesDetails];
+    newDetails[index].showAgeDropdown = !newDetails[index].showAgeDropdown;
+    setDistantesDetails(newDetails);
   };
 
   const handleAddMore = () => {
     setDistantesDetails([
       ...distantesDetails,
-      { relationship: "", gender: "", type: null, age: "" },
+      { relationship: "", type: null, age: "", showAgeDropdown: false },
     ]);
   };
 
@@ -46,39 +77,40 @@ export default function FamiliaresDistantesPaterno({
   return (
     <div className="fdp-modal-overlay" onClick={onClose}>
       <div className="fdp-modal-content" onClick={(e) => e.stopPropagation()}>
-        <Sidebar activeEtapa="etapa3" />
+        <Sidebar activeEtapa="etapa2" />
         <button className="fdp-close-button" onClick={onClose}>
           &times;
         </button>
         <div className="fdp-form-container">
-          <h2 className="fdp-title">Etapa 3 - Familiares Distantes</h2>
+          <h2 className="fdp-title">Etapa 2 - Familiares Distantes</h2>
 
           <label>
             Algum outro familiar do seu lado paterno já teve câncer?
-            <div className="checkbox-group">
+            <div className="radio-group">
               <label>
                 <input
-                  type="checkbox"
-                  checked={distantesHadCancer}
-                  onChange={() => setDistantesHadCancer(!distantesHadCancer)}
+                  type="radio"
+                  name="distantesHadCancer"
+                  checked={distantesHadCancer === true}
+                  onChange={() => handleDistantesHadCancerChange(true)}
                 />
                 Sim
               </label>
               <label>
                 <input
-                  type="checkbox"
-                  value="none"
-                  checked={!distantesHadCancer}
-                  onChange={() => setDistantesHadCancer(false)}
+                  type="radio"
+                  name="distantesHadCancer"
+                  checked={distantesHadCancer === false}
+                  onChange={() => handleDistantesHadCancerChange(false)}
                 />
                 Não
               </label>
               <label>
                 <input
-                  type="checkbox"
-                  value="no-knowledge"
-                  checked={noKnowledge}
-                  onChange={handleNoKnowledgeChange}
+                  type="radio"
+                  name="distantesHadCancer"
+                  checked={distantesHadCancer === null}
+                  onChange={() => handleDistantesHadCancerChange(null)}
                 />
                 Não tenho conhecimento da saúde dos meus parentes distantes
                 paternos
@@ -86,33 +118,20 @@ export default function FamiliaresDistantesPaterno({
             </div>
           </label>
 
-          {!noKnowledge && distantesHadCancer && (
+          {distantesHadCancer && (
             <>
               {distantesDetails.map((distante, index) => (
                 <div key={index}>
                   <label>
                     Parentesco:
-                    <input
-                      type="text"
-                      value={distante.relationship}
-                      onChange={(e) => {
-                        const newDetails = [...distantesDetails];
-                        newDetails[index].relationship = e.target.value;
-                        setDistantesDetails(newDetails);
-                      }}
-                    />
-                  </label>
-                  <label>
-                    Sexo:
                     <Select
-                      options={[
-                        { value: "feminino", label: "Feminino" },
-                        { value: "masculino", label: "Masculino" },
-                      ]}
-                      value={distante.gender}
+                      options={relationshipOptions}
+                      value={relationshipOptions.find(
+                        (option) => option.value === distante.relationship
+                      )}
                       onChange={(selectedOption) => {
                         const newDetails = [...distantesDetails];
-                        newDetails[index].gender = selectedOption;
+                        newDetails[index].relationship = selectedOption.value;
                         setDistantesDetails(newDetails);
                       }}
                     />
@@ -131,7 +150,7 @@ export default function FamiliaresDistantesPaterno({
                   </label>
                   <label>
                     Idade:
-                    {showAgeDropdown ? (
+                    {distante.showAgeDropdown ? (
                       <Select
                         options={ageOptions}
                         value={distante.age}
@@ -143,7 +162,8 @@ export default function FamiliaresDistantesPaterno({
                       />
                     ) : (
                       <input
-                        type="number"
+                        type="text"
+                        placeholder="Digite a idade"
                         value={distante.age}
                         onChange={(e) => {
                           const newDetails = [...distantesDetails];
@@ -152,23 +172,23 @@ export default function FamiliaresDistantesPaterno({
                         }}
                       />
                     )}
-                    <button type="button" onClick={handleAgeToggle}>
-                      {showAgeDropdown ? "Digitar idade" : "Não sei"}
+                    <button onClick={() => handleAgeToggle(index)}>
+                      {distante.showAgeDropdown
+                        ? "Digitar idade"
+                        : "Selecionar idade"}
                     </button>
                   </label>
                 </div>
               ))}
-              <button type="button" className="btn-add" onClick={handleAddMore}>
-                +
-              </button>
+              <button onClick={handleAddMore}>Adicionar outro familiar</button>
             </>
           )}
 
-          <div className="fdp-form-buttons">
-            <button className="btn-back" onClick={handleBackClick}>
+          <div className="fdp-button-container">
+            <button className="fdp-back-button" onClick={handleBackClick}>
               Voltar
             </button>
-            <button className="btn-next" onClick={handleAdvanceClick}>
+            <button className="fdp-advance-button" onClick={handleAdvanceClick}>
               Avançar
             </button>
           </div>

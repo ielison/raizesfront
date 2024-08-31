@@ -1,8 +1,9 @@
 import { Routes, Route } from "react-router-dom";
 import { useModals } from "./context/ModalContext";
-import { useAuth } from "./context/AuthContext"; // Import useAuth
+import { useAuth } from "./context/AuthContext"; 
+import { useState } from "react"; // Import useState
 import Etapa1Modal from "./components/Etapa1Modal/Etapa1Modal";
-import Etapa2Modal from "./components/Etapa2Modal/Etapa2modal";
+import Etapa2Modal from "./components/Etapa2Modal/Etapa2Modal";
 import DadosPaciente from "./components/DadosPaciente/DadosPaciente";
 import FilhosFilhas from "./components/FilhosFilhas/FilhosFilhas";
 import NetosNetas from "./components/NetosNetas/NetosNetas";
@@ -24,65 +25,67 @@ import QuestionarioFinalizado from "./components/QuestionarioFinalizado/Question
 import QuestionarioFinalizado2 from "./components/QuestionarioFinalizado2/QuestionarioFinalizado2";
 import Register1 from "./components/Register1/Register1";
 import Register2 from "./components/Register2/Register2";
-import RegisterEnd from "./components/RegisterEnd/RegisterEnd";
+// import RegisterEnd from "./components/RegisterEnd/RegisterEnd";
 import { UserProvider } from "./context/UserContext";
 import Sobre from "./pages/sobre/Sobre";
-import HomeTopbar from "./components/HomeTopbar/HomeTopbar"; // Import HomeTopbar
-import Topbar from "./components/Topbar/Topbar"; // Import Topbar
+import HomeTopbar from "./components/HomeTopbar/HomeTopbar"; 
+import Topbar from "./components/Topbar/Topbar"; 
 import LoginModal from "./components/LoginModal/LoginModal";
 
 function App() {
-  const { currentModal, openModal, closeModal } = useModals();
-  const { isLoggedIn } = useAuth(); // Get login status
+  const { currentModal, openModal, closeModal, modalData } = useModals();
+  const { isLoggedIn } = useAuth(); 
+  const [formData, setFormData] = useState({}); // Define formData state
+
+  const handleCloseAllModals = () => {
+    closeModal(); 
+  };
 
   const handleModalClose = (modalToOpen) => {
     closeModal();
     if (modalToOpen) {
-      openModal(modalToOpen);
+      openModal(modalToOpen, formData); // Passa formData ao abrir o modal
     }
   };
 
   const handleRegisterClick = () => {
-    openModal("register1"); // Open Register1 modal
+    openModal("register1"); 
   };
 
   return (
     <UserProvider>
-      {isLoggedIn ? <HomeTopbar /> : <Topbar />}{" "}
-      {/* Render Topbar based on login status */}
+      {isLoggedIn ? <HomeTopbar /> : <Topbar />} 
       <Routes>
         <Route path="/" element={<Inicio openModal={openModal} />} />
         <Route path="/home" element={<Home openModal={openModal} />} />
         <Route path="/linksuteis" element={<LinksUteis />} />
         <Route path="/sobre" element={<Sobre />} />
       </Routes>
-
       <LoginModal
         isOpen={currentModal === "loginModal"}
-        onClose={() => closeModal()}
-        handleRegisterClick={handleRegisterClick} // Pass the register click handler
+        onClose={handleCloseAllModals}
+        handleRegisterClick={handleRegisterClick}
       />
-
-
-
       {currentModal === "register1" && (
         <Register1
           isOpen={true}
-          onClose={() => closeModal()}
-          onAdvance={() => handleModalClose("register2")}
+          onClose={handleCloseAllModals}
+          onAdvance={() => handleModalClose("register2")} 
+          formData={modalData} // Recebe os dados do modal
+          setFormData={setFormData} 
         />
       )}
       {currentModal === "register2" && (
         <Register2
           isOpen={true}
-          onClose={() => closeModal()}
-          onBack={() => handleModalClose("register1")}
-          onFinish={() => handleModalClose("registerEnd")}
+          onClose={handleCloseAllModals}
+          onBack={() => handleModalClose("register1")} 
+          formData={modalData} // Recebe os dados do modal
         />
       )}
-      {currentModal === "registerEnd" && (
+      {/* {currentModal === "registerEnd" && (
         <RegisterEnd isOpen={true} onClose={() => closeModal()} />
-      )}
+      )} */}
       {currentModal === "Etapa1Modal" && (
         <Etapa1Modal
           onClose={closeModal}
@@ -93,42 +96,49 @@ function App() {
         <DadosPaciente
           onClose={() => handleModalClose("Etapa1Modal")}
           onAdvance={() => handleModalClose("FilhosFilhas")}
+          onBack={() => handleModalClose("Etapa1Modal")}
         />
       )}
       {currentModal === "FilhosFilhas" && (
         <FilhosFilhas
           onClose={() => handleModalClose("DadosPaciente")}
           onAdvance={() => handleModalClose("NetosNetas")}
+          onBack={() => handleModalClose("DadosPaciente")}
         />
       )}
       {currentModal === "NetosNetas" && (
         <NetosNetas
           onClose={() => handleModalClose("FilhosFilhas")}
           onAdvance={() => handleModalClose("IrmaosIrmas")}
+          onBack={() => handleModalClose("FilhosFilhas")}
         />
       )}
       {currentModal === "IrmaosIrmas" && (
         <IrmaosIrmas
           onClose={() => handleModalClose("NetosNetas")}
           onAdvance={() => handleModalClose("SobrinhoSobrinha")}
+          onBack={() => handleModalClose("NetosNetas")}
         />
       )}
       {currentModal === "SobrinhoSobrinha" && (
         <SobrinhoSobrinha
           onClose={() => handleModalClose("IrmaosIrmas")}
           onAdvance={() => handleModalClose("Etapa2Modal")}
+          onBack={() => handleModalClose("IrmaosIrmas")}
         />
       )}
       {currentModal === "Etapa2Modal" && (
         <Etapa2Modal
           onClose={() => handleModalClose("SobrinhoSobrinha")}
           onAdvance={() => handleModalClose("DadosFamiliaMaterna")}
+          onBack={() => handleModalClose("SobrinhoSobrinha")}
         />
       )}
       {currentModal === "DadosFamiliaMaterna" && (
         <DadosFamiliaMaterna
           onClose={() => handleModalClose("Etapa2Modal")}
           onAdvance={() => handleModalClose("AvosMaternos")}
+          onBack={() => handleModalClose("Etapa2Modal")}
         />
       )}
       {currentModal === "AvosMaternos" && (

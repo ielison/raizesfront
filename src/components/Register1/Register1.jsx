@@ -12,27 +12,28 @@ export default function Register1({ isOpen, onClose }) {
     confirmarSenha: "",
     pais: "",
     cep: "",
+    numero: "",
     cidade: "",
     estado: "",
     endereco: "",
     telefonePrimario: "",
     celular: "",
-    profissionalSaude: false,
-    naoProfissionalSaude: false,
+    profissionalSaude: "",
     graduacao: "",
     titulo: "",
     instituicao: "",
   });
 
   const [isRegister2Open, setRegister2Open] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
 
   if (!isOpen) return null;
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: value,
     });
   };
 
@@ -63,7 +64,6 @@ export default function Register1({ isOpen, onClose }) {
 
   const handleFinish = () => {
     console.log("Finalizing registration with data:", formData);
-    // Implement navigation to registerEnd modal here
   };
 
   return (
@@ -78,14 +78,25 @@ export default function Register1({ isOpen, onClose }) {
               </button>
             </div>
             <p>Informe seus dados para criar uma conta.</p>
-            <div className="register1-stepper">
-              <div className="register1-step register1-active">Informações Básicas</div>
-              <div className="register1-step register1-inactive">
-                <span className="register1-dotted-line"></span>
-                Segunda Etapa
+            <div className="stepper-wrapper">
+              <div
+                className={`stepper-item ${
+                  isRegister2Open ? "completed" : "active"
+                }`}
+              >
+                <div className="step-counter">1</div>
+                <div className="step-name">Informações Básicas</div>
+              </div>
+              <div
+                className={`stepper-item ${isRegister2Open ? "active" : ""}`}
+              >
+                <div className="step-counter">2</div>
+                <div className="step-name">Segunda Etapa</div>
               </div>
             </div>
+
             <form onSubmit={handleAdvance}>
+              <label>Nome</label>
               <input
                 type="text"
                 name="nome"
@@ -94,6 +105,7 @@ export default function Register1({ isOpen, onClose }) {
                 onChange={handleChange}
                 className="register1-form-input"
               />
+              <label>Sobrenome</label>
               <input
                 type="text"
                 name="sobrenome"
@@ -102,6 +114,7 @@ export default function Register1({ isOpen, onClose }) {
                 onChange={handleChange}
                 className="register1-form-input"
               />
+              <label>Email</label>
               <input
                 type="email"
                 name="email"
@@ -110,6 +123,7 @@ export default function Register1({ isOpen, onClose }) {
                 onChange={handleChange}
                 className="register1-form-input"
               />
+              <label>Senha</label>
               <input
                 type="password"
                 name="senha"
@@ -118,6 +132,7 @@ export default function Register1({ isOpen, onClose }) {
                 onChange={handleChange}
                 className="register1-form-input"
               />
+              <label>Confirmar Senha</label>
               <input
                 type="password"
                 name="confirmarSenha"
@@ -126,6 +141,7 @@ export default function Register1({ isOpen, onClose }) {
                 onChange={handleChange}
                 className="register1-form-input"
               />
+              <label>País</label>
               <input
                 type="text"
                 name="pais"
@@ -134,6 +150,7 @@ export default function Register1({ isOpen, onClose }) {
                 onChange={handleChange}
                 className="register1-form-input"
               />
+              <label>CEP</label>
               <input
                 type="text"
                 name="cep"
@@ -143,6 +160,31 @@ export default function Register1({ isOpen, onClose }) {
                 onBlur={handleCEPBlur}
                 className="register1-form-input"
               />
+              <div className="register1-address-group">
+                <div className="register1-address-field">
+                  <label>Endereço</label>
+                  <input
+                    type="text"
+                    name="endereco"
+                    placeholder="Endereço"
+                    value={formData.endereco}
+                    onChange={handleChange}
+                    className="register1-form-input"
+                  />
+                </div>
+                <div className="register1-address-field">
+                  <label>Número</label>
+                  <input
+                    type="text"
+                    name="numero"
+                    placeholder="Número"
+                    value={formData.numero}
+                    onChange={handleChange}
+                    className="register1-form-input"
+                  />
+                </div>
+              </div>
+              <label>Cidade</label>
               <input
                 type="text"
                 name="cidade"
@@ -151,6 +193,7 @@ export default function Register1({ isOpen, onClose }) {
                 onChange={handleChange}
                 className="register1-form-input"
               />
+              <label>Estado</label>
               <input
                 type="text"
                 name="estado"
@@ -159,14 +202,7 @@ export default function Register1({ isOpen, onClose }) {
                 onChange={handleChange}
                 className="register1-form-input"
               />
-              <input
-                type="text"
-                name="endereco"
-                placeholder="Endereço"
-                value={formData.endereco}
-                onChange={handleChange}
-                className="register1-form-input"
-              />
+              <label>Telefone Primário</label>
               <input
                 type="text"
                 name="telefonePrimario"
@@ -175,6 +211,7 @@ export default function Register1({ isOpen, onClose }) {
                 onChange={handleChange}
                 className="register1-form-input"
               />
+              <label>Celular</label>
               <input
                 type="text"
                 name="celular"
@@ -184,27 +221,48 @@ export default function Register1({ isOpen, onClose }) {
                 className="register1-form-input"
               />
               <div className="register1-checkbox-group">
-                <input
-                  type="checkbox"
-                  name="profissionalSaude"
-                  checked={formData.profissionalSaude}
-                  onChange={handleChange}
-                />
-                <label>Sou um profissional da saúde</label>
+                <label>
+                  <input
+                    type="radio"
+                    name="profissionalSaude"
+                    value="sim"
+                    checked={formData.profissionalSaude === "sim"}
+                    onChange={handleChange}
+                  />
+                  Sou um profissional da saúde
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="profissionalSaude"
+                    value="nao"
+                    checked={formData.profissionalSaude === "nao"}
+                    onChange={handleChange}
+                  />
+                  Não sou um profissional da saúde
+                </label>
+                <span
+                  className="register1-info-button"
+                  onClick={() => setShowInfo(!showInfo)} // Toggle info box visibility
+                >
+                  ℹ️
+                </span>
               </div>
-              <div className="register1-checkbox-group">
-                <input
-                  type="checkbox"
-                  name="naoProfissionalSaude"
-                  checked={formData.naoProfissionalSaude}
-                  onChange={handleChange}
-                />
-                <label>Não sou um profissional da saúde</label>
-                <span className="register1-info-button">ℹ️</span>
-                <div className="tooltip-text">
-                  Ao selecionar essa opção você está ciente de que os resultados...
+              {showInfo && (
+                <div className="info-box">
+                  A plataforma Raízes foi desenvolvida para ser utilizada por
+                  profissionais de saúde, com o objetivo de auxiliar na
+                  identificação de indivíduos com alto risco de câncer
+                  hereditário. Embora não seja impedido o uso por não
+                  profissionais, é fundamental destacar que a interpretação das
+                  informações fornecidas pela plataforma é facilitada quando
+                  realizada com o suporte de um profissional de saúde. Por isso,
+                  recomendamos fortemente que o uso e a aplicação das
+                  informações sejam feitos sob acompanhamento de um profissional
+                  qualificado.
                 </div>
-              </div>
+              )}
+              <label>Graduação</label>
               <input
                 type="text"
                 name="graduacao"
@@ -213,6 +271,7 @@ export default function Register1({ isOpen, onClose }) {
                 onChange={handleChange}
                 className="register1-form-input"
               />
+              <label>Título</label>
               <input
                 type="text"
                 name="titulo"
@@ -221,6 +280,7 @@ export default function Register1({ isOpen, onClose }) {
                 onChange={handleChange}
                 className="register1-form-input"
               />
+              <label>Instituição</label>
               <input
                 type="text"
                 name="instituicao"

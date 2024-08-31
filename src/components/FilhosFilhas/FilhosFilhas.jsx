@@ -6,14 +6,14 @@ import { ageOptions } from "../../data/ageOptions"; // Importe ageOptions
 import Sidebar from "../Sidebar/Sidebar";
 import "./FilhosFilhas.css";
 
-export default function FilhosFilhas({ onClose, onAdvance }) {
+export default function FilhosFilhas({ onAdvance, onBack }) {
   const [hasChildren, setHasChildren] = useState(null); // Alterado para null
   const [hasCancer, setHasCancer] = useState(false); // 'Não' marcado por padrão
-  const [children, setChildren] = useState([{ type: "", age: "" }]);
+  const [children, setChildren] = useState([{ type: [], age: "" }]); // type como array para múltiplos tipos de câncer
   const [showAgeDropdown, setShowAgeDropdown] = useState(false);
 
   const handleAddChild = () => {
-    setChildren([...children, { type: "", age: "" }]);
+    setChildren([...children, { type: [], age: "" }]); // type como array para múltiplos tipos de câncer
   };
 
   const handleAgeToggle = () => {
@@ -21,7 +21,11 @@ export default function FilhosFilhas({ onClose, onAdvance }) {
   };
 
   const handleBackClick = () => {
-    onClose();
+    if (onBack) {
+      onBack(); // Chama a função de callback onBack se fornecida
+    } else {
+      console.warn("onBack function is not provided!");
+    }
   };
 
   const handleAdvanceClick = () => {
@@ -29,18 +33,18 @@ export default function FilhosFilhas({ onClose, onAdvance }) {
   };
 
   return (
-    <div className="ff-modal-overlay" onClick={onClose}>
+    <div className="ff-modal-overlay">
       <div
         className="modal-content-filhos__filhas"
         onClick={(e) => e.stopPropagation()}
       >
         <Sidebar activeEtapa="etapa1" />
         <div className="ff-form-container">
-          <button className="close-button" onClick={onClose}>
+          <button className="close-button" onClick={handleBackClick}>
             &times;
           </button>
           <h2>Etapa 1 - Filhos e Filhas</h2>
-          
+
           <label>
             O Sr(a) tem filhos e filhas?
             <div className="checkbox-group">
@@ -72,11 +76,23 @@ export default function FilhosFilhas({ onClose, onAdvance }) {
               <div className="qtd-filhos">
                 <label>
                   Quantidade de filhos
-                  <input type="number" />
+                  <input
+                    type="number"
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      e.target.value = value >= 0 ? value : 0;
+                    }}
+                  />
                 </label>
                 <label>
                   Quantidade de filhas
-                  <input type="number" />
+                  <input
+                    type="number"
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      e.target.value = value >= 0 ? value : 0;
+                    }}
+                  />
                 </label>
               </div>
 
@@ -110,23 +126,37 @@ export default function FilhosFilhas({ onClose, onAdvance }) {
                 <>
                   <label>
                     Quantidade de filhos com câncer
-                    <input type="number" />
+                    <input
+                      type="number"
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        e.target.value = value >= 0 ? value : 0;
+                      }}
+                    />
                   </label>
                   <label>
                     Quantidade de filhas com câncer
-                    <input type="number" />
+                    <input
+                      type="number"
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        e.target.value = value >= 0 ? value : 0;
+                      }}
+                    />
                   </label>
                   {children.map((child, index) => (
-                    <div key={index}>
+                    <div key={index} className="child-container">
                       <label>Filho {index + 1}</label>
                       <label>
                         Tipo de câncer
                         <Select
+                          isMulti
+                          placeholder="Selecione o tipo de câncer"
                           options={cancerOptions}
                           value={child.type}
-                          onChange={(selectedOption) => {
+                          onChange={(selectedOptions) => {
                             const newChildren = [...children];
-                            newChildren[index].type = selectedOption;
+                            newChildren[index].type = selectedOptions;
                             setChildren(newChildren);
                           }}
                         />
@@ -136,6 +166,7 @@ export default function FilhosFilhas({ onClose, onAdvance }) {
                           Idade
                           {showAgeDropdown ? (
                             <Select
+                              placeholder="Selecione..."
                               options={ageOptions}
                               value={child.age}
                               onChange={(selectedOption) => {
@@ -149,8 +180,9 @@ export default function FilhosFilhas({ onClose, onAdvance }) {
                               type="number"
                               value={child.age}
                               onChange={(e) => {
+                                const value = e.target.value;
                                 const newChildren = [...children];
-                                newChildren[index].age = e.target.value;
+                                newChildren[index].age = value >= 0 ? value : 0; // Validação para não aceitar valores negativos
                                 setChildren(newChildren);
                               }}
                             />
@@ -185,6 +217,6 @@ export default function FilhosFilhas({ onClose, onAdvance }) {
 }
 
 FilhosFilhas.propTypes = {
-  onClose: PropTypes.func.isRequired,
   onAdvance: PropTypes.func.isRequired,
+  onBack: PropTypes.func, // Adiciona a prop onBack opcional
 };

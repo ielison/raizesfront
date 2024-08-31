@@ -1,5 +1,3 @@
-/* FamiliaresDistantesMaterno.css */
-
 .fdm-modal-overlay {
   position: fixed;
   top: 0;
@@ -18,29 +16,8 @@
   background: #fff;
   border-radius: 8px;
   width: 760px;
-  /* Largura fixa */
   height: 650px;
-  /* Altura fixa */
   overflow: hidden;
-  /* Esconde o conteúdo que ultrapassar */
-}
-
-.fdm-sidebar-container {
-  width: 25%;
-  /* Proporção semelhante à do arquivo de primos/primas */
-  background: #f8f9fa;
-  border-right: 1px solid #ddd;
-  height: 100%;
-  overflow-y: auto;
-  padding: 10px;
-}
-
-.fdm-grupo {
-  display: flex;
-  flex-direction: column;
-  width: 75%;
-  padding: 20px;
-  overflow-y: auto;
 }
 
 .fdm-form-container {
@@ -66,9 +43,8 @@
   margin-bottom: 20px;
 }
 
-.fdm-label {
-  display: block;
-  margin-bottom: 10px;
+.fdm-relative-details {
+  margin-bottom: 20px;
 }
 
 .fdm-input[type="number"],
@@ -77,33 +53,38 @@
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  margin-bottom: 10px;
 }
 
-.fdm-checkbox {
-  margin-right: 10px;
+.fdm-select {
+  width: 100%;
+  margin-bottom: 10px;
 }
 
-.fdm-btn-add {
+.btn-add {
   background: #28a745;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
 }
 
-.fdm-btn-back {
+.btn-back,
+.btn-next {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-back {
   background: #6c757d;
+  color: #fff;
 }
 
-.fdm-btn-next {
-  background: #007bff;
-}
-
-.fdm-toggle-button {
-  background: #f8f9fa;
-  color: #007bff;
-  border: 1px solid #007bff;
-  padding: 5px 10px;
-  margin-top: 5px;
-}
-
-.fdm-toggle-button:hover {
+.btn-next {
   background: #007bff;
   color: #fff;
 }
@@ -112,13 +93,4 @@
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
-}
-
-.fdm-checkbox-group {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.fdm-checkbox-group label {
-  margin-right: 15px;
 }

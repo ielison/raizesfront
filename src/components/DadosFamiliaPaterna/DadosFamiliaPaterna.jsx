@@ -4,7 +4,7 @@ import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
 import Sidebar from "../Sidebar/Sidebar";
-import "./DadosFamiliaPaterna.css";
+import "./DadosFamiliaPaterna.css"; // Ensure you have a new CSS file for this component
 
 export default function DadosFamiliaPaterna({ onClose, onBack, onAdvance }) {
   const [noKnowledge, setNoKnowledge] = useState(false);
@@ -103,6 +103,7 @@ export default function DadosFamiliaPaterna({ onClose, onBack, onAdvance }) {
                   <label className="dfp-label">
                     Qual foi o tipo de câncer que ele teve?
                     <Select
+                      placeholder="Selecione o tipo de câncer"
                       options={cancerOptions}
                       value={fatherCancerDetails.type}
                       onChange={(selectedOption) => {
@@ -116,39 +117,44 @@ export default function DadosFamiliaPaterna({ onClose, onBack, onAdvance }) {
                   </label>
 
                   <label className="dfp-label">
-                    Idade
-                    {showAgeDropdown ? (
-                      <Select
-                        options={ageOptions}
-                        value={fatherCancerDetails.age}
-                        onChange={(selectedOption) => {
-                          setFatherCancerDetails((prev) => ({
-                            ...prev,
-                            age: selectedOption,
-                          }));
-                        }}
-                        className="dfp-select"
-                      />
-                    ) : (
-                      <input
-                        type="number"
-                        value={fatherCancerDetails.age}
-                        onChange={(e) =>
-                          setFatherCancerDetails((prev) => ({
-                            ...prev,
-                            age: e.target.value,
-                          }))
-                        }
-                        className="dfp-input"
-                      />
-                    )}
-                    <button
-                      type="button"
-                      onClick={handleAgeToggle}
-                      className="dfp-toggle-button"
-                    >
-                      {showAgeDropdown ? "Digitar idade" : "Não sei"}
-                    </button>
+                    <div className="dfp-idade">
+                      <span>
+                        Idade
+                        {showAgeDropdown ? (
+                          <Select
+                            placeholder="Selecione a idade"
+                            options={ageOptions}
+                            value={fatherCancerDetails.age}
+                            onChange={(selectedOption) => {
+                              setFatherCancerDetails((prev) => ({
+                                ...prev,
+                                age: selectedOption,
+                              }));
+                            }}
+                            className="dfp-select"
+                          />
+                        ) : (
+                          <input
+                            type="number"
+                            value={fatherCancerDetails.age}
+                            onChange={(e) =>
+                              setFatherCancerDetails((prev) => ({
+                                ...prev,
+                                age: e.target.value,
+                              }))
+                            }
+                            className="dfp-input"
+                          />
+                        )}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={handleAgeToggle}
+                        className="dfp-toggle-button"
+                      >
+                        {showAgeDropdown ? "Digitar idade" : "Não sei"}
+                      </button>
+                    </div>
                   </label>
                 </>
               )}
@@ -181,7 +187,7 @@ export default function DadosFamiliaPaterna({ onClose, onBack, onAdvance }) {
 
               {hasPaternalUnclesAunts && (
                 <>
-                <label className="dfp-label">
+                  <label className="dfp-label">
                     Quantos tios?
                     <input
                       type="number"
@@ -241,7 +247,7 @@ export default function DadosFamiliaPaterna({ onClose, onBack, onAdvance }) {
 
                   {uncleAuntCancer && (
                     <>
-                    <label className="dfp-label">
+                      <label className="dfp-label">
                         Quantos tios tiveram câncer?
                         <input
                           type="number"

@@ -65,6 +65,7 @@ button.btn-back-em2 {
   background: white;
   width: 180px;
   color: var(--primary-500);
+  border: 1px solid var(--primary-500);
 }
 
 button.btn-back-em2:hover {

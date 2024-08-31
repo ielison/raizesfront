@@ -43,9 +43,11 @@ export default function DadosPaciente({ onClose, onAdvance }) {
           </label>
 
           <div className="dp-row">
-            {" "}
             {/* Flex container for side by side */}
-            <label className="sexo-paciente" style={{ flex: 1, marginRight: "10px" }}>
+            <label
+              className="sexo-paciente"
+              style={{ flex: 1, marginRight: "10px" }}
+            >
               Sexo biológico
               <select defaultValue="">
                 <option value="" disabled>
@@ -57,7 +59,13 @@ export default function DadosPaciente({ onClose, onAdvance }) {
             </label>
             <label style={{ flex: 1 }}>
               Idade do Paciente
-              <input type="number" />
+              <input
+                type="number"
+                onChange={(e) => {
+                  const value = e.target.value;
+                  e.target.value = value >= 0 ? value : 0;
+                }}
+              />
             </label>
           </div>
 
@@ -92,11 +100,21 @@ export default function DadosPaciente({ onClose, onAdvance }) {
               <div className="dp-row">
                 <label style={{ flex: 1, marginRight: "10px" }}>
                   Qual tipo de câncer o Sr(a) teve?
-                  <Select isMulti options={cancerOptions} />
+                  <Select
+                    isMulti
+                    options={cancerOptions}
+                    placeholder="Selecione..."
+                  />
                 </label>
                 <label style={{ flex: 1 }}>
                   Com que idade o Sr(a) recebeu o diagnóstico?
-                  <input type="number" />
+                  <input
+                    type="number"
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      e.target.value = value >= 0 ? value : 0;
+                    }}
+                  />
                 </label>
               </div>
 
@@ -135,6 +153,7 @@ export default function DadosPaciente({ onClose, onAdvance }) {
                           <Select
                             isMulti
                             options={cancerOptions}
+                            placeholder="Selecione..."
                             value={diagnoses[index].type}
                             onChange={(selectedOptions) => {
                               const newDiagnoses = [...diagnoses];
@@ -149,8 +168,9 @@ export default function DadosPaciente({ onClose, onAdvance }) {
                             type="number"
                             value={diagnoses[index].age}
                             onChange={(e) => {
+                              const value = e.target.value;
                               const newDiagnoses = [...diagnoses];
-                              newDiagnoses[index].age = e.target.value;
+                              newDiagnoses[index].age = value >= 0 ? value : 0;
                               setDiagnoses(newDiagnoses);
                             }}
                           />

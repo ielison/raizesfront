@@ -4,29 +4,22 @@ import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
 import Sidebar from "../Sidebar/Sidebar";
-import "./PrimosPrimasPaternos.css"; // Atualizado para refletir o novo nome do CSS
+import "./PrimosPrimasPaternos.css"; // Ensure to create a corresponding CSS file for styles
 
 export default function PrimosPrimasPaternos({ onClose, onBack, onAdvance }) {
   const [noKnowledge, setNoKnowledge] = useState(false);
-  const [primosHadCancer, setPrimosHadCancer] = useState(false);
-  const [primosDetails, setPrimosDetails] = useState([
-    { relationship: "", type: null, age: "" },
-  ]);
-  const [showAgeDropdown, setShowAgeDropdown] = useState(false);
+  const [primosHadCancer, setPrimosHadCancer] = useState(null);
+  const [primosDetails, setPrimosDetails] = useState([{ relationship: "", type: null, age: "", showAgeDropdown: false }]);
 
-  const handleNoKnowledgeChange = () => {
-    setNoKnowledge(!noKnowledge);
-  };
-
-  const handleAgeToggle = () => {
-    setShowAgeDropdown(!showAgeDropdown);
+  const handleCancerChange = (value) => {
+    setPrimosHadCancer(value);
+    if (value === true || value === false) {
+      setNoKnowledge(false);
+    }
   };
 
   const handleAddMore = () => {
-    setPrimosDetails([
-      ...primosDetails,
-      { relationship: "", type: null, age: "" },
-    ]);
+    setPrimosDetails([...primosDetails, { relationship: "", type: null, age: "", showAgeDropdown: false }]);
   };
 
   const handleBackClick = () => {
@@ -47,60 +40,68 @@ export default function PrimosPrimasPaternos({ onClose, onBack, onAdvance }) {
           <button className="ppp-close-button" onClick={onClose}>
             &times;
           </button>
-          <div className="pp-grupo">
-          <h2 className="ppp-title">Etapa 3 - Primos e primas</h2>
+          <div className="ppp-grupo">
+            <h2 className="ppp-title">Etapa 3 - Primos e primas</h2>
 
             <label>
               Algum primo ou prima do seu lado paterno já teve câncer?
-              <div className="checkbox-group">
+              <div className="ppp-checkbox-group">
                 <label>
                   <input
-                    type="checkbox"
-                    checked={primosHadCancer}
-                    onChange={() => setPrimosHadCancer(!primosHadCancer)}
+                    type="radio"
+                    name="primosCancer"
+                    checked={primosHadCancer === true}
+                    onChange={() => handleCancerChange(true)}
                   />
                   Algum/alguns primos paternos já foram acometidos
                 </label>
                 <label>
                   <input
-                    type="checkbox"
-                    value="none"
-                    checked={!primosHadCancer}
-                    onChange={() => setPrimosHadCancer(false)}
+                    type="radio"
+                    name="primosCancer"
+                    checked={primosHadCancer === false}
+                    onChange={() => handleCancerChange(false)}
                   />
                   Nenhum dos meus primos paternos foram acometidos
                 </label>
                 <label>
                   <input
-                    type="checkbox"
-                    value="no-knowledge"
+                    type="radio"
+                    name="primosCancer"
                     checked={noKnowledge}
-                    onChange={handleNoKnowledgeChange}
+                    onChange={() => {
+                      setNoKnowledge(true);
+                      setPrimosHadCancer(null);
+                    }}
                   />
                   Não tenho conhecimento da saúde dos meus primos paternos
                 </label>
               </div>
             </label>
 
-            {!noKnowledge && primosHadCancer && (
+            {primosHadCancer && !noKnowledge && (
               <>
                 {primosDetails.map((primo, index) => (
                   <div key={index}>
                     <label>
                       Parentesco:
-                      <input
-                        type="text"
+                      <select
                         value={primo.relationship}
                         onChange={(e) => {
                           const newDetails = [...primosDetails];
                           newDetails[index].relationship = e.target.value;
                           setPrimosDetails(newDetails);
                         }}
-                      />
+                      >
+                        <option value="">Selecione</option>
+                        <option value="primo">Primo</option>
+                        <option value="prima">Prima</option>
+                      </select>
                     </label>
                     <label>
                       Tipo de câncer:
                       <Select
+                        placeholder="Selecione o tipo de câncer"
                         options={cancerOptions}
                         value={primo.type}
                         onChange={(selectedOption) => {
@@ -112,8 +113,9 @@ export default function PrimosPrimasPaternos({ onClose, onBack, onAdvance }) {
                     </label>
                     <label>
                       Idade:
-                      {showAgeDropdown ? (
+                      {primo.showAgeDropdown ? (
                         <Select
+                          placeholder="Selecione.."
                           options={ageOptions}
                           value={primo.age}
                           onChange={(selectedOption) => {
@@ -133,27 +135,27 @@ export default function PrimosPrimasPaternos({ onClose, onBack, onAdvance }) {
                           }}
                         />
                       )}
-                      <button type="button" onClick={handleAgeToggle}>
-                        {showAgeDropdown ? "Digitar idade" : "Não sei"}
+                      <button type="button" className="ppp-toggle-button" onClick={() => {
+                        const newDetails = [...primosDetails];
+                        newDetails[index].showAgeDropdown = !newDetails[index].showAgeDropdown;
+                        setPrimosDetails(newDetails);
+                      }}>
+                        {primo.showAgeDropdown ? "Digitar idade" : "Não sei"}
                       </button>
                     </label>
                   </div>
                 ))}
-                <button
-                  type="button"
-                  className="btn-add"
-                  onClick={handleAddMore}
-                >
-                  +
+                <button type="button" className="ppp-btn-add" onClick={handleAddMore}>
+                  Informar+
                 </button>
               </>
             )}
 
             <div className="ppp-form-buttons">
-              <button className="btn-back" onClick={handleBackClick}>
+              <button className="ppp-btn-back" onClick={handleBackClick}>
                 Voltar
               </button>
-              <button className="btn-next" onClick={handleAdvanceClick}>
+              <button className="ppp-btn-next" onClick={handleAdvanceClick}>
                 Avançar
               </button>
             </div>

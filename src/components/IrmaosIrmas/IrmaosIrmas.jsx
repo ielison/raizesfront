@@ -10,21 +10,25 @@ export default function IrmaosIrmas({ onClose, onAdvance }) {
   const [relationships, setRelationships] = useState([]);
   const [hasCancer, setHasCancer] = useState(null);
   const [cancerDetails, setCancerDetails] = useState([
-    { relation: "", type: [], age: "" },
+    { relation: "", type: [], age: "", showAgeDropdown: false }, // Add showAgeDropdown for each sibling
   ]);
-  const [showAgeDropdown, setShowAgeDropdown] = useState(false);
 
   const handleRelationshipChange = (e) => {
     const { value } = e.target;
-    setRelationships([value]);
+
+    if (value === "naoPossuoIrmaos") {
+      setRelationships(["naoPossuoIrmaos"]); // Apenas mantém "Não possuo irmãos"
+    } else {
+      setRelationships((prev) =>
+        prev.includes(value)
+          ? prev.filter((item) => item !== value)
+          : [...prev.filter((item) => item !== "naoPossuoIrmaos"), value]
+      ); // Remove "Não possuo irmãos" se outras opções forem selecionadas
+    }
   };
 
   const handleAddCancerDetail = () => {
-    setCancerDetails([...cancerDetails, { relation: "", type: [], age: "" }]);
-  };
-
-  const handleAgeToggle = () => {
-    setShowAgeDropdown(!showAgeDropdown);
+    setCancerDetails([...cancerDetails, { relation: "", type: [], age: "", showAgeDropdown: false }]);
   };
 
   const handleBackClick = () => {
@@ -41,6 +45,26 @@ export default function IrmaosIrmas({ onClose, onAdvance }) {
     setHasCancer(value === "sim");
   };
 
+  const handleQuantityChange = (index, value) => {
+    const newDetails = [...cancerDetails];
+    const quantityValue = Math.max(0, value); // Ensure non-negative value
+    newDetails[index].quantity = quantityValue;
+    setCancerDetails(newDetails);
+  };
+
+  const handleAgeToggle = (index) => {
+    const newDetails = [...cancerDetails];
+    newDetails[index].showAgeDropdown = !newDetails[index].showAgeDropdown; // Toggle for specific sibling
+    setCancerDetails(newDetails);
+  };
+
+  const handleAgeChange = (index, value) => {
+    const newDetails = [...cancerDetails];
+    const ageValue = Math.max(0, value); // Ensure non-negative value
+    newDetails[index].age = ageValue;
+    setCancerDetails(newDetails);
+  };
+
   return (
     <div className="ii-modal-overlay" onClick={onClose}>
       <div className="ii-modal-content" onClick={(e) => e.stopPropagation()}>
@@ -55,9 +79,10 @@ export default function IrmaosIrmas({ onClose, onAdvance }) {
           <label className="ii-possui-irmao">
             <span>O Sr(a) possui irmãos, meio-irmãos ou meio-irmãs?</span>
             <div className="ii-radio-group-first">
+              {/* Checkbox inputs for relationships */}
               <label>
                 <input
-                  type="radio"
+                  type="checkbox"
                   name="relationship"
                   value="irmaos"
                   checked={relationships.includes("irmaos")}
@@ -67,7 +92,7 @@ export default function IrmaosIrmas({ onClose, onAdvance }) {
               </label>
               <label>
                 <input
-                  type="radio"
+                  type="checkbox"
                   name="relationship"
                   value="irma"
                   checked={relationships.includes("irma")}
@@ -77,7 +102,7 @@ export default function IrmaosIrmas({ onClose, onAdvance }) {
               </label>
               <label>
                 <input
-                  type="radio"
+                  type="checkbox"
                   name="relationship"
                   value="meioIrmaosPaterno"
                   checked={relationships.includes("meioIrmaosPaterno")}
@@ -87,7 +112,7 @@ export default function IrmaosIrmas({ onClose, onAdvance }) {
               </label>
               <label>
                 <input
-                  type="radio"
+                  type="checkbox"
                   name="relationship"
                   value="meioIrmasPaterno"
                   checked={relationships.includes("meioIrmasPaterno")}
@@ -97,7 +122,7 @@ export default function IrmaosIrmas({ onClose, onAdvance }) {
               </label>
               <label>
                 <input
-                  type="radio"
+                  type="checkbox"
                   name="relationship"
                   value="meioIrmaosMaterno"
                   checked={relationships.includes("meioIrmaosMaterno")}
@@ -107,7 +132,7 @@ export default function IrmaosIrmas({ onClose, onAdvance }) {
               </label>
               <label>
                 <input
-                  type="radio"
+                  type="checkbox"
                   name="relationship"
                   value="meioIrmasMaterno"
                   checked={relationships.includes("meioIrmasMaterno")}
@@ -117,7 +142,7 @@ export default function IrmaosIrmas({ onClose, onAdvance }) {
               </label>
               <label>
                 <input
-                  type="radio"
+                  type="checkbox"
                   name="relationship"
                   value="naoPossuoIrmaos"
                   checked={relationships.includes("naoPossuoIrmaos")}
@@ -127,121 +152,120 @@ export default function IrmaosIrmas({ onClose, onAdvance }) {
               </label>
             </div>
           </label>
-          {relationships.length > 0 &&
-            !relationships.includes("naoPossuoIrmaos") && (
-              <>
-                {relationships.map((relation, index) => (
-                  <label key={index}>
-                    {relation.charAt(0).toUpperCase() +
-                      relation.slice(1).replace(/([A-Z])/g, " $1")}
-                    <input type="number" placeholder="Quantidade" />
-                  </label>
-                ))}
-                <label>
-                  Algum deles foi acometido por algum câncer?
-                  <div className="ii-radio-group">
-                    <label>
-                      <input
-                        type="radio"
-                        name="hasCancer"
-                        value="sim"
-                        checked={hasCancer === true}
-                        onChange={() => handleCancerRadioChange("sim")}
-                      />
-                      Sim
-                    </label>
-                    <label>
-                      <input
-                        type="radio"
-                        name="hasCancer"
-                        value="nao"
-                        checked={hasCancer === false}
-                        onChange={() => handleCancerRadioChange("nao")}
-                      />
-                      Não
-                    </label>
-                  </div>
+          {relationships.length > 0 && !relationships.includes("naoPossuoIrmaos") && (
+            <>
+              {relationships.map((relation, index) => (
+                <label key={index}>
+                  {relation.charAt(0).toUpperCase() + relation.slice(1).replace(/([A-Z])/g, " $1")}
+                  <input
+                    type="number"
+                    placeholder="Quantidade"
+                    onChange={(e) => handleQuantityChange(index, Number(e.target.value))}
+                    min="0"
+                  />
                 </label>
-                {hasCancer && (
-                  <>
-                    {cancerDetails.map((detail, index) => (
-                      <div key={index}>
-                        <label>
-                          Parentesco
-                          <Select
-                            placeholder="Escolha o parentesco"
-                            options={relationships.map((r) => ({
-                              label: r,
-                              value: r,
-                            }))}
-                            value={detail.relation}
-                            onChange={(selectedOption) => {
-                              const newDetails = [...cancerDetails];
-                              newDetails[index].relation = selectedOption;
-                              setCancerDetails(newDetails);
-                            }}
-                          />
-                        </label>
-                        <label>
-                          Tipo de câncer
-                          <Select
-                            placeholder="Selecione o tipo de câncer"
-                            isMulti
-                            options={cancerOptions}
-                            value={detail.type}
-                            onChange={(selectedOptions) => {
-                              const newDetails = [...cancerDetails];
-                              newDetails[index].type = selectedOptions;
-                              setCancerDetails(newDetails);
-                            }}
-                          />
-                        </label>
-                        <label className="ii-idade">
-                          <div className="ii-idade-div">
-                            Idade
-                            {showAgeDropdown ? (
-                              <Select
-                                placeholder="Selecione a idade"
-                                options={ageOptions}
-                                value={detail.age}
-                                onChange={(selectedOption) => {
-                                  const newDetails = [...cancerDetails];
-                                  newDetails[index].age = selectedOption;
-                                  setCancerDetails(newDetails);
-                                }}
-                              />
-                            ) : (
-                              <input
-                                type="number"
-                                value={detail.age}
-                                onChange={(e) => {
-                                  const newDetails = [...cancerDetails];
-                                  newDetails[index].age = e.target.value;
-                                  setCancerDetails(newDetails);
-                                }}
-                              />
-                            )}
-                          </div>
-                          <button
-                            className="btn-naosei"
-                            type="button"
-                            onClick={handleAgeToggle}
-                          >
-                            {showAgeDropdown ? "Digitar idade" : "Não sei"}
-                          </button>
-                        </label>
-                      </div>
-                    ))}
-                    <button
-                      className="ii-btn-add"
-                      onClick={handleAddCancerDetail}
-                    >
-                      Informar +
-                    </button>
-                  </>
-                )}
-              </>
-            )}
+              ))}
+              <label>
+                Algum deles foi acometido por algum câncer?
+                <div className="ii-radio-group">
+                  <label>
+                    <input
+                      type="radio"
+                      name="hasCancer"
+                      value="sim"
+                      checked={hasCancer === true}
+                      onChange={() => handleCancerRadioChange("sim")}
+                    />
+                    Sim
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="hasCancer"
+                      value="nao"
+                      checked={hasCancer === false}
+                      onChange={() => handleCancerRadioChange("nao")}
+                    />
+                    Não
+                  </label>
+                </div>
+              </label>
+              {hasCancer && (
+                <>
+                  {cancerDetails.map((detail, index) => (
+                    <div key={index}>
+                      <label>
+                        Parentesco
+                        <Select
+                          placeholder="Escolha o parentesco"
+                          options={relationships.map((r) => ({
+                            label: r.charAt(0).toUpperCase() + r.slice(1).replace(/([A-Z])/g, " $1"),
+                            value: r,
+                          }))}
+                          value={detail.relation}
+                          onChange={(selectedOption) => {
+                            const newDetails = [...cancerDetails];
+                            newDetails[index].relation = selectedOption;
+                            setCancerDetails(newDetails);
+                          }}
+                          getOptionLabel={(option) => option.label}
+                          getOptionValue={(option) => option.value}
+                        />
+                      </label>
+                      <label>
+                        Tipo de câncer
+                        <Select
+                          placeholder="Selecione o tipo de câncer"
+                          isMulti
+                          options={cancerOptions}
+                          value={detail.type}
+                          onChange={(selectedOptions) => {
+                            const newDetails = [...cancerDetails];
+                            newDetails[index].type = selectedOptions;
+                            setCancerDetails(newDetails);
+                          }}
+                        />
+                      </label>
+                      <label className="ii-idade">
+                        <div className="ii-idade-div">
+                          Idade
+                          {detail.showAgeDropdown ? (
+                            <Select
+                              placeholder="Selecione a idade"
+                              options={ageOptions}
+                              value={detail.age}
+                              onChange={(selectedOption) => {
+                                const newDetails = [...cancerDetails];
+                                newDetails[index].age = selectedOption;
+                                setCancerDetails(newDetails);
+                              }}
+                            />
+                          ) : (
+                            <input
+                              type="number"
+                              value={detail.age}
+                              onChange={(e) => handleAgeChange(index, Number(e.target.value))}
+                              min="0"
+                            />
+                          )}
+                        </div>
+                        <button
+                          className="btn-naosei"
+                          type="button"
+                          onClick={() => handleAgeToggle(index)} // Pass index to toggle for specific sibling
+                        >
+                          {detail.showAgeDropdown ? "Digitar idade" : "Não sei"}
+                        </button>
+                      </label>
+                    </div>
+                  ))}
+                  <button className="ii-btn-add" onClick={handleAddCancerDetail}>
+                    Informar +
+                  </button>
+                </>
+              )}
+            </>
+          )}
           <div className="ii-form-buttons">
             <button className="ii-btn-back" onClick={handleBackClick}>
               Voltar

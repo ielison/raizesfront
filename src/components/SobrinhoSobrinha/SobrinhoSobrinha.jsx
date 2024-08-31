@@ -15,19 +15,24 @@ export default function SobrinhosSobrinhas({ onClose, onAdvance }) {
   const [cancerDetails, setCancerDetails] = useState([
     { type: [], gender: "", age: "" },
   ]);
-  const [showAgeDropdown, setShowAgeDropdown] = useState(false);
+  const [showAgeDropdowns, setShowAgeDropdowns] = useState([false]); // Track age dropdowns for each child
 
   const handleQuantityChange = (e) => {
     const { name, value } = e.target;
-    setQuantities((prev) => ({ ...prev, [name]: value }));
+    // Ensure non-negative value for quantities
+    const quantityValue = Math.max(0, value);
+    setQuantities((prev) => ({ ...prev, [name]: quantityValue }));
   };
 
   const handleAddCancerDetail = () => {
     setCancerDetails([...cancerDetails, { type: [], gender: "", age: "" }]);
+    setShowAgeDropdowns([...showAgeDropdowns, false]); // Add a new entry for the new child
   };
 
-  const handleAgeToggle = () => {
-    setShowAgeDropdown(!showAgeDropdown);
+  const handleAgeToggle = (index) => {
+    const newShowAgeDropdowns = [...showAgeDropdowns];
+    newShowAgeDropdowns[index] = !newShowAgeDropdowns[index]; // Toggle only the clicked child's dropdown
+    setShowAgeDropdowns(newShowAgeDropdowns);
   };
 
   const handleBackClick = () => {
@@ -40,6 +45,14 @@ export default function SobrinhosSobrinhas({ onClose, onAdvance }) {
 
   const handleCancerCheckboxChange = (value) => {
     setHasCancer(value === "alguns");
+  };
+
+  const handleAgeChange = (index, value) => {
+    // Ensure non-negative value for age
+    const ageValue = Math.max(0, value);
+    const newDetails = [...cancerDetails];
+    newDetails[index].age = ageValue;
+    setCancerDetails(newDetails);
   };
 
   return (
@@ -68,6 +81,7 @@ export default function SobrinhosSobrinhas({ onClose, onAdvance }) {
                   value={quantities.sobrinhos}
                   onChange={handleQuantityChange}
                   placeholder="Quantidade"
+                  min="0" // Ensure the input cannot be less than 0
                 />
               </label>
               <label>
@@ -78,6 +92,7 @@ export default function SobrinhosSobrinhas({ onClose, onAdvance }) {
                   value={quantities.meioSobrinhos}
                   onChange={handleQuantityChange}
                   placeholder="Quantidade"
+                  min="0" // Ensure the input cannot be less than 0
                 />
               </label>
             </div>
@@ -141,7 +156,7 @@ export default function SobrinhosSobrinhas({ onClose, onAdvance }) {
                   <label className="ii-idade">
                     <div className="ii-idade-div">
                       Idade
-                      {showAgeDropdown ? (
+                      {showAgeDropdowns[index] ? (
                         <Select
                           placeholder="Selecione a idade"
                           options={ageOptions}
@@ -156,20 +171,17 @@ export default function SobrinhosSobrinhas({ onClose, onAdvance }) {
                         <input
                           type="number"
                           value={detail.age}
-                          onChange={(e) => {
-                            const newDetails = [...cancerDetails];
-                            newDetails[index].age = e.target.value;
-                            setCancerDetails(newDetails);
-                          }}
+                          onChange={(e) => handleAgeChange(index, Number(e.target.value))}
+                          min="0" // Ensure the input cannot be less than 0
                         />
                       )}
                     </div>
                     <button
                       className="btn-naosei"
                       type="button"
-                      onClick={handleAgeToggle}
+                      onClick={() => handleAgeToggle(index)} // Pass the index to toggle the specific child's dropdown
                     >
-                      {showAgeDropdown ? "Digitar idade" : "Não sei"}
+                      {showAgeDropdowns[index] ? "Digitar idade" : "Não sei"}
                     </button>
                   </label>
                 </div>

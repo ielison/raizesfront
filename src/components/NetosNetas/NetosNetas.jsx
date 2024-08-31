@@ -7,26 +7,26 @@ import Sidebar from "../Sidebar/Sidebar";
 import "./NetosNetas.css";
 
 export default function NetosNetas({ onClose, onAdvance }) {
-  const [hasGrandchildren, setHasGrandchildren] = useState(null); // null to handle both "Sim" and "Não"
-  const [hasCancer, setHasCancer] = useState(null); // null to handle both "Sim" and "Não"
-  const [grandchildren, setGrandchildren] = useState([{ type: "", age: "" }]);
-  const [showAgeDropdown, setShowAgeDropdown] = useState(false);
+  const [hasGrandchildren, setHasGrandchildren] = useState(null); // null para lidar com "Sim" e "Não"
+  const [hasCancer, setHasCancer] = useState(null); // null para lidar com "Sim" e "Não"
+  const [grandchildren, setGrandchildren] = useState([{ type: "", age: "", showAgeDropdown: false }]);
 
   const handleAddGrandchild = () => {
-    setGrandchildren([...grandchildren, { type: "", age: "" }]);
+    setGrandchildren([...grandchildren, { type: "", age: "", showAgeDropdown: false }]);
   };
 
-  const handleAgeToggle = () => {
-    setShowAgeDropdown(!showAgeDropdown);
+  const handleAgeToggle = (index) => {
+    const updatedGrandchildren = grandchildren.map((grandchild, i) => 
+      i === index ? { ...grandchild, showAgeDropdown: !grandchild.showAgeDropdown } : grandchild
+    );
+    setGrandchildren(updatedGrandchildren);
   };
 
   const handleBackClick = () => {
-    console.log("Back button clicked"); // Log when the back button is clicked
-    onClose();
+    onClose(); // Fechar o modal quando o botão Voltar for clicado
   };
 
   const handleAdvanceClick = () => {
-    console.log("Advance button clicked"); // Log when the advance button is clicked
     onAdvance();
   };
 
@@ -77,11 +77,23 @@ export default function NetosNetas({ onClose, onAdvance }) {
             <>
               <label>
                 Quantidade de netos
-                <input type="number" />
+                <input
+                  type="number"
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    e.target.value = value >= 0 ? value : 0; // Impedir valores negativos
+                  }}
+                />
               </label>
               <label>
                 Quantidade de netas
-                <input type="number" />
+                <input
+                  type="number"
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    e.target.value = value >= 0 ? value : 0; // Impedir valores negativos
+                  }}
+                />
               </label>
               <label>
                 Algum deles já teve câncer?
@@ -110,11 +122,23 @@ export default function NetosNetas({ onClose, onAdvance }) {
                 <>
                   <label>
                     Quantidade de netos com câncer
-                    <input type="number" />
+                    <input
+                      type="number"
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        e.target.value = value >= 0 ? value : 0; // Impedir valores negativos
+                      }}
+                    />
                   </label>
                   <label>
                     Quantidade de netas com câncer
-                    <input type="number" />
+                    <input
+                      type="number"
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        e.target.value = value >= 0 ? value : 0; // Impedir valores negativos
+                      }}
+                    />
                   </label>
                   {grandchildren.map((grandchild, index) => (
                     <div key={index}>
@@ -122,6 +146,8 @@ export default function NetosNetas({ onClose, onAdvance }) {
                       <label>
                         Tipo de câncer
                         <Select
+                          isMulti
+                          placeholder="Selecione o tipo de câncer"
                           options={cancerOptions}
                           value={grandchild.type}
                           onChange={(selectedOption) => {
@@ -134,8 +160,9 @@ export default function NetosNetas({ onClose, onAdvance }) {
                       <label className="nn-idade">
                         <div className="nn">
                           Idade
-                          {showAgeDropdown ? (
+                          {grandchild.showAgeDropdown ? (
                             <Select
+                              placeholder="Selecione..."
                               options={ageOptions}
                               value={grandchild.age}
                               onChange={(selectedOption) => {
@@ -149,15 +176,16 @@ export default function NetosNetas({ onClose, onAdvance }) {
                               type="number"
                               value={grandchild.age}
                               onChange={(e) => {
+                                const value = e.target.value;
                                 const newGrandchildren = [...grandchildren];
-                                newGrandchildren[index].age = e.target.value;
+                                newGrandchildren[index].age = value >= 0 ? value : 0; // Impedir valores negativos
                                 setGrandchildren(newGrandchildren);
                               }}
                             />
                           )}
                         </div>
-                        <button type="button" onClick={handleAgeToggle}>
-                          {showAgeDropdown ? "Digitar idade" : "Não sei"}
+                        <button type="button" onClick={() => handleAgeToggle(index)}>
+                          {grandchild.showAgeDropdown ? "Digitar idade" : "Não sei"}
                         </button>
                       </label>
                     </div>

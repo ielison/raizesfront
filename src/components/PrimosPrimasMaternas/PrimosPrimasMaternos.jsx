@@ -8,25 +8,18 @@ import "./PrimosPrimasMaternos.css";
 
 export default function PrimosPrimasMaternos({ onClose, onBack, onAdvance }) {
   const [noKnowledge, setNoKnowledge] = useState(false);
-  const [primosHadCancer, setPrimosHadCancer] = useState(false);
-  const [primosDetails, setPrimosDetails] = useState([
-    { relationship: "", type: null, age: "" },
-  ]);
-  const [showAgeDropdown, setShowAgeDropdown] = useState(false);
+  const [primosHadCancer, setPrimosHadCancer] = useState(null);
+  const [primosDetails, setPrimosDetails] = useState([{ relationship: "", type: null, age: "", showAgeDropdown: false }]);
 
-  const handleNoKnowledgeChange = () => {
-    setNoKnowledge(!noKnowledge);
-  };
-
-  const handleAgeToggle = () => {
-    setShowAgeDropdown(!showAgeDropdown);
+  const handleCancerChange = (value) => {
+    setPrimosHadCancer(value);
+    if (value === true || value === false) {
+      setNoKnowledge(false);
+    }
   };
 
   const handleAddMore = () => {
-    setPrimosDetails([
-      ...primosDetails,
-      { relationship: "", type: null, age: "" },
-    ]);
+    setPrimosDetails([...primosDetails, { relationship: "", type: null, age: "", showAgeDropdown: false }]);
   };
 
   const handleBackClick = () => {
@@ -52,55 +45,63 @@ export default function PrimosPrimasMaternos({ onClose, onBack, onAdvance }) {
 
             <label>
               Algum primo ou prima do seu lado materno já teve câncer?
-              <div className="checkbox-group">
+              <div className="ppm-checkbox-group">
                 <label>
                   <input
-                    type="checkbox"
-                    checked={primosHadCancer}
-                    onChange={() => setPrimosHadCancer(!primosHadCancer)}
+                    type="radio"
+                    name="primosCancer"
+                    checked={primosHadCancer === true}
+                    onChange={() => handleCancerChange(true)}
                   />
                   Algum/alguns primos maternos já foram acometidos
                 </label>
                 <label>
                   <input
-                    type="checkbox"
-                    value="none"
-                    checked={!primosHadCancer}
-                    onChange={() => setPrimosHadCancer(false)}
+                    type="radio"
+                    name="primosCancer"
+                    checked={primosHadCancer === false}
+                    onChange={() => handleCancerChange(false)}
                   />
                   Nenhum dos meus primos maternos foram acometidos
                 </label>
                 <label>
                   <input
-                    type="checkbox"
-                    value="no-knowledge"
+                    type="radio"
+                    name="primosCancer"
                     checked={noKnowledge}
-                    onChange={handleNoKnowledgeChange}
+                    onChange={() => {
+                      setNoKnowledge(true);
+                      setPrimosHadCancer(null);
+                    }}
                   />
                   Não tenho conhecimento da saúde dos meus primos maternos
                 </label>
               </div>
             </label>
 
-            {!noKnowledge && primosHadCancer && (
+            {primosHadCancer && !noKnowledge && (
               <>
                 {primosDetails.map((primo, index) => (
                   <div key={index}>
                     <label>
                       Parentesco:
-                      <input
-                        type="text"
+                      <select
                         value={primo.relationship}
                         onChange={(e) => {
                           const newDetails = [...primosDetails];
                           newDetails[index].relationship = e.target.value;
                           setPrimosDetails(newDetails);
                         }}
-                      />
+                      >
+                        <option value="">Selecione</option>
+                        <option value="primo">Primo</option>
+                        <option value="prima">Prima</option>
+                      </select>
                     </label>
                     <label>
                       Tipo de câncer:
                       <Select
+                        placeholder="Selecione o tipo de câncer"
                         options={cancerOptions}
                         value={primo.type}
                         onChange={(selectedOption) => {
@@ -112,8 +113,9 @@ export default function PrimosPrimasMaternos({ onClose, onBack, onAdvance }) {
                     </label>
                     <label>
                       Idade:
-                      {showAgeDropdown ? (
+                      {primo.showAgeDropdown ? (
                         <Select
+                          placeholder="Selecione.."
                           options={ageOptions}
                           value={primo.age}
                           onChange={(selectedOption) => {
@@ -133,27 +135,27 @@ export default function PrimosPrimasMaternos({ onClose, onBack, onAdvance }) {
                           }}
                         />
                       )}
-                      <button type="button" onClick={handleAgeToggle}>
-                        {showAgeDropdown ? "Digitar idade" : "Não sei"}
+                      <button type="button" className="ppm-toggle-button" onClick={() => {
+                        const newDetails = [...primosDetails];
+                        newDetails[index].showAgeDropdown = !newDetails[index].showAgeDropdown;
+                        setPrimosDetails(newDetails);
+                      }}>
+                        {primo.showAgeDropdown ? "Digitar idade" : "Não sei"}
                       </button>
                     </label>
                   </div>
                 ))}
-                <button
-                  type="button"
-                  className="btn-add"
-                  onClick={handleAddMore}
-                >
-                  +
+                <button type="button" className="ppm-btn-add" onClick={handleAddMore}>
+                  Informar+
                 </button>
               </>
             )}
 
             <div className="ppm-form-buttons">
-              <button className="ff-btn-back" onClick={handleBackClick}>
+              <button className="ppm-btn-back" onClick={handleBackClick}>
                 Voltar
               </button>
-              <button className="ff-btn-next" onClick={handleAdvanceClick}>
+              <button className="ppm-btn-next" onClick={handleAdvanceClick}>
                 Avançar
               </button>
             </div>

@@ -6,21 +6,25 @@ const ModalContext = createContext();
 
 export function ModalProvider({ children }) {
   const [currentModal, setCurrentModal] = useState(null);
+  const [modalData, setModalData] = useState({}); // Adiciona estado para dados do modal
 
-  const openModal = (modalName) => setCurrentModal(modalName);
-  const closeModal = () => setCurrentModal(null);
-  const closeCurrentModal = () => {
-    // Implement logic to close the current modal if needed
+  const openModal = (modalName, data = {}) => {
+    setCurrentModal(modalName);
+    setModalData(data); // Armazena dados ao abrir o modal
+  };
+
+  const closeModal = () => {
     setCurrentModal(null);
+    setModalData({}); // Limpa os dados ao fechar
   };
 
   return (
     <ModalContext.Provider
       value={{
         currentModal,
+        modalData, // Adiciona dados do modal ao contexto
         openModal,
         closeModal,
-        closeCurrentModal, // Add this if you need to close the current modal
       }}
     >
       {children}
