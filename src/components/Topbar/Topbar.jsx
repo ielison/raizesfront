@@ -1,18 +1,19 @@
 import { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom"; // Importando useLocation
+import { useNavigate, useLocation } from "react-router-dom";
 import Logo from "../../assets/logo.svg";
 import LoginModal from "../LoginModal/LoginModal";
-import "./Topbar.css";
 import Register1 from "../Register1/Register1";
+import "./Topbar.css";
 
 export default function Topbar() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // Estado para o menu
   const navigate = useNavigate();
-  const location = useLocation(); // Obtendo a localização atual
+  const location = useLocation();
 
   const handleLoginClick = () => {
-    setIsLoginModalOpen(true); // Use o nome correto da função de estado
+    setIsLoginModalOpen(true);
   };
 
   const handleCloseLoginModal = () => {
@@ -20,9 +21,8 @@ export default function Topbar() {
   };
 
   const handleRegisterClick = () => {
-    handleCloseLoginModal(); // Fecha o modal de login ao abrir o de registro
+    handleCloseLoginModal();
     setIsRegisterModalOpen(true);
-    console.log("Abrindo modal de registro...");
   };
 
   const handleCloseRegisterModal = () => {
@@ -36,14 +36,15 @@ export default function Topbar() {
 
   const handleSobreClick = (e) => {
     e.preventDefault();
-    console.log("valeu");
-
     navigate("/sobre");
   };
 
   const handleLogoClick = () => {
-    console.log("Logo clicked");
-    navigate("/"); // Navega para a raiz quando o logo é clicado
+    navigate("/");
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
   };
 
   return (
@@ -54,7 +55,7 @@ export default function Topbar() {
         alt="Logo Raízes"
         onClick={handleLogoClick}
       />
-      <nav className="topbar__nav">
+      <nav className={`topbar__nav ${isMenuOpen ? "open" : ""}`}>
         <ul>
           <li>
             <a
@@ -62,7 +63,7 @@ export default function Topbar() {
               onClick={handleSobreClick}
               style={{
                 textDecoration:
-                  location.pathname === "/sobre" ? "underline" : "none", // Aplica o sublinhado condicionalmente
+                  location.pathname === "/sobre" ? "underline" : "none",
               }}
             >
               Sobre nós
@@ -74,13 +75,22 @@ export default function Topbar() {
               onClick={handleLinksUteisClick}
               style={{
                 textDecoration:
-                  location.pathname === "/linksuteis" ? "underline" : "none", // Aplica o sublinhado condicionalmente
+                  location.pathname === "/linksuteis" ? "underline" : "none",
               }}
             >
               Links úteis
             </a>
           </li>
         </ul>
+        {/* Botões dentro do menu na versão mobile */}
+        <div className="botoes_topbar">
+          <button className="topbar__register" onClick={handleRegisterClick}>
+            Registrar
+          </button>
+          <button className="topbar__login" onClick={handleLoginClick}>
+            Entrar
+          </button>
+        </div>
       </nav>
       <div className="topbar__div">
         <button className="topbar__register" onClick={handleRegisterClick}>
@@ -90,10 +100,17 @@ export default function Topbar() {
           Entrar
         </button>
       </div>
+      <button
+        className="topbar__menu-toggle"
+        onClick={toggleMenu}
+        aria-label="Toggle menu"
+      >
+        {isMenuOpen ? "✕" : "☰"} {/* Alterna entre X e ☰ */}
+      </button>
       <LoginModal
         isOpen={isLoginModalOpen}
         onClose={handleCloseLoginModal}
-        handleRegisterClick={handleRegisterClick} // Certifique-se de passar a função aqui
+        handleRegisterClick={handleRegisterClick}
       />
       <Register1
         isOpen={isRegisterModalOpen}

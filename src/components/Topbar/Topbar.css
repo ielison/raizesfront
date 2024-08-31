@@ -1,3 +1,4 @@
+/* Estilos gerais */
 .topbar__header {
   background-color: var(--white);
   padding: 3rem 5rem;
@@ -23,7 +24,6 @@
   display: flex;
   justify-content: space-between;
   gap: 2rem;
-
 }
 
 .topbar__nav a:link {
@@ -32,11 +32,6 @@
   font-size: 1rem;
   font-weight: 500;
 }
-
-/* .link-active {
-  text-decoration: underline;
-} */
-
 
 .topbar__nav a:hover {
   color: var(--secondary-500);
@@ -73,14 +68,10 @@
 
 .topbar__register {
   display: flex;
-  /* Adicionado para permitir o alinhamento flexível */
   justify-content: center;
-  /* Centraliza o texto horizontalmente */
   align-items: center;
-  /* Centraliza o texto verticalmente */
   border-radius: 4px;
   width: 8rem;
-  /* Certifique-se de que a largura seja suficiente */
   height: 40px;
   padding: 8px 20px;
   color: var(--primary-500);
@@ -89,9 +80,7 @@
   border-color: var(--primary-500);
   font: var(--font);
   text-align: center;
-  /* Adicionado para garantir que o texto esteja centralizado */
 }
-
 
 .topbar__register:hover {
   color: var(--secondary-500);
@@ -104,7 +93,78 @@
   border-color: var(--tertiary-500);
 }
 
-
 .topbar__nav li a {
   color: var(--primary-500);
+}
+
+
+/* Menu styles for mobile */
+.topbar__menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: var(--primary-500);
+  cursor: pointer;
+  z-index: 1001; /* Certifique-se de que esteja acima do menu */
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .topbar__menu-toggle {
+    display: block; /* Exibe o menu hambúrguer em telas pequenas */
+  }
+
+  .topbar__nav {
+    display: none; /* Oculta o menu em telas pequenas */
+    flex-direction: column; /* Exibe em coluna quando aberto */
+    position: absolute;
+    top: 6rem; /* Posiciona abaixo do cabeçalho */
+    left: 0;
+    right: 0;
+    background-color: var(--white);
+    padding: 1rem;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* Certifique-se de que o menu esteja acima dos outros elementos */
+  }
+
+  .topbar__nav.open {
+    display: flex; /* Exibe o menu quando estiver aberto */
+    flex-direction: column; /* Garante que os itens no menu estejam em coluna */
+  }
+
+  .topbar__nav ul {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .topbar__div {
+    display: none; /* Oculta os botões fora do menu em telas pequenas */
+  }
+
+  .topbar__nav.open .topbar__register,
+  .topbar__nav.open .topbar__login {
+    display: block; /* Exibe os botões dentro do menu quando o menu está aberto */
+    width: 100%; /* Faz com que os botões ocupem a largura total */
+    margin-top: 1rem; /* Adiciona espaço acima dos botões */
+    padding: 1rem;
+    text-align: center; /* Centraliza o texto dos botões */
+  }
+}
+
+/* Estilos para tablet e desktop */
+@media (min-width: 769px) {
+  .topbar__div {
+    display: flex;
+  }
+
+  .topbar__nav {
+    display: flex !important; /* Garante que o menu fique sempre visível */
+  }
+
+  .topbar__login,
+  .topbar__register {
+    width: auto;
+    padding: 8px 20px;
+  }
 }
