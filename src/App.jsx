@@ -1,9 +1,9 @@
 import { Routes, Route } from "react-router-dom";
 import { useModals } from "./context/ModalContext";
-import { useAuth } from "./context/AuthContext"; 
+import { useAuth } from "./context/AuthContext";
 import { useState } from "react"; // Import useState
 import Etapa1Modal from "./components/Etapa1Modal/Etapa1Modal";
-import Etapa2Modal from "./components/Etapa2Modal/Etapa2Modal";
+import Etapa2Modal from "./components/Etapa2Modal/Etapa2modal";
 import DadosPaciente from "./components/DadosPaciente/DadosPaciente";
 import FilhosFilhas from "./components/FilhosFilhas/FilhosFilhas";
 import NetosNetas from "./components/NetosNetas/NetosNetas";
@@ -28,17 +28,17 @@ import Register2 from "./components/Register2/Register2";
 // import RegisterEnd from "./components/RegisterEnd/RegisterEnd";
 import { UserProvider } from "./context/UserContext";
 import Sobre from "./pages/sobre/Sobre";
-import HomeTopbar from "./components/HomeTopbar/HomeTopbar"; 
-import Topbar from "./components/Topbar/Topbar"; 
+import HomeTopbar from "./components/HomeTopbar/HomeTopbar";
+import Topbar from "./components/Topbar/Topbar";
 import LoginModal from "./components/LoginModal/LoginModal";
 
 function App() {
   const { currentModal, openModal, closeModal, modalData } = useModals();
-  const { isLoggedIn } = useAuth(); 
+  const { isLoggedIn } = useAuth();
   const [formData, setFormData] = useState({}); // Define formData state
 
   const handleCloseAllModals = () => {
-    closeModal(); 
+    closeModal();
   };
 
   const handleModalClose = (modalToOpen) => {
@@ -49,12 +49,12 @@ function App() {
   };
 
   const handleRegisterClick = () => {
-    openModal("register1"); 
+    openModal("register1");
   };
 
   return (
     <UserProvider>
-      {isLoggedIn ? <HomeTopbar /> : <Topbar />} 
+      {isLoggedIn ? <HomeTopbar /> : <Topbar />}
       <Routes>
         <Route path="/" element={<Inicio openModal={openModal} />} />
         <Route path="/home" element={<Home openModal={openModal} />} />
@@ -70,16 +70,16 @@ function App() {
         <Register1
           isOpen={true}
           onClose={handleCloseAllModals}
-          onAdvance={() => handleModalClose("register2")} 
+          onAdvance={() => handleModalClose("register2")}
           formData={modalData} // Recebe os dados do modal
-          setFormData={setFormData} 
+          setFormData={setFormData}
         />
       )}
       {currentModal === "register2" && (
         <Register2
           isOpen={true}
           onClose={handleCloseAllModals}
-          onBack={() => handleModalClose("register1")} 
+          onBack={() => handleModalClose("register1")}
           formData={modalData} // Recebe os dados do modal
         />
       )}
