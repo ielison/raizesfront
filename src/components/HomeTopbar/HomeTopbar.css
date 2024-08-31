@@ -1,3 +1,4 @@
+/* Estilos gerais */
 .header-home__topbar {
   background-color: var(--white);
   padding: 3rem 5rem;
@@ -5,16 +6,16 @@
   height: 6rem;
   display: flex;
   justify-content: space-between;
-  /* Alinha os itens com o mesmo espaçamento */
   align-items: center;
   font: var(--font);
+  box-shadow: 0px 5px 10px 4px rgba(0, 0, 0, 0.2);
 }
 
 .header-home__topbar .logo {
   height: 3rem;
 }
 
-.logo:hover {
+.header-home__topbar .logo:hover {
   cursor: pointer;
 }
 
@@ -25,22 +26,18 @@
   gap: 2rem;
 }
 
-.links-uteis__hometopbar a {
-  color: var(--primary-500);
-}
-
-.header-home__topbar a:link {
+.header-home__topbar .links-uteis__hometopbar a:link {
   text-decoration: none;
   color: var(--primary-500);
   font-size: 1rem;
   font-weight: 500;
 }
 
-.header-home__topbar a:hover {
+.header-home__topbar .links-uteis__hometopbar a:hover {
   color: var(--secondary-500);
 }
 
-.header-home__topbar a:active {
+.header-home__topbar .links-uteis__hometopbar a:active {
   color: var(--tertiary-500);
 }
 
@@ -49,15 +46,30 @@
   gap: 1rem;
 }
 
-.header-home__topbar .meus-pacientes {
+.header-home__topbar .logout,
+.header-home__topbar .meus-pacientes,
+.header-home__topbar .cadastrar-paciente {
   border-radius: 4px;
-  width: 166px;
   height: 40px;
   padding: 8px 20px;
+  font: var(--font);
+}
+
+.header-home__topbar .logout {
   color: var(--white);
   background-color: var(--primary-500);
   border-style: none;
-  font: var(--font);
+}
+
+.header-home__topbar .logout:hover {
+  background-color: var(--secondary-500);
+  cursor: pointer;
+}
+
+.header-home__topbar .meus-pacientes {
+  color: var(--white);
+  background-color: var(--primary-500);
+  border-style: none;
 }
 
 .header-home__topbar .meus-pacientes:hover {
@@ -65,20 +77,10 @@
   cursor: pointer;
 }
 
-.header-home__topbar .meus-pacientes:active {
-  background-color: var(--tertiary-500);
-}
-
 .header-home__topbar .cadastrar-paciente {
-  border-radius: 4px;
-  width: 208px;
-  height: 40px;
-  padding: 8px 20px;
   color: var(--primary-500);
   background-color: var(--white);
-  border-style: solid;
-  border-color: var(--primary-500);
-  font: var(--font);
+  border: solid 1px var(--primary-500);
 }
 
 .header-home__topbar .cadastrar-paciente:hover {
@@ -87,105 +89,63 @@
   cursor: pointer;
 }
 
-.header-home__topbar .cadastrar-paciente:active {
-  color: var(--tertiary-500);
-  border-color: var(--tertiary-500);
-}
-
-header {
-  background-color: var(--white);
-  padding: 3rem 5rem;
-  width: 100vw;
-  height: 6rem;
-  display: flex;
-  justify-content: space-between;
-  /* Alinha os itens com o mesmo espaçamento */
-  align-items: center;
-  font: var(--font);
-}
-
-header .logo {
-  height: 3rem;
-}
-
-header nav ul {
-  list-style-type: none;
-  display: flex;
-  justify-content: space-between;
-  gap: 2rem;
-}
-
-header a:link {
-  text-decoration: none;
+/* Menu styles for mobile */
+.header-home__menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 2rem;
   color: var(--primary-500);
-  font-size: 1rem;
-  font-weight: 500;
-}
-
-header a:hover {
-  color: var(--secondary-500);
-}
-
-header a:active {
-  color: var(--tertiary-500);
-}
-
-header div {
-  display: flex;
-  gap: 1rem;
-}
-
-header .login,
-header .logout {
-  border-radius: 4px;
-  width: 88px;
-  height: 40px;
-  padding: 8px 20px;
-  color: var(--white);
-  background-color: var(--primary-500);
-  border-style: none;
-  font: var(--font);
-}
-
-header .login:hover,
-header .logout:hover {
-  background-color: var(--secondary-500);
   cursor: pointer;
+  z-index: 900; /* Ensure it's above the menu */
 }
 
-header .login:active {
-  background-color: var(--tertiary-500);
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .header-home__nav {
+    display: none; /* Hide the menu by default */
+    flex-direction: column; /* Stack links vertically */
+    width: 100%; /* Full width for the mobile menu */
+    position: absolute; /* Position the menu */
+    top: 6rem; /* Align below the top bar */
+    left: 0;
+    background-color: var(--white); /* Ensure background color */
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2); /* Optional shadow */
+  }
+
+  .header-home__nav.open {
+    display: flex; /* Show the menu when it's open */
+  }
+
+  .header-home__nav .links-uteis__hometopbar{
+    flex-direction: column;
+  }
+  /* Ensure buttons are full width in the mobile view */
+  .header-home__nav .links-uteis__hometopbar li {
+    width: 100%; /* Make each link full width */
+    text-align: center; /* Center text */
+  }
+
+  /* Show the menu toggle button */
+  .header-home__menu-toggle {
+    display: block; /* Show the hamburger icon */
+  }
 }
 
-header .register {
-  border-radius: 4px;
-  width: 7rem;
-  height: 40px;
-  padding: 8px 20px;
-  color: var(--primary-500);
-  background-color: var(--white);
-  border-style: solid;
-  border-color: var(--primary-500);
-  font: var(--font);
-  justify-content: center;
-  align-items: center;
-}
+/* Estilos para tablet e desktop */
+@media (min-width: 769px) {
+  .header-home__topbar .hometopbar-buttons {
+    display: flex;
+  }
 
-header .register:hover {
-  color: var(--secondary-500);
-  border-color: var(--secondary-500);
-  cursor: pointer;
-}
+  .links-uteis__hometopbar {
+    display: flex !important; /* Ensure the menu is always visible */
+  }
 
-header .register:active {
-  color: var(--tertiary-500);
-  border-color: var(--tertiary-500);
-}
-
-/* Add this at the end of your HomeTopbar.css */
-/* Add this at the end of your HomeTopbar.css */
-
-.links-uteis__hometopbar .underline {
-  color: var(--primary-500);
-  text-decoration: underline !important;
+  .header-home__topbar .logout,
+  .header-home__topbar .meus-pacientes,
+  .header-home__topbar .cadastrar-paciente {
+    width: auto;
+    padding: 8px 20px;
+  }
 }

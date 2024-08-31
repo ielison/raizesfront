@@ -5,32 +5,22 @@
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
-  /* Fundo escurecido */
   display: flex;
   justify-content: center;
-  /* Centraliza horizontalmente */
   align-items: center;
-  /* Centraliza verticalmente */
-  z-index: 1000;
+  z-index: 1010;
 }
 
 .login-modal-content {
-  width: 760px;
-  /* Largura fixa do modal */
-  height: 650px;
-  /* Altura fixa do modal */
+  width: 90%; /* Largura responsiva para telas pequenas */
+  max-width: 760px; /* Largura máxima */
+  height: auto; /* Altura automática */
   background: white;
-  /* Fundo branco do modal */
   border-radius: 8px;
-  /* Bordas arredondadas */
   padding: 2rem;
-  /* Espaçamento interno */
   position: relative;
-  /* Para o posicionamento do botão de fechar */
   display: flex;
-  /* Usando flexbox para o layout */
   flex-direction: column;
-  /* Colocar os elementos em coluna */
 }
 
 .login-modal-close-button {
@@ -46,35 +36,25 @@
 
 .login-modal-form-group {
   margin-bottom: 1rem;
-  /* Espaço entre os grupos de formulário */
 }
 
 .login-modal-form-group label {
   display: block;
-  /* Tornar labels elementos de bloco */
   margin-bottom: 0.5rem;
-  /* Espaço abaixo das labels */
 }
 
 .login-modal-form-group input {
   width: 100%;
-  /* Largura total para inputs */
   padding: 0.5rem;
-  /* Padding para inputs */
   border: 1px solid #ccc;
-  /* Borda para inputs */
   border-radius: 4px;
-  /* Cantos arredondados para inputs */
 }
 
 .login-modal-forgot-password {
   display: block;
-  /* Exibir o link de esquecer a senha como bloco */
   margin-top: 0.5rem;
-  /* Margem acima do link */
   color: var(--primary-500);
   text-align: right;
-  /* Alinhar à direita */
 }
 
 .login-modal-submit-button-container {
@@ -83,34 +63,67 @@
 }
 
 .login-modal-submit-button {
-
   margin: 1.5rem 0;
-  /* Espaçamento acima e abaixo do botão */
   padding: 0.75rem 2rem;
-  /* Padding para o botão */
   background-color: var(--primary-500);
-  /* Cor de fundo do botão */
   color: white;
-  /* Cor do texto do botão */
   border: none;
-  /* Sem borda */
   border-radius: 4px;
-  /* Cantos arredondados */
   cursor: pointer;
-  /* Cursor de ponteiro ao passar o mouse */
   align-self: center;
-  /* Centraliza o botão horizontalmente */
 }
 
 .login-modal-register-prompt {
   text-align: center;
-  /* Centraliza o prompt de registro */
   margin-top: auto;
-  /* Empurra para o fundo */
 }
 
 .login-modal-register-link {
   color: var(--secondary-500);
-  /* Cor diferente para o link de registro */
   cursor: pointer;
+}
+
+/* Estilos responsivos para tablets e celulares */
+@media (max-width: 768px) {
+  .login-modal-content {
+    padding: 1.5rem; /* Menor padding para telas menores */
+  }
+
+  .login-modal-close-button {
+    font-size: 1.25rem; /* Tamanho de fonte menor para o botão de fechar */
+  }
+
+  .login-modal-title {
+    font-size: 1.75rem; /* Ajusta o tamanho do título */
+  }
+
+  .login-modal-paragraph {
+    font-size: 0.9rem; /* Ajusta o tamanho do parágrafo */
+  }
+
+  .login-modal-submit-button {
+    width: 100%; /* Botão ocupa toda a largura */
+  }
+
+  .login-modal-register-prompt {
+    font-size: 0.9rem; /* Ajusta o tamanho do prompt de registro */
+  }
+}
+
+@media (max-width: 480px) {
+  .login-modal-close-button {
+    font-size: 1rem; /* Tamanho de fonte ainda menor para o botão de fechar */
+  }
+
+  .login-modal-title {
+    font-size: 1.5rem; /* Tamanho do título menor */
+  }
+
+  .login-modal-paragraph {
+    font-size: 0.85rem; /* Tamanho do parágrafo menor */
+  }
+
+  .login-modal-register-prompt {
+    font-size: 0.85rem; /* Tamanho do prompt de registro ainda menor */
+  }
 }

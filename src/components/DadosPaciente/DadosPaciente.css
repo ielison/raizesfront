@@ -9,8 +9,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
-  /* Coloca o modal acima de outros conteúdos */
+  z-index: 1010;
 }
 
 /* Container do conteúdo do modal */
@@ -90,7 +89,8 @@
   /* Espaçamento reduzido */
   cursor: pointer;
   /* Cursor pointer */
-  font-size: 24x;
+  font-size: 24px;
+  /* Tamanho do texto */
   font-weight: bold;
   /* Tamanho do texto */
   align-self: flex-end;
@@ -129,9 +129,10 @@
   /* Cor cinza */
 }
 
-.dp-btn-next:hover{
+.dp-btn-next:hover {
   background-color: var(--primary-700);
 }
+
 .dp-btn-back:hover {
   background: var(--secondary-500);
   border-radius: 4px;
@@ -189,4 +190,90 @@
   display: flex;
   flex-direction: row;
   align-items: baseline;
+}
+
+/* Estilos para telas menores */
+@media (max-width: 768px) {
+  .dp-modal-content {
+    flex-direction: row;
+    width: 90%;
+    height: auto;
+  }
+
+  .dp-sidebar-container {
+    width: 100%;
+    /* Sidebar ocupa 100% da largura */
+    border-right: none;
+    /* Remove a borda em telas pequenas */
+    height: auto;
+    /* Altura automática */
+  }
+
+  .dp-form-container {
+    width: 100%;
+    /* Formulário ocupa 100% da largura */
+    padding: 15px;
+    /* Padding reduzido */
+  }
+
+  .dp-close-button {
+    font-size: 20px;
+    /* Tamanho de fonte menor para o botão de fechar */
+  }
+
+  .dp-btn-add {
+    font-size: 20px;
+    /* Tamanho de fonte menor para o botão de adicionar */
+  }
+
+  .dp-btn-back,
+  .dp-btn-next {
+    font-size: 14px;
+    /* Tamanho de fonte menor para botões */
+    padding: 8px 12px;
+    /* Padding reduzido */
+  }
+
+  .nome-paciente span {
+    font-size: 16px;
+    /* Tamanho de fonte menor para o nome do paciente */
+  }
+
+  .nome-paciente input,
+  .sexo-paciente select {
+    height: 28px;
+    /* Altura dos inputs reduzida */
+  }
+}
+
+/* Estilos para celulares */
+@media (max-width: 480px) {
+  .dp-close-button {
+    font-size: 18px;
+    /* Tamanho de fonte ainda menor para o botão de fechar */
+  }
+
+  .dp-btn-add {
+    font-size: 18px;
+    /* Tamanho de fonte ainda menor para o botão de adicionar */
+  }
+
+  .dp-btn-back,
+  .dp-btn-next {
+    font-size: 12px;
+    /* Tamanho de fonte ainda menor para botões */
+    padding: 6px 10px;
+    /* Padding ainda mais reduzido */
+  }
+
+  .nome-paciente span {
+    font-size: 14px;
+    /* Tamanho de fonte ainda menor para o nome do paciente */
+  }
+
+  .nome-paciente input,
+  .sexo-paciente select {
+    height: 24px;
+    /* Altura dos inputs reduzida para celulares */
+  }
 }

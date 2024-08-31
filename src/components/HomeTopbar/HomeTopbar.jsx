@@ -2,17 +2,19 @@ import { useModals } from "../../context/ModalContext";
 import Logo from "../../assets/logo.svg";
 import "./HomeTopbar.css";
 import Etapa1Modal from "../Etapa1Modal/Etapa1Modal";
-import { useNavigate, useLocation } from "react-router-dom"; // Import useLocation
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { useState } from "react";
 
-export default function Topbar() {
+export default function HomeTopbar() {
   const { openModal, closeModal, currentModal } = useModals();
   const navigate = useNavigate();
-  const location = useLocation(); // Get the current location
+  const location = useLocation();
   const { logout } = useAuth();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleLogout = () => {
-    logout(); // Call the logout function
+    logout();
     navigate("/");
   };
 
@@ -25,37 +27,44 @@ export default function Topbar() {
   };
 
   const handleLinksUteisClick = (e) => {
-    e.preventDefault(); // Prevent default anchor behavior
-    navigate("/linksuteis"); // Navigate to /linksuteis when the link is clicked
+    e.preventDefault();
+    navigate("/linksuteis");
+    setIsMenuOpen(false); // Close the menu
   };
 
   const handleLogoClick = () => {
-    navigate("/home"); // Navigate to /home when the logo is clicked
+    navigate("/home");
   };
 
   const handleSobreClick = (e) => {
     e.preventDefault();
-    
     navigate("/sobre");
+    setIsMenuOpen(false); // Close the menu
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
   };
 
   return (
-    <header className="header-home__topbar">
+    <header className={`header-home__topbar ${isMenuOpen ? "open" : ""}`}>
       <img
         className="logo"
         src={Logo}
         alt="Logo Raízes"
         onClick={handleLogoClick}
       />
-      <nav>
+      <button className="header-home__menu-toggle" onClick={toggleMenu}>
+        {isMenuOpen ? "✖" : "☰"}
+      </button>
+      <nav className={`header-home__nav ${isMenuOpen ? "open" : ""}`}>
         <ul className="links-uteis__hometopbar">
           <li>
             <a
               href=""
               onClick={handleSobreClick}
               style={{
-                textDecoration:
-                  location.pathname === "/sobre" ? "underline" : "none", // Aplica o sublinhado condicionalmente
+                textDecoration: location.pathname === "/sobre" ? "underline" : "none",
               }}
             >
               Sobre nós
@@ -63,22 +72,26 @@ export default function Topbar() {
           </li>
           <li>
             <a
-              href="/linksuteis" // Set href for proper semantic navigation
+              href="/linksuteis"
               onClick={handleLinksUteisClick}
               className={location.pathname === "/linksuteis" ? "underline" : ""}
             >
               Links úteis
             </a>
           </li>
+          <li>
+            <button className="cadastrar-paciente" onClick={handleStartClick}>
+              Cadastrar Paciente
+            </button>
+          </li>
+          <li>
+            <button className="meus-pacientes">Meus Pacientes</button>
+          </li>
+          <li>
+            <button className="logout" onClick={handleLogout}>Sair</button>
+          </li>
         </ul>
       </nav>
-      <div className="hometopbar-buttons">
-        <button className="cadastrar-paciente" onClick={handleStartClick}>
-          Cadastrar Paciente
-        </button>
-        <button className="meus-pacientes">Meus Pacientes</button>
-        <button className="logout" onClick={handleLogout}>Sair</button>
-      </div>
       {currentModal === "Etapa1Modal" && (
         <Etapa1Modal onClose={handleCloseModal} />
       )}
