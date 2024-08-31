@@ -24,6 +24,7 @@
   display: flex;
   justify-content: space-between;
   gap: 2rem;
+  align-items: center;
 }
 
 .header-home__topbar .links-uteis__hometopbar a:link {
@@ -100,6 +101,11 @@
   z-index: 900; /* Ensure it's above the menu */
 }
 
+.links-uteis__hometopbar .underline {
+  color: var(--primary-500);
+  text-decoration: underline !important;
+}
+
 /* Responsive Styles */
 @media (max-width: 768px) {
   .header-home__nav {
@@ -124,6 +130,7 @@
   .header-home__nav .links-uteis__hometopbar li {
     width: 100%; /* Make each link full width */
     text-align: center; /* Center text */
+    align-items: center;
   }
 
   /* Show the menu toggle button */

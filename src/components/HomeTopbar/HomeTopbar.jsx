@@ -42,6 +42,11 @@ export default function HomeTopbar() {
     setIsMenuOpen(false); // Close the menu
   };
 
+  const handleMeusPacientesClick = () => {
+    navigate("/pacientes");
+    setIsMenuOpen(false); // Close the menu
+  };
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -85,7 +90,16 @@ export default function HomeTopbar() {
             </button>
           </li>
           <li>
-            <button className="meus-pacientes">Meus Pacientes</button>
+            <button 
+              className="meus-pacientes" 
+              onClick={handleMeusPacientesClick}
+              style={{
+                backgroundColor: location.pathname === "/pacientes" ? "#7BBDAD" : "#274195",
+                color: location.pathname === "/pacientes" ? "#000" : "#fff", // Optional: Change text color
+              }}
+            >
+              Meus Pacientes
+            </button>
           </li>
           <li>
             <button className="logout" onClick={handleLogout}>Sair</button>

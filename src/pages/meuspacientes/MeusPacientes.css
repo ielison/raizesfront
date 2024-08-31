@@ -1,0 +1,118 @@
+.meus-pacientes {
+  padding: 20px;
+  background-image: url('../../assets/background.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed; /* Keep background image fixed */
+  height: calc(100vh - 96px);
+  display: flex;
+  flex-direction: column; /* Stack elements vertically */
+}
+
+.h1-pacientes {
+  color: white;
+}
+
+.search-box {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.pacientes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Space between cards */
+  overflow-y: auto; /* Allow vertical scrolling */
+  height: calc(100% - 60px); /* Adjust height for scrolling */
+  padding-right: 10px; /* Add padding to prevent text from sticking to the edge */
+}
+
+.paciente-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  gap: 30px;
+  background-color: #ffffff; /* White background */
+}
+
+.paciente-info {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Align items to the start */
+}
+
+.paciente-icon {
+  font-size: 24px; /* Size of the icon */
+  margin-right: 10px; /* Space between icon and name */
+}
+
+.paciente-details {
+  display: flex;
+  flex-direction: column; /* Stack name and age vertically */
+}
+
+.paciente-nome {
+  font-weight: bold; /* Highlight the name */
+}
+
+.divider {
+  height: 1px;
+  background-color: #ccc; /* Gray divider */
+  margin: 10px 0; /* Space above and below the divider */
+}
+
+.paciente-contato {
+  display: flex;
+  flex-direction: column; /* Stack contact details vertically */
+}
+
+.consulta-oncogenetica {
+  font-weight: bold; /* Highlight the oncogenetic consultation text */
+  margin-top: 10px; /* Space above this text */
+}
+
+/* Tablet Styles */
+@media (max-width: 1024px) {
+  .paciente-card {
+    flex-direction: column; /* Stack the content vertically on tablet */
+    align-items: flex-start; /* Align items to the start */
+  }
+
+  .divider {
+    margin: 5px 0; /* Reduce space around dividers on tablet */
+  }
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .meus-pacientes {
+    padding: 15px; /* Reduce padding on mobile */
+  }
+
+  .search-box {
+    padding: 8px; /* Adjust padding for the search box */
+  }
+
+  .paciente-card {
+    padding: 10px; /* Reduce padding on cards for mobile */
+    gap: 15px; /* Reduce gap between items in card */
+  }
+
+  .paciente-icon {
+    font-size: 20px; /* Slightly smaller icon on mobile */
+  }
+
+  .paciente-nome {
+    font-size: 18px; /* Adjust font size for the name */
+  }
+
+  .consulta-oncogenetica {
+    font-size: 14px; /* Smaller font for the consultation text */
+  }
+}

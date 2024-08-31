@@ -31,6 +31,7 @@ import Sobre from "./pages/sobre/Sobre";
 import HomeTopbar from "./components/HomeTopbar/HomeTopbar";
 import Topbar from "./components/Topbar/Topbar";
 import LoginModal from "./components/LoginModal/LoginModal";
+import MeusPacientes from "./pages/meuspacientes/MeusPacientes";
 
 function App() {
   const { currentModal, openModal, closeModal, modalData } = useModals();
@@ -60,6 +61,7 @@ function App() {
         <Route path="/home" element={<Home openModal={openModal} />} />
         <Route path="/linksuteis" element={<LinksUteis />} />
         <Route path="/sobre" element={<Sobre />} />
+        <Route path="/pacientes" element={<MeusPacientes />} />
       </Routes>
       <LoginModal
         isOpen={currentModal === "loginModal"}
