@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "../../context/UserContext";
 import { useAuth } from "../../context/AuthContext";
 import { useState } from "react";
+import axios from "axios";
 
 const Register2 = ({ isOpen, onClose, onBack, formData }) => {
   const navigate = useNavigate();
@@ -13,15 +14,60 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [subscribeNews, setSubscribeNews] = useState(false);
   const [subscribeUpdates, setSubscribeUpdates] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleFinish = () => {
+  const handleFinish = async () => {
     if (!acceptedTerms) {
       alert("Você deve aceitar os termos para continuar.");
       return;
     }
-    setUser({ nome: formData.nome });
-    login();
-    navigate("/home");
+
+    // Preparar o objeto de dados
+    const userData = {
+      usuarioId: 0, 
+      nome: formData.nome,
+      email: formData.email,
+      senha: formData.senha,
+      cep: formData.cep,
+      pais: formData.pais,
+      cidade: formData.cidade,
+      rua: formData.endereco,
+      numeroRua: formData.numeroRua || "", 
+      telefone: formData.telefonePrimario,
+      celular: formData.celular,
+      profissionalDaSaude: formData.profissionalSaude,
+      graduacao: formData.graduacao,
+      receberEmail: subscribeNews || subscribeUpdates,
+    };
+
+    try {
+      setIsLoading(true);
+      // Enviar dados para a API
+      const response = await axios.post(
+        "http://217.196.61.218:8080/v1/user/save-user", 
+        userData, 
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Requested-With": "XMLHttpRequest", // Evitar ataques CSRF
+          },
+          timeout: 10000, // 10 segundos de timeout
+        }
+      );
+
+      if (response.status === 200) {
+        setUser({ nome: formData.nome });
+        login();
+        navigate("/home");
+      } else {
+        alert("Houve um erro ao registrar o usuário. Por favor, tente novamente.");
+      }
+    } catch (error) {
+      console.error("Erro ao registrar usuário:", error.message || error);
+      alert("Não foi possível registrar o usuário. Tente novamente mais tarde.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleBack = () => {
@@ -173,9 +219,9 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
           <button
             onClick={handleFinish}
             className="register2-finish-button"
-            disabled={!acceptedTerms}
+            disabled={!acceptedTerms || isLoading}
           >
-            Finalizar Cadastro
+            {isLoading ? "Registrando..." : "Finalizar Cadastro"}
           </button>
         </div>
       </div>

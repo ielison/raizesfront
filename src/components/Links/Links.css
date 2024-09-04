@@ -1,12 +1,12 @@
+/* General Reset and Body Styles */
 body {
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
-  /* Prevent horizontal scrolling */
-  font-family: Arial, sans-serif;
-  /* Default font */
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  /* Default font could be added here if needed */
 }
 
+/* Container Styles */
 .linksuteis__container {
   padding: 20px;
   display: flex;
@@ -14,16 +14,18 @@ body {
   background-image: url('../../assets/background.png');
   background-size: cover;
   background-repeat: no-repeat;
-  background-attachment: fixed;
-  height: calc(100vh - 96px);
+  background-attachment: fixed; /* Keeps background fixed while scrolling */
+  height: calc(100vh - 96px); /* Adjust for header/footer height */
 }
 
+/* Content Area */
 .linksuteis__content {
-  width: 60%;
-  height: 100%;
-  overflow-y: auto;
+  width: 60%; /* Set a base width */
+  height: 100%; /* Full height of container */
+  overflow-y: auto; /* Scrollable content */
 }
 
+/* Search Wrapper */
 .linksuteis__search-wrapper {
   display: flex;
   align-items: center;
@@ -31,205 +33,183 @@ body {
   position: relative;
 }
 
+/* Search Field */
 .linksuteis__search-field {
   width: 100%;
-  padding: 10px 40px 10px 10px;
-  /* Adds space for the icon on the right */
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-  /* Include padding in the total width */
+  padding: 10px 40px 10px 10px; /* Space for icon on the right */
+  font-size: 16px; /* Default font size */
+  border: 1px solid #ccc; /* Light border */
+  border-radius: 4px; /* Rounded corners */
+  box-sizing: border-box; /* Include padding in width calculation */
 }
 
+/* Search Icon */
 .linksuteis__search-icon {
   position: absolute;
-  right: 10px;
-  /* Move the icon to the right side */
-  width: 20px;
-  height: 20px;
-  pointer-events: none;
-  /* Prevent clicks on the icon */
+  right: 10px; /* Positioning to the right */
+  width: 20px; /* Fixed size */
+  height: 20px; /* Fixed size */
+  pointer-events: none; /* Prevents interaction with icon */
 }
 
+/* Tabs Styles */
 .linksuteis__tabs {
   display: flex;
-  margin-bottom: 20px;
+  margin-bottom: 20px; /* Space below tabs */
 }
 
 .linksuteis__tab {
-  flex: 1;
-  padding: 10px;
-  cursor: pointer;
-  text-align: center;
-  background-color: transparent;
-  /* Makes background transparent */
-  border: none;
-  font-weight: normal;
+  flex: 1; /* Equal space for each tab */
+  padding: 10px; /* Padding for tab area */
+  cursor: pointer; /* Pointer on hover */
+  text-align: center; /* Center text */
+  background-color: transparent; /* Transparent background */
+  border: none; /* No border */
+  font-weight: normal; /* Normal font weight */
+  transition: color 0.3s; /* Smooth color transition */
 }
 
 .linksuteis__tab.active {
-  font-weight: bold;
-  text-decoration: underline;
-  /* Underline the text when active */
-  color: #007bff;
-  /* Color of the active text */
+  font-weight: bold; /* Bold text for active tab */
+  text-decoration: underline; /* Underline active tab text */
+  color: #007bff; /* Color of active tab */
 }
 
+/* Tab Content Styles */
 .linksuteis__tab-content {
-  padding: 20px;
-  background-color: #f9f9f9;
-  border: 1px solid #ccc;
+  padding: 20px; /* Padding inside tab content */
+  background-color: #f9f9f9; /* Light background for content */
+  border: 1px solid #ccc; /* Border around content */
   display: flex;
-  flex-direction: column;
-  gap: 16px;
-  max-width: 100%;
+  flex-direction: column; /* Stack items vertically */
+  gap: 16px; /* Space between items */
+  max-width: 100%; /* Ensures full width */
 }
 
+/* Link and Service Item Styles */
 .linksuteis__link-item,
 .linksuteis__service-item {
-  margin-bottom: 16px;
-  /* Spacing between items */
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
+  margin-bottom: 16px; /* Space between items */
+  padding: 10px; /* Padding inside items */
+  border-bottom: 1px solid #ddd; /* Light border */
 }
 
 .linksuteis__link-item img {
-  width: 20px;
-  height: 20px;
-  margin-left: 10px;
+  width: 20px; /* Fixed width for images */
+  height: 20px; /* Fixed height for images */
+  margin-left: 10px; /* Space between text and image */
 }
 
+/* Pagination Styles */
 .linksuteis__pagination {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 20px;
+  display: flex; /* Flex layout for pagination */
+  justify-content: space-between; /* Space between buttons */
+  align-items: center; /* Center vertically */
+  margin-top: 20px; /* Space above pagination */
 }
 
 .linksuteis__pagination button {
-  padding: 5px 10px;
-  border: 1px solid #ccc;
-  background-color: #007bff;
-  color: white;
-  cursor: pointer;
+  padding: 5px 10px; /* Padding for buttons */
+  border: 1px solid #ccc; /* Light border */
+  background-color: #007bff; /* Primary button color */
+  color: white; /* Text color for buttons */
+  cursor: pointer; /* Pointer on hover */
+  transition: background-color 0.3s; /* Smooth background change */
+}
+
+.linksuteis__pagination button:hover {
+  background-color: #0056b3; /* Darker on hover */
 }
 
 .linksuteis__pagination button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
+  background-color: #ccc; /* Gray for disabled */
+  cursor: not-allowed; /* No pointer for disabled */
 }
 
+/* State Filter Styles */
 .linksuteis__state-filter {
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
+  margin-bottom: 20px; /* Space below filter */
+  display: flex; /* Flex layout for filter */
+  align-items: center; /* Center vertically */
 }
 
 .linksuteis__state-filter label {
-  margin-right: 10px;
+  margin-right: 10px; /* Space between label and dropdown */
 }
 
 .linksuteis__state-dropdown {
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 10px; /* Padding inside dropdown */
+  border: 1px solid #ccc; /* Light border */
+  border-radius: 4px; /* Rounded corners */
 }
 
 /* Responsive Styles */
-@media (max-width: 1024px) {
-
-  /* Tablets */
+@media (max-width: 1024px) { /* Tablets */
   .linksuteis__content {
-    width: 80%;
-    /* Increase width for tablets */
+    width: 80%; /* Increase width for tablets */
   }
 
   .linksuteis__search-field {
-    font-size: 14px;
-    /* Slightly smaller font for tablets */
+    font-size: 14px; /* Slightly smaller font */
   }
 
   .linksuteis__tab-content {
-    padding: 15px;
-    /* Reduced padding for tablet view */
+    padding: 15px; /* Reduced padding */
   }
 
   .linksuteis__pagination {
-    flex-direction: column;
-    /* Stack pagination buttons vertically */
-    align-items: flex-start;
-    /* Align items to start */
+    flex-direction: column; /* Stack pagination vertically */
+    align-items: flex-start; /* Align to start */
   }
 }
 
-@media (max-width: 768px) {
-
-  /* Mobile devices */
+@media (max-width: 768px) { /* Mobile devices */
   .linksuteis__container {
-    padding: 10px;
-    /* Reduced padding for mobile */
+    padding: 10px; /* Reduced padding */
   }
 
   .linksuteis__content {
-    width: 100%;
-    /* Full width on mobile */
-    height: auto;
-    /* Ensure height adapts to content */
+    width: 100%; /* Full width on mobile */
+    height: auto; /* Height adapts to content */
   }
 
   .linksuteis__search-field {
-    font-size: 14px;
-    /* Smaller font for mobile */
-    width: 100%;
-    /* Ensure the search field also occupies 100% */
+    font-size: 14px; /* Smaller font */
+    width: 100%; /* Full width */
   }
 
   .linksuteis__tabs {
-    flex-direction: column;
-    /* Stack tabs vertically */
-    width: 100%;
-    /* Ensure tabs occupy full width */
+    flex-direction: column; /* Stack tabs vertically */
+    width: 100%; /* Full width */
   }
 
   .linksuteis__tab {
-    padding: 8px;
-    /* Reduced padding for mobile tabs */
-    text-align: left;
-    /* Align text to left */
-    width: 100%;
-    /* Make each tab occupy full width */
+    padding: 8px; /* Reduced padding for mobile */
+    text-align: left; /* Align text to left */
+    width: 100%; /* Full width */
   }
 
   .linksuteis__tab-content {
-    padding: 10px;
-    /* Reduced padding for mobile tab content */
-    width: 100%;
-    /* Make tab content occupy full width */
+    padding: 10px; /* Reduced padding */
+    width: 100%; /* Full width */
   }
 
   .linksuteis__link-item,
   .linksuteis__service-item {
-    width: 100%;
-    /* Ensure items occupy full width */
+    width: 100%; /* Full width for items */
   }
 
   .linksuteis__pagination {
-    flex-direction: column;
-    /* Stack pagination buttons vertically */
-    align-items: flex-start;
-    /* Align items to start */
-    width: 100%;
-    /* Ensure pagination occupies full width */
+    flex-direction: column; /* Stack pagination vertically */
+    align-items: flex-start; /* Align to start */
+    width: 100%; /* Full width */
   }
 
   .linksuteis__state-filter {
-    width: 100%;
-    /* Ensure state filter occupies full width */
+    width: 100%; /* Full width for state filter */
   }
 
   .linksuteis__state-dropdown {
-    width: 100%;
-    /* Make dropdown occupy full width */
+    width: 100%; /* Full width for dropdown */
   }
 }

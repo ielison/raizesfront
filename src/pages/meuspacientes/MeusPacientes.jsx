@@ -1,13 +1,57 @@
 import { useState } from "react";
-import "./MeusPacientes.css"; // Make sure to create this CSS file for styling
-import pacientesData from "../../data/pacientes.js"; // Import the patient data
+import "./MeusPacientes.css";
+import pacientesData from "../../data/pacientes.js";
+import Tooltip from "../../components/Tooltip/Tooltip.jsx";
 
 export default function MeusPacientes() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const pacientesPerPage = 15;
 
+  // Filtrar pacientes com base no termo de busca
   const filteredPacientes = pacientesData.filter((paciente) =>
     paciente.nome.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  // Calcular o índice do primeiro e do último paciente na página atual
+  const indexOfLastPaciente = currentPage * pacientesPerPage;
+  const indexOfFirstPaciente = indexOfLastPaciente - pacientesPerPage;
+  const currentPacientes = filteredPacientes.slice(
+    indexOfFirstPaciente,
+    indexOfLastPaciente
+  );
+
+  // Calcular o número total de páginas
+  const totalPages = Math.ceil(filteredPacientes.length / pacientesPerPage);
+
+  // Função para mudar de página
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  // Função para retornar o ícone baseado no gênero
+  const getIcon = (sexo) => {
+    if (sexo === "M") {
+      return "👨"; // Ícone para homem
+    } else if (sexo === "F") {
+      return "👩"; // Ícone para mulher
+    }
+    return "👤"; // Ícone padrão
+  };
+
+  // Funções de ação para os botões
+  const abrirRelatorio = (pacienteId) => {
+    console.log(`Abrir relatório do paciente com ID: ${pacienteId}`);
+    // Implementar lógica para abrir modal relatórioPaciente
+  };
+
+  const editarRelatorio = (pacienteId) => {
+    console.log(`Editar relatório do paciente com ID: ${pacienteId}`);
+    // Implementar lógica para abrir dadosPaciente com dados da API
+  };
+
+  const baixarRelatorio = (pacienteId) => {
+    console.log(`Baixar relatório do paciente com ID: ${pacienteId}`);
+    // Implementar lógica para download do relatório
+  };
 
   return (
     <div className="meus-pacientes">
@@ -20,10 +64,10 @@ export default function MeusPacientes() {
         className="search-box"
       />
       <div className="pacientes-list">
-        {filteredPacientes.map((paciente) => (
+        {currentPacientes.map((paciente) => (
           <div key={paciente.id} className="paciente-card">
             <div className="paciente-info">
-              <div className="paciente-icon">👤</div>
+              <div className="paciente-icon">{getIcon(paciente.sexo)}</div>
               <div className="paciente-details">
                 <span className="paciente-nome">{paciente.nome}</span>
                 <span className="paciente-idade">{paciente.idade} anos</span>
@@ -36,6 +80,19 @@ export default function MeusPacientes() {
               <span>Tipo de Câncer: {paciente.tipoCancer}</span>
             </div>
             <div className="divider"></div>
+            <div className="report-buttons">
+              <Tooltip text="Abrir relatório">
+                <button onClick={() => abrirRelatorio(paciente.id)}>📄</button>
+              </Tooltip>
+              <Tooltip text="Editar relatório">
+                <button onClick={() => editarRelatorio(paciente.id)}>✏️</button>
+              </Tooltip>
+              <Tooltip text="Baixar relatório">
+                <button onClick={() => baixarRelatorio(paciente.id)}>⬇️</button>
+              </Tooltip>
+            </div>
+
+            <div className="divider"></div>
             <div className="consulta-oncogenetica">
               {paciente.consultaOncogenetica
                 ? "Precisa consulta oncogenética"
@@ -43,6 +100,23 @@ export default function MeusPacientes() {
             </div>
           </div>
         ))}
+      </div>
+      <div className="pagination">
+        <button
+          onClick={() => paginate(currentPage - 1)}
+          disabled={currentPage === 1}
+        >
+          Anterior
+        </button>
+        <span>
+          Página {currentPage} de {totalPages}
+        </span>
+        <button
+          onClick={() => paginate(currentPage + 1)}
+          disabled={currentPage === totalPages}
+        >
+          Próximo
+        </button>
       </div>
     </div>
   );

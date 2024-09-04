@@ -69,7 +69,8 @@ export default function HomeTopbar() {
               href=""
               onClick={handleSobreClick}
               style={{
-                textDecoration: location.pathname === "/sobre" ? "underline" : "none",
+                textDecoration:
+                  location.pathname === "/sobre" ? "underline" : "none",
               }}
             >
               Sobre nós
@@ -90,19 +91,19 @@ export default function HomeTopbar() {
             </button>
           </li>
           <li>
-            <button 
-              className="meus-pacientes" 
+            <button
+              className={`meus-pacientes ${
+                location.pathname === "/pacientes" ? "active" : ""
+              }`}
               onClick={handleMeusPacientesClick}
-              style={{
-                backgroundColor: location.pathname === "/pacientes" ? "#7BBDAD" : "#274195",
-                color: location.pathname === "/pacientes" ? "#000" : "#fff", // Optional: Change text color
-              }}
             >
               Meus Pacientes
             </button>
           </li>
           <li>
-            <button className="logout" onClick={handleLogout}>Sair</button>
+            <button className="logout" onClick={handleLogout}>
+              Sair
+            </button>
           </li>
         </ul>
       </nav>

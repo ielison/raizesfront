@@ -101,6 +101,7 @@ export default function PrimosPrimasPaternos({ onClose, onBack, onAdvance }) {
                     <label>
                       Tipo de câncer:
                       <Select
+                      isMulti
                         placeholder="Selecione o tipo de câncer"
                         options={cancerOptions}
                         value={primo.type}

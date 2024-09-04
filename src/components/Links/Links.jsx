@@ -3,7 +3,7 @@ import "./Links.css";
 import { linksUteis } from "../../data/links";
 import { servicosPublicos } from "../../data/servicos";
 import LinkImage from "../../assets/link.svg";
-import SearchIcon from "../../assets/search-icon.svg"; // Novo ícone de busca
+import SearchIcon from "../../assets/search-icon.svg";
 
 // List of Brazilian states
 const estadosBrasileiros = [
@@ -45,17 +45,17 @@ function Links() {
 
   const handleTabChange = (tab) => {
     setActiveTab(tab);
-    setCurrentPage(1); // Reset to the first page when changing tabs
+    setCurrentPage(1);
   };
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value.toLowerCase());
-    setCurrentPage(1); // Reset to the first page when changing search term
+    setCurrentPage(1);
   };
 
   const handleStateChange = (e) => {
     setSelectedState(e.target.value);
-    setCurrentPage(1); // Reset to the first page when changing state
+    setCurrentPage(1);
   };
 
   const normalizeText = (text) => {
@@ -88,10 +88,8 @@ function Links() {
     );
   });
 
-  // Calculate the number of pages
   const totalPages = Math.ceil(filteredServicosPublicos.length / itemsPerPage);
 
-  // Get the items for the current page
   const paginatedServicosPublicos = filteredServicosPublicos.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
@@ -103,7 +101,7 @@ function Links() {
 
   return (
     <div className="linksuteis__container">
-      <div className="linksuteis__content">
+      <div className="linksuteis__background">
         <div className="linksuteis__search-wrapper">
           <input
             type="text"
@@ -118,114 +116,113 @@ function Links() {
             className="linksuteis__search-icon"
           />
         </div>
-
-        <div className="linksuteis__tabs">
-          <button
-            className={`linksuteis__tab ${
-              activeTab === "linksUteis" ? "active" : ""
-            }`}
-            onClick={() => handleTabChange("linksUteis")}
-          >
-            Links Úteis
-          </button>
-          <button
-            className={`linksuteis__tab ${
-              activeTab === "servicosPublicos" ? "active" : ""
-            }`}
-            onClick={() => handleTabChange("servicosPublicos")}
-          >
-            Serviços Públicos de Genética no Brasil
-          </button>
-        </div>
-
-        {activeTab === "linksUteis" && (
-          <div className="linksuteis__tab-content">
-            {filteredLinksUteis.length > 0 ? (
-              filteredLinksUteis.map((link, index) => (
-                <div className="linksuteis__link-item" key={index}>
-                  <a href={link.url} target="_blank" rel="noopener noreferrer">
-                    <div>
-                      <span>{link.name}</span>
-                    </div>
-                    <div>
-                      <img src={LinkImage} alt="Link Icon" />
-                      <span className="url">{link.url}</span>
-                    </div>
-                  </a>
-                </div>
-              ))
-            ) : (
-              <p>Nenhum link encontrado.</p>
-            )}
-          </div>
-        )}
-
-        {activeTab === "servicosPublicos" && (
-          <div className="linksuteis__tab-content">
-            {/* Dropdown for State Filter */}
-            <div className="linksuteis__state-filter">
-              <label htmlFor="state-select">Filtrar por Estado:</label>
-              <select
-                id="state-select"
-                value={selectedState}
-                onChange={handleStateChange}
-                className="linksuteis__state-dropdown"
-              >
-                <option value="todos">Todos</option>
-                {estadosBrasileiros.map((estado) => (
-                  <option key={estado.sigla} value={estado.sigla}>
-                    {estado.nome}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {paginatedServicosPublicos.length > 0 ? (
-              paginatedServicosPublicos.map((servico, index) => (
-                <div className="linksuteis__service-item" key={index}>
-                  <h3>{servico.name}</h3>
-                  <p>{servico.address}</p>
-                  <p>{servico.cityState}</p>
-                  <p>Responsável: {servico.responsible}</p>
-                  <p>Email: {servico.email}</p>
-                  <p>Telefone: {servico.phone}</p>
-                  <a
-                    href={servico.location}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Localização
-                  </a>
-                </div>
-              ))
-            ) : (
-              <p>Nenhum serviço encontrado.</p>
-            )}
-
-            {totalPages > 1 && (
-              <div className="linksuteis__pagination">
-                <button
-                  onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
-                  disabled={currentPage === 1}
-                >
-                  Anterior
-                </button>
-                <span>
-                  Página {currentPage} de {totalPages}
-                </span>
-                <button
-                  onClick={() =>
-                    handlePageChange(Math.min(currentPage + 1, totalPages))
-                  }
-                  disabled={currentPage === totalPages}
-                >
-                  Próxima
-                </button>
-              </div>
-            )}
-          </div>
-        )}
       </div>
+
+      <div className="linksuteis__tabs">
+        <button
+          className={`linksuteis__tab ${
+            activeTab === "linksUteis" ? "active" : ""
+          }`}
+          onClick={() => handleTabChange("linksUteis")}
+        >
+          Links Úteis
+        </button>
+        <button
+          className={`linksuteis__tab ${
+            activeTab === "servicosPublicos" ? "active" : ""
+          }`}
+          onClick={() => handleTabChange("servicosPublicos")}
+        >
+          Serviços Públicos de Genética no Brasil
+        </button>
+      </div>
+
+      {activeTab === "linksUteis" && (
+        <div className="linksuteis__link-grid">
+          {filteredLinksUteis.length > 0 ? (
+            filteredLinksUteis.map((link, index) => (
+              <div className="linksuteis__link-item" key={index}>
+                <a href={link.url} target="_blank" rel="noopener noreferrer">
+                  <div>
+                    <span>{link.name}</span>
+                  </div>
+                  <div>
+                    <img src={LinkImage} alt="Link Icon" />
+                    <span className="url">{link.url}</span>
+                  </div>
+                </a>
+              </div>
+            ))
+          ) : (
+            <p>Nenhum link encontrado.</p>
+          )}
+        </div>
+      )}
+
+      {activeTab === "servicosPublicos" && (
+        <div className="linksuteis__tab-content">
+          <div className="linksuteis__state-filter">
+            <label htmlFor="state-select">Filtrar por Estado:</label>
+            <select
+              id="state-select"
+              value={selectedState}
+              onChange={handleStateChange}
+              className="linksuteis__state-dropdown"
+            >
+              <option value="todos">Todos</option>
+              {estadosBrasileiros.map((estado) => (
+                <option key={estado.sigla} value={estado.sigla}>
+                  {estado.nome}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {paginatedServicosPublicos.length > 0 ? (
+            paginatedServicosPublicos.map((servico, index) => (
+              <div className="linksuteis__service-item" key={index}>
+                <h3>{servico.name}</h3>
+                <p>{servico.address}</p>
+                <p>{servico.cityState}</p>
+                <p>Responsável: {servico.responsible}</p>
+                <p>Email: {servico.email}</p>
+                <p>Telefone: {servico.phone}</p>
+                <a
+                  href={servico.location}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Localização
+                </a>
+              </div>
+            ))
+          ) : (
+            <p>Nenhum serviço encontrado.</p>
+          )}
+
+          {totalPages > 1 && (
+            <div className="linksuteis__pagination">
+              <button
+                onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+                disabled={currentPage === 1}
+              >
+                Anterior
+              </button>
+              <span>
+                Página {currentPage} de {totalPages}
+              </span>
+              <button
+                onClick={() =>
+                  handlePageChange(Math.min(currentPage + 1, totalPages))
+                }
+                disabled={currentPage === totalPages}
+              >
+                Próxima
+              </button>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
