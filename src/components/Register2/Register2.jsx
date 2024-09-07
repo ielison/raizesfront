@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import "./Register2.css";
+import "./Register2.css"; // Estilos para o componente
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../context/UserContext";
 import { useAuth } from "../../context/AuthContext";
@@ -11,62 +11,82 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
   const { setUser } = useUser();
   const { login } = useAuth();
 
+  // Estados locais
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [subscribeNews, setSubscribeNews] = useState(false);
   const [subscribeUpdates, setSubscribeUpdates] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleFinish = async () => {
+  const handleFinish = async (e) => {
+    e.preventDefault(); // Prevenir o envio padrão do formulário
+
+    // Verifica se os termos foram aceitos
     if (!acceptedTerms) {
       alert("Você deve aceitar os termos para continuar.");
       return;
     }
 
-    // Preparar o objeto de dados
+    // Preparar os dados do usuário
     const userData = {
-      usuarioId: 0, 
+      usuarioId: 0,
       nome: formData.nome,
       email: formData.email,
       senha: formData.senha,
       cep: formData.cep,
       pais: formData.pais,
       cidade: formData.cidade,
-      rua: formData.endereco,
-      numeroRua: formData.numeroRua || "", 
-      telefone: formData.telefonePrimario,
+      rua: formData.rua,
+      numeroRua: formData.numeroRua || "",
+      telefone: formData.telefone,
       celular: formData.celular,
-      profissionalDaSaude: formData.profissionalSaude,
+      profissionalDaSaude: formData.profissionalDaSaude,
       graduacao: formData.graduacao,
-      receberEmail: subscribeNews || subscribeUpdates,
+      receberEmail: subscribeNews,
     };
 
+    // Adicione o console.log aqui para ver o payload
+    console.log("Payload enviado para a API:", userData);
+
     try {
-      setIsLoading(true);
-      // Enviar dados para a API
+      setIsLoading(true); // Inicia o carregamento
+      // Enviar dados para a API local
       const response = await axios.post(
-        "http://217.196.61.218:8080/v1/user/save-user", 
-        userData, 
+        "http://localhost:3000/api/register",
+        userData,
         {
           headers: {
             "Content-Type": "application/json",
-            "X-Requested-With": "XMLHttpRequest", // Evitar ataques CSRF
+            "X-Requested-With": "XMLHttpRequest", // Para evitar ataques CSRF
           },
-          timeout: 10000, // 10 segundos de timeout
+          timeout: 10000, // Timeout de 10 segundos
         }
       );
 
-      if (response.status === 200) {
+      // Verifica se o status da resposta é 204
+      if (response.status === 204) {
         setUser({ nome: formData.nome });
         login();
         navigate("/home");
       } else {
-        alert("Houve um erro ao registrar o usuário. Por favor, tente novamente.");
+        alert(
+          "Houve um erro ao registrar o usuário. Por favor, tente novamente."
+        );
       }
     } catch (error) {
-      console.error("Erro ao registrar usuário:", error.message || error);
-      alert("Não foi possível registrar o usuário. Tente novamente mais tarde.");
+      if (error.response) {
+        console.error("Erro ao registrar usuário:", error.response.data);
+        alert(
+          "Erro: " + error.response.data.message ||
+            "Não foi possível registrar o usuário. Tente novamente mais tarde."
+        );
+      } else {
+        console.error("Erro ao registrar usuário:", error.message || error);
+        alert(
+          "Não foi possível registrar o usuário. Tente novamente mais tarde."
+        );
+      }
     } finally {
-      setIsLoading(false);
+      setIsLoading(false); // Finaliza o carregamento
     }
   };
 
@@ -74,7 +94,7 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
     onBack(); // Volta para Register1
   };
 
-  if (!isOpen) return null;
+  if (!isOpen) return null; // Se não estiver aberto, não renderiza nada
 
   return (
     <div className="register2-modal-overlay" onClick={onClose}>
@@ -100,6 +120,7 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
           </div>
         </div>
         <div className="register2-confirmation-table">
+          {/* Exibição dos dados do formulário */}
           <div>
             <strong>Primeiro Nome:</strong> {formData.nome}
           </div>
@@ -120,7 +141,7 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
           </div>
           <div>
             <strong>Profissional de Saúde:</strong>{" "}
-            {formData.profissionalSaude ? "Sim" : "Não"}
+            {formData.profissionalDaSaude ? "Sim" : "Não"}
           </div>
           <div>
             <strong>País:</strong> {formData.pais}
@@ -132,13 +153,16 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
             <strong>CEP:</strong> {formData.cep}
           </div>
           <div>
-            <strong>Rua:</strong> {formData.endereco}
+            <strong>Rua:</strong> {formData.rua}
+          </div>
+          <div>
+            <strong>Número:</strong> {formData.numeroRua}
           </div>
           <div>
             <strong>Cidade:</strong> {formData.cidade}
           </div>
           <div>
-            <strong>Tel. Primário:</strong> {formData.telefonePrimario}
+            <strong>Tel. Primário:</strong> {formData.telefone}
           </div>
           <div>
             <strong>Celular:</strong> {formData.celular}
@@ -182,8 +206,9 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
               required
               checked={acceptedTerms}
               onChange={() => setAcceptedTerms((prev) => !prev)}
+              aria-labelledby="accept-terms-label"
             />
-            <label htmlFor="accept-terms">
+            <label id="accept-terms-label" htmlFor="accept-terms">
               Aceito os termos de usuário conforme apresentado
             </label>
           </div>
@@ -193,8 +218,9 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
               id="subscribe-news"
               checked={subscribeNews}
               onChange={() => setSubscribeNews((prev) => !prev)}
+              aria-labelledby="subscribe-news-label"
             />
-            <label htmlFor="subscribe-news">
+            <label id="subscribe-news-label" htmlFor="subscribe-news">
               Gostaria de receber e-mails do Raízes, como resultados e notícias
               da ferramenta.
             </label>
@@ -205,8 +231,9 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
               id="subscribe-updates"
               checked={subscribeUpdates}
               onChange={() => setSubscribeUpdates((prev) => !prev)}
+              aria-labelledby="subscribe-updates-label"
             />
-            <label htmlFor="subscribe-updates">
+            <label id="subscribe-updates-label" htmlFor="subscribe-updates">
               Em caso de atualizações sobre o cálculo de risco, gostaria de ser
               notificado sobre mudança.
             </label>
@@ -218,10 +245,10 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
           </button>
           <button
             onClick={handleFinish}
-            className="register2-finish-button"
-            disabled={!acceptedTerms || isLoading}
+            className={`register2-finish-button ${isLoading ? "loading" : ""}`}
+            disabled={isLoading}
           >
-            {isLoading ? "Registrando..." : "Finalizar Cadastro"}
+            {isLoading ? "Carregando..." : "Finalizar Cadastro"}
           </button>
         </div>
       </div>

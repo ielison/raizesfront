@@ -2,7 +2,6 @@ import { useState } from "react";
 import "./Links.css";
 import { linksUteis } from "../../data/links";
 import { servicosPublicos } from "../../data/servicos";
-import LinkImage from "../../assets/link.svg";
 import SearchIcon from "../../assets/search-icon.svg";
 
 // List of Brazilian states
@@ -146,10 +145,7 @@ function Links() {
                   <div>
                     <span>{link.name}</span>
                   </div>
-                  <div>
-                    <img src={LinkImage} alt="Link Icon" />
-                    <span className="url">{link.url}</span>
-                  </div>
+                  
                 </a>
               </div>
             ))
@@ -162,7 +158,7 @@ function Links() {
       {activeTab === "servicosPublicos" && (
         <div className="linksuteis__tab-content">
           <div className="linksuteis__state-filter">
-            <label htmlFor="state-select">Filtrar por Estado:</label>
+            <label className="label-estado" htmlFor="state-select">Filtrar por Estado:</label>
             <select
               id="state-select"
               value={selectedState}

@@ -3,7 +3,7 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden; /* Prevent horizontal scrolling */
-  /* Default font could be added here if needed */
+  font-family: Arial, sans-serif; /* Set default font family */
 }
 
 /* Container Styles */
@@ -15,201 +15,136 @@ body {
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed; /* Keeps background fixed while scrolling */
-  height: calc(100vh - 96px); /* Adjust for header/footer height */
+  min-height: calc(100vh - 96px); /* Adjust for header/footer height */
 }
 
-/* Content Area */
-.linksuteis__content {
-  width: 60%; /* Set a base width */
-  height: 100%; /* Full height of container */
-  overflow-y: auto; /* Scrollable content */
-}
-
-/* Search Wrapper */
+/* Search Input Styles */
 .linksuteis__search-wrapper {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
   position: relative;
 }
 
-/* Search Field */
 .linksuteis__search-field {
   width: 100%;
-  padding: 10px 40px 10px 10px; /* Space for icon on the right */
-  font-size: 16px; /* Default font size */
-  border: 1px solid #ccc; /* Light border */
-  border-radius: 4px; /* Rounded corners */
-  box-sizing: border-box; /* Include padding in width calculation */
+  padding: 10px 40px; /* Add padding to the input */
+  border: none;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* Search Icon */
 .linksuteis__search-icon {
   position: absolute;
-  right: 10px; /* Positioning to the right */
-  width: 20px; /* Fixed size */
-  height: 20px; /* Fixed size */
-  pointer-events: none; /* Prevents interaction with icon */
+  top: 50%;
+  left: 10px; /* Adjust icon position */
+  transform: translateY(-50%);
+  width: 20px; /* Set icon width */
+  height: 20px; /* Set icon height */
 }
 
-/* Tabs Styles */
+/* Tab Styles */
 .linksuteis__tabs {
   display: flex;
-  margin-bottom: 20px; /* Space below tabs */
+  justify-content: center;
+  margin: 20px 0;
+  width: 100%; /* Adjust width for responsiveness */
 }
 
 .linksuteis__tab {
-  flex: 1; /* Equal space for each tab */
-  padding: 10px; /* Padding for tab area */
-  cursor: pointer; /* Pointer on hover */
-  text-align: center; /* Center text */
-  background-color: transparent; /* Transparent background */
-  border: none; /* No border */
-  font-weight: normal; /* Normal font weight */
-  transition: color 0.3s; /* Smooth color transition */
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #e0e0e0; /* Tab background color */
+  transition: background-color 0.3s;
 }
 
 .linksuteis__tab.active {
-  font-weight: bold; /* Bold text for active tab */
-  text-decoration: underline; /* Underline active tab text */
-  color: #007bff; /* Color of active tab */
+  background-color: #b0b0b0; /* Active tab background color */
 }
 
-/* Tab Content Styles */
-.linksuteis__tab-content {
-  padding: 20px; /* Padding inside tab content */
-  background-color: #f9f9f9; /* Light background for content */
-  border: 1px solid #ccc; /* Border around content */
-  display: flex;
-  flex-direction: column; /* Stack items vertically */
-  gap: 16px; /* Space between items */
-  max-width: 100%; /* Ensures full width */
+/* Link Grid Styles */
+.linksuteis__link-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Responsive columns */
+  gap: 20px;
+  margin: 20px 0;
 }
 
-/* Link and Service Item Styles */
-.linksuteis__link-item,
-.linksuteis__service-item {
-  margin-bottom: 16px; /* Space between items */
-  padding: 10px; /* Padding inside items */
-  border-bottom: 1px solid #ddd; /* Light border */
+.linksuteis__link-item {
+  background-color: #fff; /* Background color for link items */
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  transition: transform 0.3s;
+  display: flex; /* Use flex for better alignment */
+  flex-direction: column; /* Stack content vertically */
+  justify-content: center; /* Center content */
+  height: 200px; /* Set a fixed height for uniformity */
+  word-break: break-word; /* Break words to prevent overflow */
 }
 
-.linksuteis__link-item img {
-  width: 20px; /* Fixed width for images */
-  height: 20px; /* Fixed height for images */
-  margin-left: 10px; /* Space between text and image */
-}
-
-/* Pagination Styles */
-.linksuteis__pagination {
-  display: flex; /* Flex layout for pagination */
-  justify-content: space-between; /* Space between buttons */
-  align-items: center; /* Center vertically */
-  margin-top: 20px; /* Space above pagination */
-}
-
-.linksuteis__pagination button {
-  padding: 5px 10px; /* Padding for buttons */
-  border: 1px solid #ccc; /* Light border */
-  background-color: #007bff; /* Primary button color */
-  color: white; /* Text color for buttons */
-  cursor: pointer; /* Pointer on hover */
-  transition: background-color 0.3s; /* Smooth background change */
-}
-
-.linksuteis__pagination button:hover {
-  background-color: #0056b3; /* Darker on hover */
-}
-
-.linksuteis__pagination button:disabled {
-  background-color: #ccc; /* Gray for disabled */
-  cursor: not-allowed; /* No pointer for disabled */
+.linksuteis__link-item:hover {
+  transform: scale(1.05); /* Scale on hover */
 }
 
 /* State Filter Styles */
 .linksuteis__state-filter {
-  margin-bottom: 20px; /* Space below filter */
-  display: flex; /* Flex layout for filter */
-  align-items: center; /* Center vertically */
-}
-
-.linksuteis__state-filter label {
-  margin-right: 10px; /* Space between label and dropdown */
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
 .linksuteis__state-dropdown {
-  padding: 10px; /* Padding inside dropdown */
-  border: 1px solid #ccc; /* Light border */
-  border-radius: 4px; /* Rounded corners */
+  margin-left: 10px;
+  padding: 5px;
+  border: 1px solid #ccc; /* Add border to dropdown */
+  border-radius: 4px;
+}
+
+/* Service Item Styles */
+.linksuteis__service-item {
+  background-color: #fff; /* Background color for service items */
+  border-radius: 4px;
+  padding: 10px;
+  margin: 10px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Pagination Styles */
+.linksuteis__pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.linksuteis__pagination button {
+  margin: 0 5px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff; /* Button background color */
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.linksuteis__pagination button:disabled {
+  background-color: #ccc; /* Disabled button color */
+  cursor: not-allowed;
+}
+
+.label-estado{
+  color: white;
 }
 
 /* Responsive Styles */
-@media (max-width: 1024px) { /* Tablets */
-  .linksuteis__content {
-    width: 80%; /* Increase width for tablets */
+@media (max-width: 768px) {
+  .linksuteis__link-grid {
+    grid-template-columns: 1fr; /* 1 column for smaller screens */
   }
 
   .linksuteis__search-field {
-    font-size: 14px; /* Slightly smaller font */
-  }
-
-  .linksuteis__tab-content {
-    padding: 15px; /* Reduced padding */
-  }
-
-  .linksuteis__pagination {
-    flex-direction: column; /* Stack pagination vertically */
-    align-items: flex-start; /* Align to start */
-  }
-}
-
-@media (max-width: 768px) { /* Mobile devices */
-  .linksuteis__container {
-    padding: 10px; /* Reduced padding */
-  }
-
-  .linksuteis__content {
-    width: 100%; /* Full width on mobile */
-    height: auto; /* Height adapts to content */
-  }
-
-  .linksuteis__search-field {
-    font-size: 14px; /* Smaller font */
-    width: 100%; /* Full width */
-  }
-
-  .linksuteis__tabs {
-    flex-direction: column; /* Stack tabs vertically */
-    width: 100%; /* Full width */
-  }
-
-  .linksuteis__tab {
-    padding: 8px; /* Reduced padding for mobile */
-    text-align: left; /* Align text to left */
-    width: 100%; /* Full width */
-  }
-
-  .linksuteis__tab-content {
-    padding: 10px; /* Reduced padding */
-    width: 100%; /* Full width */
-  }
-
-  .linksuteis__link-item,
-  .linksuteis__service-item {
-    width: 100%; /* Full width for items */
-  }
-
-  .linksuteis__pagination {
-    flex-direction: column; /* Stack pagination vertically */
-    align-items: flex-start; /* Align to start */
-    width: 100%; /* Full width */
-  }
-
-  .linksuteis__state-filter {
-    width: 100%; /* Full width for state filter */
-  }
-
-  .linksuteis__state-dropdown {
-    width: 100%; /* Full width for dropdown */
+    width: calc(100% - 40px); /* Adjust width for small screens */
   }
 }

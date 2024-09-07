@@ -12,13 +12,13 @@ export default function Register1({ isOpen, onClose }) {
     confirmarSenha: "",
     pais: "",
     cep: "",
-    numero: "",
+    numeroRua: "",
     cidade: "",
     estado: "",
-    endereco: "",
-    telefonePrimario: "",
+    rua: "",
+    telefone: "",
     celular: "",
-    profissionalSaude: "",
+    profissionalDaSaude: "",
     graduacao: "",
     titulo: "",
     instituicao: "",
@@ -46,7 +46,7 @@ export default function Register1({ isOpen, onClose }) {
             ...prevState,
             cidade: data.localidade || "",
             estado: data.uf || "",
-            endereco: data.logradouro || "",
+            rua: data.logradouro || "",
           }));
         })
         .catch((err) => console.error("Error fetching CEP data:", err));
@@ -165,9 +165,9 @@ export default function Register1({ isOpen, onClose }) {
                   <label>Endereço</label>
                   <input
                     type="text"
-                    name="endereco"
+                    name="rua"
                     placeholder="Endereço"
-                    value={formData.endereco}
+                    value={formData.rua}
                     onChange={handleChange}
                     className="register1-form-input"
                   />
@@ -176,9 +176,9 @@ export default function Register1({ isOpen, onClose }) {
                   <label>Número</label>
                   <input
                     type="text"
-                    name="numero"
+                    name="numeroRua"
                     placeholder="Número"
-                    value={formData.numero}
+                    value={formData.numeroRua}
                     onChange={handleChange}
                     className="register1-form-input"
                   />
@@ -205,9 +205,9 @@ export default function Register1({ isOpen, onClose }) {
               <label>Telefone Primário</label>
               <input
                 type="text"
-                name="telefonePrimario"
+                name="telefone"
                 placeholder="Telefone Primário"
-                value={formData.telefonePrimario}
+                value={formData.telefone}
                 onChange={handleChange}
                 className="register1-form-input"
               />
@@ -224,23 +224,28 @@ export default function Register1({ isOpen, onClose }) {
                 <label>
                   <input
                     type="radio"
-                    name="profissionalSaude"
-                    value="sim"
-                    checked={formData.profissionalSaude === "sim"}
-                    onChange={handleChange}
+                    name="profissionalDaSaude"
+                    value="true" // Corrigido para string "true"
+                    checked={formData.profissionalDaSaude === true}
+                    onChange={() =>
+                      setFormData({ ...formData, profissionalDaSaude: true })
+                    } // Atualiza o valor para true diretamente
                   />
                   Sou um profissional da saúde
                 </label>
                 <label>
                   <input
                     type="radio"
-                    name="profissionalSaude"
-                    value="nao"
-                    checked={formData.profissionalSaude === "nao"}
-                    onChange={handleChange}
+                    name="profissionalDaSaude"
+                    value="false" // Corrigido para string "false"
+                    checked={formData.profissionalDaSaude === false}
+                    onChange={() =>
+                      setFormData({ ...formData, profissionalDaSaude: false })
+                    } // Atualiza o valor para false diretamente
                   />
                   Não sou um profissional da saúde
                 </label>
+
                 <span
                   className="register1-info-button"
                   onClick={() => setShowInfo(!showInfo)} // Toggle info box visibility

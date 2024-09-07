@@ -92,7 +92,7 @@ export default function HomeTopbar() {
           </li>
           <li>
             <button
-              className={`meus-pacientes ${
+              className={`pacientes-btn ${
                 location.pathname === "/pacientes" ? "active" : ""
               }`}
               onClick={handleMeusPacientesClick}

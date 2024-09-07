@@ -9,6 +9,7 @@
   align-items: center;
   font: var(--font);
   box-shadow: 0px 5px 10px 4px rgba(0, 0, 0, 0.2);
+  gap: 70px;
 }
 
 .topbar__logo {
@@ -110,7 +111,7 @@
   font-size: 2rem;
   color: var(--primary-500);
   cursor: pointer;
-  z-index: 1001;
+  z-index: 900;
   /* Certifique-se de que esteja acima do menu */
 }
 
@@ -147,6 +148,7 @@
 
   .topbar__nav ul {
     flex-direction: column;
+    align-items: center;
     gap: 1rem;
   }
 
@@ -157,15 +159,13 @@
 
   .topbar__nav.open .topbar__register,
   .topbar__nav.open .topbar__login {
-    display: block;
-    /* Exibe os botões dentro do menu quando o menu está aberto */
+    display: flex;
     width: 100%;
-    /* Faz com que os botões ocupem a largura total */
     margin-top: 1rem;
-    /* Adiciona espaço acima dos botões */
     padding: 1rem;
     text-align: center;
-    /* Centraliza o texto dos botões */
+    align-items: center;
+    justify-content: center;
   }
 
   .botoes_topbar {

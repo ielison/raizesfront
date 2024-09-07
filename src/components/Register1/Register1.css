@@ -3,11 +3,12 @@
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  width: 760px; /* Largura do modal */
-  height: 650px; /* Altura do modal */
+  width: 90%; /* Ajusta para 90% da largura da tela menor */
+  max-width: 760px; /* Largura máxima */
+  height: auto; /* Altura automática */
+  max-height: 90vh; /* Garante que o modal não exceda 90% da altura da tela */
   overflow-y: auto; /* Adiciona rolagem vertical se necessário */
-  overflow-x: hidden; /* Oculta a rolagem horizontal se presente */
-  max-height: 650px; /* Garante que o modal não exceda a altura definida */
+  overflow-x: hidden; /* Oculta a rolagem horizontal */
   display: flex;
   flex-direction: column;
 }
@@ -175,4 +176,19 @@
   padding: 10px;
   margin-top: 10px;
   border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+  .register1-modal {
+    width: 95%; /* Aumenta a responsividade para telas pequenas */
+    padding: 15px; /* Menor padding para economizar espaço */
+  }
+}
+
+@media (max-width: 480px) {
+  .register1-modal {
+    width: 90%; /* Ocupa toda a largura da tela */
+    max-height: 85vh; /* Limita a altura a 85% da tela */
+    padding: 10px; /* Padding reduzido para pequenas telas */
+  }
 }

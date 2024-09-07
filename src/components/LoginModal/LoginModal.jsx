@@ -9,17 +9,30 @@ export default function LoginModal({ isOpen, onClose, handleRegisterClick }) {
   const { login } = useAuth(); // Using the login function from AuthContext
   const [errorMessage, setErrorMessage] = useState('');
 
-  const handleLoginSubmit = (e) => {
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
 
-    // Example login logic (you would typically verify against an API)
-    if (email === "user@example.com" && password === "password") {
-      login(); // Set login state to true
-      navigate("/home"); // Navigate to home
-    } else {
-      setErrorMessage("E-mail ou senha inválidos."); // Show error message
+    try {
+      // Fazendo requisição GET para o endpoint de login
+      const response = await fetch(
+        `http://localhost:3000/api/login?email=${encodeURIComponent(email)}&senha=${encodeURIComponent(password)}`, 
+        { method: 'GET' }
+      );
+
+      // Verifica se a resposta é 200 (login bem-sucedido)
+      if (response.status === 200) {
+        login(); // Aciona o login do AuthContext
+        navigate("/home"); // Redireciona para a página home
+      } else {
+        // Caso contrário, trata como erro
+        const data = await response.json();
+        setErrorMessage(data.error || "E-mail ou senha inválidos.");
+      }
+    } catch (error) {
+      setErrorMessage("Erro ao realizar login. Tente novamente.");
+      console.error("Erro ao realizar login:", error);
     }
   };
 

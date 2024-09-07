@@ -14,6 +14,7 @@
 .login-modal-content {
   width: 90%; /* Largura responsiva para telas pequenas */
   max-width: 760px; /* Largura máxima */
+  max-height: 90vh; /* Altura máxima para telas pequenas */
   height: auto; /* Altura automática */
   background: white;
   border-radius: 8px;
@@ -21,6 +22,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
+  overflow-y: auto; /* Habilita rolagem caso o conteúdo ultrapasse a altura */
 }
 
 .login-modal-close-button {
@@ -87,6 +89,7 @@
 @media (max-width: 768px) {
   .login-modal-content {
     padding: 1.5rem; /* Menor padding para telas menores */
+    max-height: 80vh; /* Altura máxima para tablets */
   }
 
   .login-modal-close-button {
@@ -111,6 +114,11 @@
 }
 
 @media (max-width: 480px) {
+  .login-modal-content {
+    padding: 1rem; /* Menor padding para telas pequenas */
+    max-height: 85vh; /* Altura máxima para telas pequenas */
+  }
+
   .login-modal-close-button {
     font-size: 1rem; /* Tamanho de fonte ainda menor para o botão de fechar */
   }
@@ -127,3 +135,4 @@
     font-size: 0.85rem; /* Tamanho do prompt de registro ainda menor */
   }
 }
+
