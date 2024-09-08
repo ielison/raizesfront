@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
-import Sidebar from "../Sidebar/Sidebar";
 import "./DadosFamiliaMaterna.css";
 
 export default function DadosFamiliaMaterna({ onClose, onBack, onAdvance }) {
@@ -13,17 +12,16 @@ export default function DadosFamiliaMaterna({ onClose, onBack, onAdvance }) {
     type: null,
     age: "",
   });
-  const [showAgeDropdown, setShowAgeDropdown] = useState(false);
   const [hasMaternalUnclesAunts, setHasMaternalUnclesAunts] = useState(false);
   const [uncleAuntQuantities, setUncleAuntQuantities] = useState({
     tios: "",
     tias: "",
   });
   const [uncleAuntCancer, setUncleAuntCancer] = useState(false);
-  const [uncleAuntCancerDetails, setUncleAuntCancerDetails] = useState({
-    tiosComCancer: "",
-    tiasComCancer: "",
-  });
+  const [uncleAuntCancerDetails, setUncleAuntCancerDetails] = useState([
+    { type: [], parentesco: "", age: "" },
+  ]);
+  const [showAgeDropdowns, setShowAgeDropdowns] = useState([false]);
 
   const handleNoKnowledgeChange = () => {
     setNoKnowledge(!noKnowledge);
@@ -33,19 +31,27 @@ export default function DadosFamiliaMaterna({ onClose, onBack, onAdvance }) {
     setMotherHadCancer(value === "sim");
   };
 
-  const handleAgeToggle = () => {
-    setShowAgeDropdown(!showAgeDropdown);
+  const handleAgeToggle = (index) => {
+    const newShowAgeDropdowns = [...showAgeDropdowns];
+    newShowAgeDropdowns[index] = !newShowAgeDropdowns[index];
+    setShowAgeDropdowns(newShowAgeDropdowns);
   };
 
   const handleUncleAuntCancerChange = (value) => {
     setUncleAuntCancer(value === "sim");
   };
 
-  const handleBackClick = () => {
-    console.log("Back button clicked");
-    onBack();
+  const handleAddCancerDetail = () => {
+    setUncleAuntCancerDetails([
+      ...uncleAuntCancerDetails,
+      { type: [], parentesco: "", age: "" },
+    ]);
+    setShowAgeDropdowns([...showAgeDropdowns, false]);
   };
 
+  const handleBackClick = () => {
+    onBack();
+  };
 
   const handleAdvanceClick = () => {
     onAdvance();
@@ -54,12 +60,13 @@ export default function DadosFamiliaMaterna({ onClose, onBack, onAdvance }) {
   return (
     <div className="dfm-modal-overlay" onClick={onClose}>
       <div className="dfm-modal-content" onClick={(e) => e.stopPropagation()}>
-        <Sidebar activeEtapa="etapa2" />
         <div className="dfm-form-container">
-          <button className="dfm-close-button" onClick={onClose}>
-            &times;
-          </button>
-          <h2 className="dfm-title">Etapa 2 - Dados da família materna</h2>
+          <div className="dfm-header">
+            <h2 className="dfm-title">Etapa 2 - Dados da família materna</h2>
+            <button className="dfm-close-button" onClick={onClose}>
+              &times;
+            </button>
+          </div>
 
           <label className="dfm-label">
             <input
@@ -104,7 +111,7 @@ export default function DadosFamiliaMaterna({ onClose, onBack, onAdvance }) {
                   <label className="dfm-label">
                     Qual foi o tipo de câncer que ela teve?
                     <Select
-                    placeholder="Selecione o tipo de câncer"
+                      placeholder="Selecione o tipo de câncer"
                       options={cancerOptions}
                       value={motherCancerDetails.type}
                       onChange={(selectedOption) => {
@@ -118,43 +125,43 @@ export default function DadosFamiliaMaterna({ onClose, onBack, onAdvance }) {
                   </label>
 
                   <label className="dfm-label">
-                  <div className="dfm-idade">
-                  <span>
-                    Idade
-                    {showAgeDropdown ? (
-                      <Select
-                      placeholder="Selecione a idade"
-                        options={ageOptions}
-                        value={motherCancerDetails.age}
-                        onChange={(selectedOption) => {
-                          setMotherCancerDetails((prev) => ({
-                            ...prev,
-                            age: selectedOption,
-                          }));
-                        }}
-                        className="dfm-select"
-                      />
-                    ) : (
-                      <input
-                        type="number"
-                        value={motherCancerDetails.age}
-                        onChange={(e) =>
-                          setMotherCancerDetails((prev) => ({
-                            ...prev,
-                            age: e.target.value,
-                          }))
-                        }
-                        className="dfm-input"
-                      />
-                    )}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={handleAgeToggle}
-                      className="dfm-toggle-button"
-                    >
-                      {showAgeDropdown ? "Digitar idade" : "Não sei"}
-                    </button>
+                    <div className="dfm-idade">
+                      <span>
+                        Idade
+                        {showAgeDropdowns[0] ? (
+                          <Select
+                            placeholder="Selecione a idade"
+                            options={ageOptions}
+                            value={motherCancerDetails.age}
+                            onChange={(selectedOption) => {
+                              setMotherCancerDetails((prev) => ({
+                                ...prev,
+                                age: selectedOption,
+                              }));
+                            }}
+                            className="dfm-select"
+                          />
+                        ) : (
+                          <input
+                            type="number"
+                            value={motherCancerDetails.age}
+                            onChange={(e) =>
+                              setMotherCancerDetails((prev) => ({
+                                ...prev,
+                                age: e.target.value,
+                              }))
+                            }
+                            className="dfm-input"
+                          />
+                        )}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => handleAgeToggle(0)}
+                        className="dfm-toggle-button"
+                      >
+                        {showAgeDropdowns[0] ? "Digitar idade" : "Não sei"}
+                      </button>
                     </div>
                   </label>
                 </>
@@ -248,37 +255,94 @@ export default function DadosFamiliaMaterna({ onClose, onBack, onAdvance }) {
 
                   {uncleAuntCancer && (
                     <>
-                      <label className="dfm-label">
-                        Quantos tios tiveram câncer?
-                        <input
-                          type="number"
-                          value={uncleAuntCancerDetails.tiosComCancer}
-                          onChange={(e) =>
-                            setUncleAuntCancerDetails((prev) => ({
-                              ...prev,
-                              tiosComCancer: e.target.value,
-                            }))
-                          }
-                          placeholder="Quantidade"
-                          className="dfm-input"
-                        />
-                      </label>
+                      {uncleAuntCancerDetails.map((detail, index) => (
+                        <div key={index} className="dfm-cancer-detail">
+                          <label className="dfm-label">
+                            Tipo de câncer
+                            <Select
+                              placeholder="Selecione o tipo de câncer"
+                              options={cancerOptions}
+                              value={detail.type}
+                              onChange={(selectedOptions) => {
+                                const newDetails = [...uncleAuntCancerDetails];
+                                newDetails[index].type = selectedOptions;
+                                setUncleAuntCancerDetails(newDetails);
+                              }}
+                              className="dfm-select"
+                            />
+                          </label>
 
-                      <label className="dfm-label">
-                        Quantas tias tiveram câncer?
-                        <input
-                          type="number"
-                          value={uncleAuntCancerDetails.tiasComCancer}
-                          onChange={(e) =>
-                            setUncleAuntCancerDetails((prev) => ({
-                              ...prev,
-                              tiasComCancer: e.target.value,
-                            }))
-                          }
-                          placeholder="Quantidade"
-                          className="dfm-input"
-                        />
-                      </label>
+                          <label className="dfm-label">
+                            Parentesco
+                            <select
+                              value={detail.parentesco}
+                              onChange={(e) => {
+                                const newDetails = [...uncleAuntCancerDetails];
+                                newDetails[index].parentesco = e.target.value;
+                                setUncleAuntCancerDetails(newDetails);
+                              }}
+                              className="dfm-select"
+                            >
+                              <option value="">Selecione</option>
+                              <option value="tio">Tio</option>
+                              <option value="tia">Tia</option>
+                            </select>
+                          </label>
+
+                          <label className="dfm-label">
+                            <div className="dfm-idade">
+                              <span>
+                                Idade
+                                {showAgeDropdowns[index] ? (
+                                  <Select
+                                    placeholder="Selecione a idade"
+                                    options={ageOptions}
+                                    value={detail.age}
+                                    onChange={(selectedOption) => {
+                                      const newDetails = [
+                                        ...uncleAuntCancerDetails,
+                                      ];
+                                      newDetails[index].age = selectedOption;
+                                      setUncleAuntCancerDetails(newDetails);
+                                    }}
+                                    className="dfm-select"
+                                  />
+                                ) : (
+                                  <input
+                                    type="number"
+                                    value={detail.age}
+                                    onChange={(e) => {
+                                      const newDetails = [
+                                        ...uncleAuntCancerDetails,
+                                      ];
+                                      newDetails[index].age = e.target.value;
+                                      setUncleAuntCancerDetails(newDetails);
+                                    }}
+                                    className="dfm-input"
+                                  />
+                                )}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => handleAgeToggle(index)}
+                                className="dfm-toggle-button"
+                              >
+                                {showAgeDropdowns[index]
+                                  ? "Digitar idade"
+                                  : "Não sei"}
+                              </button>
+                            </div>
+                          </label>
+                        </div>
+                      ))}
+
+                      <button
+                        type="button"
+                        onClick={handleAddCancerDetail}
+                        className="dfm-add-button"
+                      >
+                        Adicionar outro caso
+                      </button>
                     </>
                   )}
                 </>
@@ -286,11 +350,19 @@ export default function DadosFamiliaMaterna({ onClose, onBack, onAdvance }) {
             </>
           )}
 
-          <div className="dfm-form-buttons">
-            <button className="dfm-btn-back" onClick={handleBackClick}>
+          <div className="dfm-buttons">
+            <button
+              type="button"
+              className="dfm-button dfm-back-button"
+              onClick={handleBackClick}
+            >
               Voltar
             </button>
-            <button className="dfm-btn-next" onClick={handleAdvanceClick}>
+            <button
+              type="button"
+              className="dfm-button dfm-advance-button"
+              onClick={handleAdvanceClick}
+            >
               Avançar
             </button>
           </div>

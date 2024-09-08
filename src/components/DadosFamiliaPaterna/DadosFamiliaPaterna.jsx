@@ -3,8 +3,7 @@ import PropTypes from "prop-types";
 import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
-import Sidebar from "../Sidebar/Sidebar";
-import "./DadosFamiliaPaterna.css"; // Ensure you have a new CSS file for this component
+import "./DadosFamiliaPaterna.css"; // Atualize o nome do arquivo CSS também
 
 export default function DadosFamiliaPaterna({ onClose, onBack, onAdvance }) {
   const [noKnowledge, setNoKnowledge] = useState(false);
@@ -13,17 +12,16 @@ export default function DadosFamiliaPaterna({ onClose, onBack, onAdvance }) {
     type: null,
     age: "",
   });
-  const [showAgeDropdown, setShowAgeDropdown] = useState(false);
   const [hasPaternalUnclesAunts, setHasPaternalUnclesAunts] = useState(false);
   const [uncleAuntQuantities, setUncleAuntQuantities] = useState({
     tios: "",
     tias: "",
   });
   const [uncleAuntCancer, setUncleAuntCancer] = useState(false);
-  const [uncleAuntCancerDetails, setUncleAuntCancerDetails] = useState({
-    tiosComCancer: "",
-    tiasComCancer: "",
-  });
+  const [uncleAuntCancerDetails, setUncleAuntCancerDetails] = useState([
+    { type: [], parentesco: "", age: "" },
+  ]);
+  const [showAgeDropdowns, setShowAgeDropdowns] = useState([false]);
 
   const handleNoKnowledgeChange = () => {
     setNoKnowledge(!noKnowledge);
@@ -33,16 +31,25 @@ export default function DadosFamiliaPaterna({ onClose, onBack, onAdvance }) {
     setFatherHadCancer(value === "sim");
   };
 
-  const handleAgeToggle = () => {
-    setShowAgeDropdown(!showAgeDropdown);
+  const handleAgeToggle = (index) => {
+    const newShowAgeDropdowns = [...showAgeDropdowns];
+    newShowAgeDropdowns[index] = !newShowAgeDropdowns[index];
+    setShowAgeDropdowns(newShowAgeDropdowns);
   };
 
   const handleUncleAuntCancerChange = (value) => {
     setUncleAuntCancer(value === "sim");
   };
 
+  const handleAddCancerDetail = () => {
+    setUncleAuntCancerDetails([
+      ...uncleAuntCancerDetails,
+      { type: [], parentesco: "", age: "" },
+    ]);
+    setShowAgeDropdowns([...showAgeDropdowns, false]);
+  };
+
   const handleBackClick = () => {
-    console.log("Back button clicked");
     onBack();
   };
 
@@ -53,12 +60,13 @@ export default function DadosFamiliaPaterna({ onClose, onBack, onAdvance }) {
   return (
     <div className="dfp-modal-overlay" onClick={onClose}>
       <div className="dfp-modal-content" onClick={(e) => e.stopPropagation()}>
-        <Sidebar activeEtapa="etapa3" />
         <div className="dfp-form-container">
-          <button className="dfp-close-button" onClick={onClose}>
-            &times;
-          </button>
-          <h2 className="dfp-title">Etapa 3 - Dados da família paterna</h2>
+          <div className="dfp-header">
+            <h2 className="dfp-title">Etapa 2 - Dados da família paterna</h2>
+            <button className="dfp-close-button" onClick={onClose}>
+              &times;
+            </button>
+          </div>
 
           <label className="dfp-label">
             <input
@@ -120,7 +128,7 @@ export default function DadosFamiliaPaterna({ onClose, onBack, onAdvance }) {
                     <div className="dfp-idade">
                       <span>
                         Idade
-                        {showAgeDropdown ? (
+                        {showAgeDropdowns[0] ? (
                           <Select
                             placeholder="Selecione a idade"
                             options={ageOptions}
@@ -149,10 +157,10 @@ export default function DadosFamiliaPaterna({ onClose, onBack, onAdvance }) {
                       </span>
                       <button
                         type="button"
-                        onClick={handleAgeToggle}
+                        onClick={() => handleAgeToggle(0)}
                         className="dfp-toggle-button"
                       >
-                        {showAgeDropdown ? "Digitar idade" : "Não sei"}
+                        {showAgeDropdowns[0] ? "Digitar idade" : "Não sei"}
                       </button>
                     </div>
                   </label>
@@ -247,37 +255,90 @@ export default function DadosFamiliaPaterna({ onClose, onBack, onAdvance }) {
 
                   {uncleAuntCancer && (
                     <>
-                      <label className="dfp-label">
-                        Quantos tios tiveram câncer?
-                        <input
-                          type="number"
-                          value={uncleAuntCancerDetails.tiosComCancer}
-                          onChange={(e) =>
-                            setUncleAuntCancerDetails((prev) => ({
-                              ...prev,
-                              tiosComCancer: e.target.value,
-                            }))
-                          }
-                          placeholder="Quantidade"
-                          className="dfp-input"
-                        />
-                      </label>
+                      {uncleAuntCancerDetails.map((detail, index) => (
+                        <div key={index} className="dfp-cancer-detail">
+                          <label className="dfp-label">
+                            Tipo de câncer
+                            <Select
+                              placeholder="Selecione o tipo de câncer"
+                              options={cancerOptions}
+                              value={detail.type}
+                              onChange={(selectedOptions) => {
+                                const newDetails = [...uncleAuntCancerDetails];
+                                newDetails[index].type = selectedOptions;
+                                setUncleAuntCancerDetails(newDetails);
+                              }}
+                              className="dfp-select"
+                            />
+                          </label>
 
-                      <label className="dfp-label">
-                        Quantas tias tiveram câncer?
-                        <input
-                          type="number"
-                          value={uncleAuntCancerDetails.tiasComCancer}
-                          onChange={(e) =>
-                            setUncleAuntCancerDetails((prev) => ({
-                              ...prev,
-                              tiasComCancer: e.target.value,
-                            }))
-                          }
-                          placeholder="Quantidade"
-                          className="dfp-input"
-                        />
-                      </label>
+                          <label className="dfp-label">
+                            Parentesco
+                            <select
+                              value={detail.parentesco}
+                              onChange={(e) => {
+                                const newDetails = [...uncleAuntCancerDetails];
+                                newDetails[index].parentesco = e.target.value;
+                                setUncleAuntCancerDetails(newDetails);
+                              }}
+                              className="dfp-select"
+                            >
+                              <option value="">Selecione</option>
+                              <option value="tio">Tio</option>
+                              <option value="tia">Tia</option>
+                            </select>
+                          </label>
+
+                          <label className="dfp-label">
+                            Idade
+                            <div className="dfp-idade">
+                              <span>
+                                {showAgeDropdowns[index + 1] ? (
+                                  <Select
+                                    placeholder="Selecione a idade"
+                                    options={ageOptions}
+                                    value={detail.age}
+                                    onChange={(selectedOption) => {
+                                      const newDetails = [...uncleAuntCancerDetails];
+                                      newDetails[index].age = selectedOption;
+                                      setUncleAuntCancerDetails(newDetails);
+                                    }}
+                                    className="dfp-select"
+                                  />
+                                ) : (
+                                  <input
+                                    type="number"
+                                    value={detail.age}
+                                    onChange={(e) => {
+                                      const newDetails = [...uncleAuntCancerDetails];
+                                      newDetails[index].age = e.target.value;
+                                      setUncleAuntCancerDetails(newDetails);
+                                    }}
+                                    className="dfp-input"
+                                  />
+                                )}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => handleAgeToggle(index + 1)}
+                                className="dfp-toggle-button"
+                              >
+                                {showAgeDropdowns[index + 1]
+                                  ? "Digitar idade"
+                                  : "Não sei"}
+                              </button>
+                            </div>
+                          </label>
+                        </div>
+                      ))}
+
+                      <button
+                        type="button"
+                        onClick={handleAddCancerDetail}
+                        className="dfp-add-button"
+                      >
+                        Informar +
+                      </button>
                     </>
                   )}
                 </>
@@ -285,11 +346,11 @@ export default function DadosFamiliaPaterna({ onClose, onBack, onAdvance }) {
             </>
           )}
 
-          <div className="dfp-form-buttons">
-            <button className="dfp-btn-back" onClick={handleBackClick}>
+          <div className="dfp-button-group">
+            <button className="dfp-button" onClick={handleBackClick}>
               Voltar
             </button>
-            <button className="dfp-btn-next" onClick={handleAdvanceClick}>
+            <button className="dfp-button" onClick={handleAdvanceClick}>
               Avançar
             </button>
           </div>

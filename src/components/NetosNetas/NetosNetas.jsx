@@ -3,39 +3,29 @@ import PropTypes from "prop-types";
 import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
-import Sidebar from "../Sidebar/Sidebar";
 import "./NetosNetas.css";
 
 export default function NetosNetas({ onClose, onAdvance }) {
-  const [hasGrandchildren, setHasGrandchildren] = useState(null); // null para lidar com "Sim" e "Não"
-  const [hasCancer, setHasCancer] = useState(null); // null para lidar com "Sim" e "Não"
-  const [grandchildren, setGrandchildren] = useState([{ type: "", age: "", showAgeDropdown: false }]);
+  const [hasGrandchildren, setHasGrandchildren] = useState(null);
+  const [hasCancer, setHasCancer] = useState(false);
+  const [grandchildren, setGrandchildren] = useState([]);
 
   const handleAddGrandchild = () => {
-    setGrandchildren([...grandchildren, { type: "", age: "", showAgeDropdown: false }]);
-  };
-
-  const handleAgeToggle = (index) => {
-    const updatedGrandchildren = grandchildren.map((grandchild, i) => 
-      i === index ? { ...grandchild, showAgeDropdown: !grandchild.showAgeDropdown } : grandchild
-    );
-    setGrandchildren(updatedGrandchildren);
+    setGrandchildren([...grandchildren, { sex: "", type: [], age: "", showAgeDropdown: false }]);
   };
 
   const handleBackClick = () => {
-    onClose(); // Fechar o modal quando o botão Voltar for clicado
+    onClose(); // Close the modal when the back button is clicked
   };
 
   const handleAdvanceClick = () => {
     onAdvance();
   };
 
-  const handleGrandchildrenRadioChange = (value) => {
-    setHasGrandchildren(value === "sim");
-  };
-
-  const handleCancerRadioChange = (value) => {
-    setHasCancer(value === "sim");
+  const toggleAgeDropdown = (index) => {
+    const newGrandchildren = [...grandchildren];
+    newGrandchildren[index].showAgeDropdown = !newGrandchildren[index].showAgeDropdown;
+    setGrandchildren(newGrandchildren);
   };
 
   return (
@@ -44,12 +34,14 @@ export default function NetosNetas({ onClose, onAdvance }) {
         className="modal-content-netos__netas"
         onClick={(e) => e.stopPropagation()}
       >
-        <Sidebar activeEtapa="etapa1" />
-        <div className="form-container">
-          <button className="close-button" onClick={onClose}>
-            &times;
-          </button>
-          <h2>Etapa 1 - Netos e Netas</h2>
+        <div className="nn-form-container">
+          <div className="dp-form-top">
+            <h2>Etapa 1 - Netos e Netas</h2>
+            <button className="dp-close-button" onClick={handleBackClick}>
+              &times;
+            </button>
+          </div>
+
           <label>
             O Sr(a) tem netos e netas?
             <div className="radio-group">
@@ -58,7 +50,7 @@ export default function NetosNetas({ onClose, onAdvance }) {
                   type="radio"
                   name="hasGrandchildren"
                   checked={hasGrandchildren === true}
-                  onChange={() => handleGrandchildrenRadioChange("sim")}
+                  onChange={() => setHasGrandchildren(true)}
                 />
                 Sim
               </label>
@@ -67,34 +59,38 @@ export default function NetosNetas({ onClose, onAdvance }) {
                   type="radio"
                   name="hasGrandchildren"
                   checked={hasGrandchildren === false}
-                  onChange={() => handleGrandchildrenRadioChange("nao")}
+                  onChange={() => setHasGrandchildren(false)}
                 />
                 Não
               </label>
             </div>
           </label>
+
           {hasGrandchildren && (
             <>
-              <label>
-                Quantidade de netos
-                <input
-                  type="number"
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    e.target.value = value >= 0 ? value : 0; // Impedir valores negativos
-                  }}
-                />
-              </label>
-              <label>
-                Quantidade de netas
-                <input
-                  type="number"
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    e.target.value = value >= 0 ? value : 0; // Impedir valores negativos
-                  }}
-                />
-              </label>
+              <div className="qtd-netos-netas">
+                <label>
+                  Quantidade de netos
+                  <input
+                    type="number"
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      e.target.value = value >= 0 ? value : 0; // Prevent negative values
+                    }}
+                  />
+                </label>
+                <label>
+                  Quantidade de netas
+                  <input
+                    type="number"
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      e.target.value = value >= 0 ? value : 0; // Prevent negative values
+                    }}
+                  />
+                </label>
+              </div>
+
               <label>
                 Algum deles já teve câncer?
                 <div className="radio-group">
@@ -103,7 +99,7 @@ export default function NetosNetas({ onClose, onAdvance }) {
                       type="radio"
                       name="hasCancer"
                       checked={hasCancer === true}
-                      onChange={() => handleCancerRadioChange("sim")}
+                      onChange={() => setHasCancer(true)}
                     />
                     Sim
                   </label>
@@ -112,37 +108,32 @@ export default function NetosNetas({ onClose, onAdvance }) {
                       type="radio"
                       name="hasCancer"
                       checked={hasCancer === false}
-                      onChange={() => handleCancerRadioChange("nao")}
+                      onChange={() => setHasCancer(false)}
                     />
                     Não
                   </label>
                 </div>
               </label>
-              {hasCancer === true && (
+
+              {hasCancer && (
                 <>
-                  <label>
-                    Quantidade de netos com câncer
-                    <input
-                      type="number"
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        e.target.value = value >= 0 ? value : 0; // Impedir valores negativos
-                      }}
-                    />
-                  </label>
-                  <label>
-                    Quantidade de netas com câncer
-                    <input
-                      type="number"
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        e.target.value = value >= 0 ? value : 0; // Impedir valores negativos
-                      }}
-                    />
-                  </label>
                   {grandchildren.map((grandchild, index) => (
-                    <div key={index}>
-                      <label>Neto {index + 1}</label>
+                    <div key={index} className="grandchild-container">
+                      <label>
+                        Sexo
+                        <Select
+                          options={[
+                            { value: "masculino", label: "Masculino" },
+                            { value: "feminino", label: "Feminino" },
+                          ]}
+                          onChange={(selectedOption) => {
+                            const newGrandchildren = [...grandchildren];
+                            newGrandchildren[index].sex = selectedOption.value; // Set the sex of the grandchild
+                            setGrandchildren(newGrandchildren);
+                          }}
+                          placeholder="Selecione o sexo"
+                        />
+                      </label>
                       <label>
                         Tipo de câncer
                         <Select
@@ -150,9 +141,9 @@ export default function NetosNetas({ onClose, onAdvance }) {
                           placeholder="Selecione o tipo de câncer"
                           options={cancerOptions}
                           value={grandchild.type}
-                          onChange={(selectedOption) => {
+                          onChange={(selectedOptions) => {
                             const newGrandchildren = [...grandchildren];
-                            newGrandchildren[index].type = selectedOption;
+                            newGrandchildren[index].type = selectedOptions; // Set the cancer type
                             setGrandchildren(newGrandchildren);
                           }}
                         />
@@ -167,7 +158,7 @@ export default function NetosNetas({ onClose, onAdvance }) {
                               value={grandchild.age}
                               onChange={(selectedOption) => {
                                 const newGrandchildren = [...grandchildren];
-                                newGrandchildren[index].age = selectedOption;
+                                newGrandchildren[index].age = selectedOption; // Set the age of the grandchild
                                 setGrandchildren(newGrandchildren);
                               }}
                             />
@@ -178,13 +169,16 @@ export default function NetosNetas({ onClose, onAdvance }) {
                               onChange={(e) => {
                                 const value = e.target.value;
                                 const newGrandchildren = [...grandchildren];
-                                newGrandchildren[index].age = value >= 0 ? value : 0; // Impedir valores negativos
+                                newGrandchildren[index].age = value >= 0 ? value : 0; // Prevent negative values
                                 setGrandchildren(newGrandchildren);
                               }}
                             />
                           )}
                         </div>
-                        <button type="button" onClick={() => handleAgeToggle(index)}>
+                        <button
+                          type="button"
+                          onClick={() => toggleAgeDropdown(index)}
+                        >
                           {grandchild.showAgeDropdown ? "Digitar idade" : "Não sei"}
                         </button>
                       </label>
@@ -197,6 +191,7 @@ export default function NetosNetas({ onClose, onAdvance }) {
               )}
             </>
           )}
+
           <div className="nn-form-buttons">
             <button className="nn-btn-back" onClick={handleBackClick}>
               Voltar

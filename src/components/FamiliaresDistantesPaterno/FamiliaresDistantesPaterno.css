@@ -25,20 +25,11 @@
   /* Esconde o conteúdo que ultrapassar */
 }
 
-.fdp-sidebar-container {
-  width: 25%;
-  /* Proporção semelhante à do arquivo de primos/primas */
-  background: #f8f9fa;
-  border-right: 1px solid #ddd;
-  height: 100%;
-  overflow-y: auto;
-  padding: 10px;
-}
 
 .fdp-form-container {
   display: flex;
   flex-direction: column;
-  width: 75%;
+  width: 100%;
   padding: 20px;
   overflow-y: auto;
 }

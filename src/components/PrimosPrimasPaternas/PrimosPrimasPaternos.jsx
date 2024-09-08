@@ -3,13 +3,14 @@ import PropTypes from "prop-types";
 import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
-import Sidebar from "../Sidebar/Sidebar";
-import "./PrimosPrimasPaternos.css"; // Ensure to create a corresponding CSS file for styles
+import "./PrimosPrimasPaternos.css"; // Renomeie o arquivo CSS, se necessário
 
 export default function PrimosPrimasPaternos({ onClose, onBack, onAdvance }) {
   const [noKnowledge, setNoKnowledge] = useState(false);
   const [primosHadCancer, setPrimosHadCancer] = useState(null);
-  const [primosDetails, setPrimosDetails] = useState([{ relationship: "", type: null, age: "", showAgeDropdown: false }]);
+  const [primosDetails, setPrimosDetails] = useState([
+    { relationship: "", type: null, age: "", showAgeDropdown: false },
+  ]);
 
   const handleCancerChange = (value) => {
     setPrimosHadCancer(value);
@@ -19,7 +20,10 @@ export default function PrimosPrimasPaternos({ onClose, onBack, onAdvance }) {
   };
 
   const handleAddMore = () => {
-    setPrimosDetails([...primosDetails, { relationship: "", type: null, age: "", showAgeDropdown: false }]);
+    setPrimosDetails([
+      ...primosDetails,
+      { relationship: "", type: null, age: "", showAgeDropdown: false },
+    ]);
   };
 
   const handleBackClick = () => {
@@ -35,14 +39,14 @@ export default function PrimosPrimasPaternos({ onClose, onBack, onAdvance }) {
   return (
     <div className="ppp-modal-overlay" onClick={onClose}>
       <div className="ppp-modal-content" onClick={(e) => e.stopPropagation()}>
-        <Sidebar activeEtapa="etapa3" />
         <div className="ppp-form-container">
-          <button className="ppp-close-button" onClick={onClose}>
-            &times;
-          </button>
+          <div className="ppp-header">
+            <h2 className="ppp-title">Etapa 2 - Primos e Primas Paternos</h2>
+            <button className="ppp-close-button" onClick={onClose}>
+              &times;
+            </button>
+          </div>
           <div className="ppp-grupo">
-            <h2 className="ppp-title">Etapa 3 - Primos e primas</h2>
-
             <label>
               Algum primo ou prima do seu lado paterno já teve câncer?
               <div className="ppp-checkbox-group">
@@ -101,8 +105,8 @@ export default function PrimosPrimasPaternos({ onClose, onBack, onAdvance }) {
                     <label>
                       Tipo de câncer:
                       <Select
-                      isMulti
-                        placeholder="Selecione o tipo de câncer"
+                        isMulti
+                        placeholder="Selecione os tipos de câncer desse familiar"
                         options={cancerOptions}
                         value={primo.type}
                         onChange={(selectedOption) => {
@@ -136,17 +140,26 @@ export default function PrimosPrimasPaternos({ onClose, onBack, onAdvance }) {
                           }}
                         />
                       )}
-                      <button type="button" className="ppp-toggle-button" onClick={() => {
-                        const newDetails = [...primosDetails];
-                        newDetails[index].showAgeDropdown = !newDetails[index].showAgeDropdown;
-                        setPrimosDetails(newDetails);
-                      }}>
+                      <button
+                        type="button"
+                        className="ppp-toggle-button"
+                        onClick={() => {
+                          const newDetails = [...primosDetails];
+                          newDetails[index].showAgeDropdown =
+                            !newDetails[index].showAgeDropdown;
+                          setPrimosDetails(newDetails);
+                        }}
+                      >
                         {primo.showAgeDropdown ? "Digitar idade" : "Não sei"}
                       </button>
                     </label>
                   </div>
                 ))}
-                <button type="button" className="ppp-btn-add" onClick={handleAddMore}>
+                <button
+                  type="button"
+                  className="ppp-btn-add"
+                  onClick={handleAddMore}
+                >
                   Informar+
                 </button>
               </>

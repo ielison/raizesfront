@@ -2,27 +2,21 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
-import { ageOptions } from "../../data/ageOptions"; // Importe ageOptions
-import Sidebar from "../Sidebar/Sidebar";
+import { ageOptions } from "../../data/ageOptions"; // Import ageOptions
 import "./FilhosFilhas.css";
 
 export default function FilhosFilhas({ onAdvance, onBack }) {
-  const [hasChildren, setHasChildren] = useState(null); // Alterado para null
-  const [hasCancer, setHasCancer] = useState(false); // 'Não' marcado por padrão
-  const [children, setChildren] = useState([{ type: [], age: "" }]); // type como array para múltiplos tipos de câncer
-  const [showAgeDropdown, setShowAgeDropdown] = useState(false);
-
+  const [hasChildren, setHasChildren] = useState(null); // Changed to null
+  const [hasCancer, setHasCancer] = useState(false); // Default to 'Não'
+  const [children, setChildren] = useState([]); // Initialize as an empty array
+  
   const handleAddChild = () => {
-    setChildren([...children, { type: [], age: "" }]); // type como array para múltiplos tipos de câncer
-  };
-
-  const handleAgeToggle = () => {
-    setShowAgeDropdown(!showAgeDropdown);
+    setChildren([...children, { sex: "", type: [], age: "", showAgeDropdown: false }]); // Add new child with showAgeDropdown
   };
 
   const handleBackClick = () => {
     if (onBack) {
-      onBack(); // Chama a função de callback onBack se fornecida
+      onBack(); // Call the onBack callback if provided
     } else {
       console.warn("onBack function is not provided!");
     }
@@ -32,19 +26,25 @@ export default function FilhosFilhas({ onAdvance, onBack }) {
     onAdvance();
   };
 
+  const toggleAgeDropdown = (index) => {
+    const newChildren = [...children];
+    newChildren[index].showAgeDropdown = !newChildren[index].showAgeDropdown; // Toggle the specific child's showAgeDropdown state
+    setChildren(newChildren);
+  };
+
   return (
     <div className="ff-modal-overlay">
       <div
         className="modal-content-filhos__filhas"
         onClick={(e) => e.stopPropagation()}
       >
-        <Sidebar activeEtapa="etapa1" />
         <div className="ff-form-container">
-          <button className="close-button" onClick={handleBackClick}>
-            &times;
-          </button>
-          <h2>Etapa 1 - Filhos e Filhas</h2>
-
+          <div className="dp-form-top">
+            <h2>Etapa 1 - Filhos e Filhas</h2>
+            <button className="dp-close-button" onClick={handleBackClick}>
+              &times;
+            </button>
+          </div>
           <label>
             O Sr(a) tem filhos e filhas?
             <div className="checkbox-group">
@@ -124,29 +124,23 @@ export default function FilhosFilhas({ onAdvance, onBack }) {
 
               {hasCancer && (
                 <>
-                  <label>
-                    Quantidade de filhos com câncer
-                    <input
-                      type="number"
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        e.target.value = value >= 0 ? value : 0;
-                      }}
-                    />
-                  </label>
-                  <label>
-                    Quantidade de filhas com câncer
-                    <input
-                      type="number"
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        e.target.value = value >= 0 ? value : 0;
-                      }}
-                    />
-                  </label>
                   {children.map((child, index) => (
                     <div key={index} className="child-container">
-                      <label>Filho {index + 1}</label>
+                      <label>
+                        Sexo
+                        <Select
+                          options={[
+                            { value: "masculino", label: "Masculino" },
+                            { value: "feminino", label: "Feminino" },
+                          ]}
+                          onChange={(selectedOption) => {
+                            const newChildren = [...children];
+                            newChildren[index].sex = selectedOption.value; // Set the sex of the child
+                            setChildren(newChildren);
+                          }}
+                          placeholder="Selecione o sexo"
+                        />
+                      </label>
                       <label>
                         Tipo de câncer
                         <Select
@@ -164,14 +158,14 @@ export default function FilhosFilhas({ onAdvance, onBack }) {
                       <label className="ff-idade">
                         <div className="ff">
                           Idade
-                          {showAgeDropdown ? (
+                          {child.showAgeDropdown ? ( // Use the child's showAgeDropdown state
                             <Select
                               placeholder="Selecione..."
                               options={ageOptions}
                               value={child.age}
                               onChange={(selectedOption) => {
                                 const newChildren = [...children];
-                                newChildren[index].age = selectedOption;
+                                newChildren[index].age = selectedOption; // Set the age of the child
                                 setChildren(newChildren);
                               }}
                             />
@@ -182,14 +176,14 @@ export default function FilhosFilhas({ onAdvance, onBack }) {
                               onChange={(e) => {
                                 const value = e.target.value;
                                 const newChildren = [...children];
-                                newChildren[index].age = value >= 0 ? value : 0; // Validação para não aceitar valores negativos
+                                newChildren[index].age = value >= 0 ? value : 0; // Validation to prevent negative values
                                 setChildren(newChildren);
                               }}
                             />
                           )}
                         </div>
-                        <button type="button" onClick={handleAgeToggle}>
-                          {showAgeDropdown ? "Digitar idade" : "Não sei"}
+                        <button type="button" onClick={() => toggleAgeDropdown(index)}>
+                          {child.showAgeDropdown ? "Digitar idade" : "Não sei"}
                         </button>
                       </label>
                     </div>
@@ -218,5 +212,5 @@ export default function FilhosFilhas({ onAdvance, onBack }) {
 
 FilhosFilhas.propTypes = {
   onAdvance: PropTypes.func.isRequired,
-  onBack: PropTypes.func, // Adiciona a prop onBack opcional
+  onBack: PropTypes.func, // Optional onBack prop
 };

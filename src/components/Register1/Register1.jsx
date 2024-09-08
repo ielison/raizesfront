@@ -64,6 +64,7 @@ export default function Register1({ isOpen, onClose }) {
 
   const handleFinish = () => {
     console.log("Finalizing registration with data:", formData);
+    // Add your finish logic here, like sending data to an API
   };
 
   return (
@@ -225,11 +226,11 @@ export default function Register1({ isOpen, onClose }) {
                   <input
                     type="radio"
                     name="profissionalDaSaude"
-                    value="true" // Corrigido para string "true"
+                    value="true"
                     checked={formData.profissionalDaSaude === true}
                     onChange={() =>
                       setFormData({ ...formData, profissionalDaSaude: true })
-                    } // Atualiza o valor para true diretamente
+                    }
                   />
                   Sou um profissional da saúde
                 </label>
@@ -237,18 +238,18 @@ export default function Register1({ isOpen, onClose }) {
                   <input
                     type="radio"
                     name="profissionalDaSaude"
-                    value="false" // Corrigido para string "false"
+                    value="false"
                     checked={formData.profissionalDaSaude === false}
                     onChange={() =>
                       setFormData({ ...formData, profissionalDaSaude: false })
-                    } // Atualiza o valor para false diretamente
+                    }
                   />
                   Não sou um profissional da saúde
                 </label>
 
                 <span
                   className="register1-info-button"
-                  onClick={() => setShowInfo(!showInfo)} // Toggle info box visibility
+                  onClick={() => setShowInfo(!showInfo)}
                 >
                   ℹ️
                 </span>

@@ -3,13 +3,14 @@ import PropTypes from "prop-types";
 import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
-import Sidebar from "../Sidebar/Sidebar";
 import "./PrimosPrimasMaternos.css";
 
 export default function PrimosPrimasMaternos({ onClose, onBack, onAdvance }) {
   const [noKnowledge, setNoKnowledge] = useState(false);
   const [primosHadCancer, setPrimosHadCancer] = useState(null);
-  const [primosDetails, setPrimosDetails] = useState([{ relationship: "", type: null, age: "", showAgeDropdown: false }]);
+  const [primosDetails, setPrimosDetails] = useState([
+    { relationship: "", type: null, age: "", showAgeDropdown: false },
+  ]);
 
   const handleCancerChange = (value) => {
     setPrimosHadCancer(value);
@@ -19,7 +20,10 @@ export default function PrimosPrimasMaternos({ onClose, onBack, onAdvance }) {
   };
 
   const handleAddMore = () => {
-    setPrimosDetails([...primosDetails, { relationship: "", type: null, age: "", showAgeDropdown: false }]);
+    setPrimosDetails([
+      ...primosDetails,
+      { relationship: "", type: null, age: "", showAgeDropdown: false },
+    ]);
   };
 
   const handleBackClick = () => {
@@ -35,14 +39,15 @@ export default function PrimosPrimasMaternos({ onClose, onBack, onAdvance }) {
   return (
     <div className="ppm-modal-overlay" onClick={onClose}>
       <div className="ppm-modal-content" onClick={(e) => e.stopPropagation()}>
-        <Sidebar activeEtapa="etapa2" />
         <div className="ppm-form-container">
-          <button className="ppm-close-button" onClick={onClose}>
-            &times;
-          </button>
-          <div className="ppm-grupo">
+          <div className="ppm-header">
             <h2 className="ppm-title">Etapa 2 - Primos e primas</h2>
 
+            <button className="ppm-close-button" onClick={onClose}>
+              &times;
+            </button>
+          </div>
+          <div className="ppm-grupo">
             <label>
               Algum primo ou prima do seu lado materno já teve câncer?
               <div className="ppm-checkbox-group">
@@ -136,17 +141,26 @@ export default function PrimosPrimasMaternos({ onClose, onBack, onAdvance }) {
                           }}
                         />
                       )}
-                      <button type="button" className="ppm-toggle-button" onClick={() => {
-                        const newDetails = [...primosDetails];
-                        newDetails[index].showAgeDropdown = !newDetails[index].showAgeDropdown;
-                        setPrimosDetails(newDetails);
-                      }}>
+                      <button
+                        type="button"
+                        className="ppm-toggle-button"
+                        onClick={() => {
+                          const newDetails = [...primosDetails];
+                          newDetails[index].showAgeDropdown =
+                            !newDetails[index].showAgeDropdown;
+                          setPrimosDetails(newDetails);
+                        }}
+                      >
                         {primo.showAgeDropdown ? "Digitar idade" : "Não sei"}
                       </button>
                     </label>
                   </div>
                 ))}
-                <button type="button" className="ppm-btn-add" onClick={handleAddMore}>
+                <button
+                  type="button"
+                  className="ppm-btn-add"
+                  onClick={handleAddMore}
+                >
                   Informar+
                 </button>
               </>

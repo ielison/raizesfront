@@ -27,7 +27,7 @@
 .avosp-form-container {
   display: flex;
   flex-direction: column;
-  width: 75%;
+  width: 100%;
   padding: 20px;
   overflow-y: auto;
 }

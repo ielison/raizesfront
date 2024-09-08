@@ -26,6 +26,8 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
       return;
     }
 
+    
+
     // Preparar os dados do usuário
     const userData = {
       usuarioId: 0,

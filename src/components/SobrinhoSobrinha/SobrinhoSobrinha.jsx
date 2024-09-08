@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
-import Sidebar from "../Sidebar/Sidebar";
 import "./SobrinhoSobrinha.css";
 
 export default function SobrinhosSobrinhas({ onClose, onAdvance }) {
@@ -13,19 +12,18 @@ export default function SobrinhosSobrinhas({ onClose, onAdvance }) {
   });
   const [hasCancer, setHasCancer] = useState(null);
   const [cancerDetails, setCancerDetails] = useState([
-    { type: [], gender: "", age: "" },
+    { type: [], relation: "", age: "" },
   ]);
   const [showAgeDropdowns, setShowAgeDropdowns] = useState([false]); // Track age dropdowns for each child
 
   const handleQuantityChange = (e) => {
     const { name, value } = e.target;
-    // Ensure non-negative value for quantities
-    const quantityValue = Math.max(0, value);
+    const quantityValue = Math.max(0, value); // Ensure non-negative value for quantities
     setQuantities((prev) => ({ ...prev, [name]: quantityValue }));
   };
 
   const handleAddCancerDetail = () => {
-    setCancerDetails([...cancerDetails, { type: [], gender: "", age: "" }]);
+    setCancerDetails([...cancerDetails, { type: [], relation: "", age: "" }]);
     setShowAgeDropdowns([...showAgeDropdowns, false]); // Add a new entry for the new child
   };
 
@@ -48,8 +46,7 @@ export default function SobrinhosSobrinhas({ onClose, onAdvance }) {
   };
 
   const handleAgeChange = (index, value) => {
-    // Ensure non-negative value for age
-    const ageValue = Math.max(0, value);
+    const ageValue = Math.max(0, value); // Ensure non-negative value for age
     const newDetails = [...cancerDetails];
     newDetails[index].age = ageValue;
     setCancerDetails(newDetails);
@@ -61,15 +58,16 @@ export default function SobrinhosSobrinhas({ onClose, onAdvance }) {
         className="sobrinhos-sobrinhas-modal-content"
         onClick={(e) => e.stopPropagation()}
       >
-        <Sidebar activeEtapa="etapa1" />
         <div className="sobrinhos-sobrinhas-form-container">
-          <button
-            className="sobrinhos-sobrinhas-close-button"
-            onClick={onClose}
-          >
-            &times;
-          </button>
-          <h2>Etapa 1 - Sobrinhos e Sobrinhas</h2>
+          <div className="ss-header">
+            <h2>Etapa 1 - Sobrinhos e Sobrinhas</h2>
+            <button
+              className="sobrinhos-sobrinhas-close-button"
+              onClick={onClose}
+            >
+              &times;
+            </button>
+          </div>
           <label>
             Quantos filhos que os irmãos ou meio-irmãos possuem?
             <div className="sobrinhos-sobrinhas-quantity-group">
@@ -139,18 +137,20 @@ export default function SobrinhosSobrinhas({ onClose, onAdvance }) {
                     />
                   </label>
                   <label>
-                    Sexo
+                    Parentesco
                     <select
-                      value={detail.gender}
+                      value={detail.relation}
                       onChange={(e) => {
                         const newDetails = [...cancerDetails];
-                        newDetails[index].gender = e.target.value;
+                        newDetails[index].relation = e.target.value;
                         setCancerDetails(newDetails);
                       }}
                     >
                       <option value="">Selecione</option>
-                      <option value="masculino">Masculino</option>
-                      <option value="feminino">Feminino</option>
+                      <option value="sobrinho">Sobrinho</option>
+                      <option value="sobrinha">Sobrinha</option>
+                      <option value="meio-sobrinho">Meio-sobrinho</option>
+                      <option value="meio-sobrinha">Meio-sobrinha</option>
                     </select>
                   </label>
                   <label className="ii-idade">
@@ -171,7 +171,9 @@ export default function SobrinhosSobrinhas({ onClose, onAdvance }) {
                         <input
                           type="number"
                           value={detail.age}
-                          onChange={(e) => handleAgeChange(index, Number(e.target.value))}
+                          onChange={(e) =>
+                            handleAgeChange(index, Number(e.target.value))
+                          }
                           min="0" // Ensure the input cannot be less than 0
                         />
                       )}

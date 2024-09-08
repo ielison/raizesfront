@@ -3,7 +3,6 @@ import { useState } from "react";
 import "./DadosPaciente.css";
 import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
-import Sidebar from "../Sidebar/Sidebar";
 
 export default function DadosPaciente({ onClose, onAdvance }) {
   const [diagnoses, setDiagnoses] = useState([{ type: [], age: "" }]);
@@ -24,26 +23,25 @@ export default function DadosPaciente({ onClose, onAdvance }) {
   };
 
   const handleOtherDiagnosisChange = (e) => {
-    setHasOtherDiagnosis(e.target.checked); // Atualiza o estado para checkboxes
+    setHasOtherDiagnosis(e.target.value === "sim");
   };
 
   return (
     <div className="dp-modal-overlay" onClick={onClose}>
       <div className="dp-modal-content" onClick={(e) => e.stopPropagation()}>
-        <Sidebar activeEtapa="etapa1" />
         <div className="dp-form-container">
-          <button className="dp-close-button" onClick={onClose}>
-            &times;
-          </button>
-          <h2>Etapa 1 - Dados do Paciente</h2>
-
+          <div className="dp-form-top">
+            <h2>Etapa 1 - Dados do Paciente</h2>
+            <button className="dp-close-button" onClick={onClose}>
+              &times;
+            </button>
+          </div>
           <label className="nome-paciente">
             <span>Qual o nome do paciente?</span>
             <input type="text" placeholder="Informe o nome do paciente" />
           </label>
 
           <div className="dp-row">
-            {/* Flex container for side by side */}
             <label
               className="sexo-paciente"
               style={{ flex: 1, marginRight: "10px" }}
@@ -71,20 +69,20 @@ export default function DadosPaciente({ onClose, onAdvance }) {
 
           <label>
             O Sr(a) já teve câncer?
-            <div className="checkbox-group">
+            <div className="radio-group">
               <label>
                 <input
-                  type="checkbox"
+                  type="radio"
                   name="hasCancer"
                   value="sim"
                   checked={hasCancer}
-                  onChange={() => setHasCancer(!hasCancer)}
+                  onChange={() => setHasCancer(true)}
                 />
                 Sim
               </label>
               <label>
                 <input
-                  type="checkbox"
+                  type="radio"
                   name="hasCancer"
                   value="nao"
                   checked={!hasCancer}
@@ -120,10 +118,10 @@ export default function DadosPaciente({ onClose, onAdvance }) {
 
               <label>
                 O Sr(a) recebeu algum outro diagnóstico de câncer?
-                <div className="checkbox-group">
+                <div className="radio-group">
                   <label>
                     <input
-                      type="checkbox"
+                      type="radio"
                       name="hasOtherDiagnosis"
                       value="sim"
                       checked={hasOtherDiagnosis}
@@ -133,7 +131,7 @@ export default function DadosPaciente({ onClose, onAdvance }) {
                   </label>
                   <label>
                     <input
-                      type="checkbox"
+                      type="radio"
                       name="hasOtherDiagnosis"
                       value="nao"
                       checked={!hasOtherDiagnosis}

@@ -3,44 +3,17 @@ import PropTypes from "prop-types";
 import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
-import Sidebar from "../Sidebar/Sidebar";
 import "./FamiliaresDistantesMaterno.css";
 
 const relationshipOptions = [
-  { value: "mãe", label: "Mãe" },
-  { value: "pai", label: "Pai" },
-  { value: "filho", label: "Filho" },
-  { value: "filha", label: "Filha" },
-  { value: "irmão", label: "Irmão" },
-  { value: "irmã", label: "Irmã" },
-  { value: "meio-irmão materno", label: "Meio-Irmão Materno" },
-  { value: "meia-irmã materna", label: "Meia-Irmã Materna" },
-  { value: "meio-irmão paterno", label: "Meio-Irmão Paterno" },
-  { value: "meia-irmã paterna", label: "Meia-Irmã Paterna" },
-  { value: "sobrinho", label: "Sobrinho" },
-  { value: "sobrinha", label: "Sobrinha" },
-  { value: "tio materno", label: "Tio Materno" },
-  { value: "tia materna", label: "Tia Materna" },
-  { value: "tio paterno", label: "Tio Paterno" },
-  { value: "tia paterna", label: "Tia Paterna" },
   { value: "meio-tio materno", label: "Meio-Tio Materno" },
   { value: "meia-tia materna", label: "Meia-Tia Materna" },
   { value: "meio-tio paterno", label: "Meio-Tio Paterno" },
   { value: "meia-tia paterna", label: "Meia-Tia Paterna" },
-  { value: "avô materno", label: "Avô Materno" },
-  { value: "avó materna", label: "Avó Materna" },
-  { value: "avô paterno", label: "Avô Paterno" },
-  { value: "avó paterna", label: "Avó Paterna" },
-  { value: "neto", label: "Neto" },
-  { value: "neta", label: "Neta" },
   { value: "tio-avô materno", label: "Tio-Avô Materno" },
   { value: "tia-avó materna", label: "Tia-Avó Materna" },
   { value: "tio-avô paterno", label: "Tio-Avô Paterno" },
   { value: "tia-avó paterna", label: "Tia-Avó Paterna" },
-  { value: "prima materna 1o grau", label: "Prima Materna 1º Grau" },
-  { value: "primo materno 1o grau", label: "Primo Materno 1º Grau" },
-  { value: "prima paterna 1o grau", label: "Prima Paterna 1º Grau" },
-  { value: "primo paterno 1o grau", label: "Primo Paterno 1º Grau" },
   { value: "prima materna 2o grau", label: "Prima Materna 2º Grau" },
   { value: "primo materno 2o grau", label: "Primo Materno 2º Grau" },
   { value: "prima paterna 2o grau", label: "Prima Paterna 2º Grau" },
@@ -65,31 +38,66 @@ export default function FamiliaresDistantesMaterno({
 }) {
   const [distantesHadCancer, setDistantesHadCancer] = useState(null);
   const [distantesDetails, setDistantesDetails] = useState([
-    { relationship: "", type: null, age: "", showAgeDropdown: false },
+    {
+      relationship: "",
+      type: null,
+      age: "",
+      showAgeDropdown: false,
+      customRelationship: "",
+    },
   ]);
 
   const handleDistantesHadCancerChange = (value) => {
     setDistantesHadCancer(value);
 
-    // Clear selections if "Sim" or "Não" is selected
     if (value === false) {
       setDistantesDetails([
-        { relationship: "", type: null, age: "", showAgeDropdown: false },
+        {
+          relationship: "",
+          type: null,
+          age: "",
+          showAgeDropdown: false,
+          customRelationship: "",
+        },
       ]);
     }
+  };
+
+  const handleAddMore = () => {
+    setDistantesDetails([
+      ...distantesDetails,
+      {
+        relationship: "",
+        type: null,
+        age: "",
+        showAgeDropdown: false,
+        customRelationship: "",
+      },
+    ]);
+  };
+
+  const handleRelationshipChange = (selectedOption, index) => {
+    const newDetails = [...distantesDetails];
+    newDetails[index].relationship = selectedOption.value;
+
+    // Clear custom relationship if not "Outro"
+    if (selectedOption.value !== "outro") {
+      newDetails[index].customRelationship = "";
+    }
+
+    setDistantesDetails(newDetails);
+  };
+
+  const handleCustomRelationshipChange = (index, value) => {
+    const newDetails = [...distantesDetails];
+    newDetails[index].customRelationship = value;
+    setDistantesDetails(newDetails);
   };
 
   const handleAgeToggle = (index) => {
     const newDetails = [...distantesDetails];
     newDetails[index].showAgeDropdown = !newDetails[index].showAgeDropdown;
     setDistantesDetails(newDetails);
-  };
-
-  const handleAddMore = () => {
-    setDistantesDetails([
-      ...distantesDetails,
-      { relationship: "", type: null, age: "", showAgeDropdown: false },
-    ]);
   };
 
   const handleBackClick = () => {
@@ -105,7 +113,6 @@ export default function FamiliaresDistantesMaterno({
   return (
     <div className="fdm-modal-overlay" onClick={onClose}>
       <div className="fdm-modal-content" onClick={(e) => e.stopPropagation()}>
-        <Sidebar activeEtapa="etapa2" />
         <button className="fdm-close-button" onClick={onClose}>
           &times;
         </button>
@@ -157,12 +164,26 @@ export default function FamiliaresDistantesMaterno({
                       value={relationshipOptions.find(
                         (option) => option.value === distante.relationship
                       )}
-                      onChange={(selectedOption) => {
-                        const newDetails = [...distantesDetails];
-                        newDetails[index].relationship = selectedOption.value;
-                        setDistantesDetails(newDetails);
-                      }}
+                      onChange={(selectedOption) =>
+                        handleRelationshipChange(selectedOption, index)
+                      }
                     />
+                    {/* Show custom input if "Outro" is selected */}
+                    {distante.relationship === "outro" && (
+                      <div>
+                      <span>Qual o parentesco?</span>
+                      <input
+                        type="text"
+                        placeholder="Digite o parentesco"
+                        value={distante.customRelationship}
+                        onChange={(e) =>
+                          handleCustomRelationshipChange(index, e.target.value)
+                        }
+                      />
+                      </div>
+                      
+                      
+                    )}
                   </label>
                   <label>
                     Tipo de câncer:
