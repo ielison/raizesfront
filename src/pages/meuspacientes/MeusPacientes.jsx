@@ -6,7 +6,7 @@ import Tooltip from "../../components/Tooltip/Tooltip.jsx";
 export default function MeusPacientes() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const pacientesPerPage = 15;
+  const pacientesPerPage = 10;
 
   // Filtrar pacientes com base no termo de busca
   const filteredPacientes = pacientesData.filter((paciente) =>

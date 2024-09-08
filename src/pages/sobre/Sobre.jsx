@@ -38,6 +38,7 @@ export default function Sobre() {
             </div>
           </section>
 
+          <div className="sobre-bar"></div>
           <section className="sobre-section2">
             <div className="section2-missao">
               <h2 className="h2-sobre">Nossa Missão</h2>
@@ -88,6 +89,8 @@ export default function Sobre() {
               </p>
             </div>
           </section>
+
+          <div className="sobre-bar"></div>
 
           <section className="sobre-section3">
             <h2 className="h2-sobre">Agradecimentos</h2>

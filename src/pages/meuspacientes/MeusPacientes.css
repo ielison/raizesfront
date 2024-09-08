@@ -1,20 +1,20 @@
 .meus-pacientes {
-  padding: 20px;
+  padding: 15px;
   background-image: url('../../assets/background.png');
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
-  /* Manter a imagem de fundo fixa */
   height: calc(100vh - 96px);
   display: flex;
   flex-direction: column;
-  /* Empilhar elementos verticalmente */
 }
 
+/* Ajuste da cor do título */
 .h1-pacientes {
   color: white;
 }
 
+/* Caixinha de pesquisa mais acessível */
 .search-box {
   width: 100%;
   padding: 10px;
@@ -27,15 +27,12 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
-  /* Espaço entre os cartões */
   overflow-y: auto;
-  /* Permitir rolagem vertical */
   height: calc(100% - 60px);
-  /* Ajustar altura para rolagem */
   padding-right: 10px;
-  /* Adicionar padding para evitar que o texto grude na borda */
 }
 
+/* Cartão do paciente */
 .paciente-card {
   border: 1px solid #e0e0e0;
   border-radius: 8px;
@@ -43,50 +40,41 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  /* Alinhar elementos com espaço entre eles */
   gap: 20px;
-  /* Ajustar espaço entre os elementos */
   background-color: #ffffff;
-  /* Fundo branco */
   height: 100px;
-  /* Altura fixa para cada cartão */
 }
 
+/* Informações do paciente */
 .paciente-info {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  /* Alinhar itens ao início */
   width: 20%;
-  /* Largura fixa para informações do paciente */
 }
 
+/* Ícone do paciente */
 .paciente-icon {
   font-size: 24px;
-  /* Tamanho do ícone */
   margin-right: 10px;
-  /* Espaço entre o ícone e o nome */
 }
 
+/* Detalhes do paciente */
 .paciente-details {
   display: flex;
   flex-direction: column;
-  /* Empilhar nome e idade verticalmente */
   width: 70%;
-  /* Largura fixa para detalhes do paciente */
 }
 
+/* Nome do paciente com reticências para texto longo */
 .paciente-nome {
   font-weight: bold;
-  /* Destacar o nome */
   overflow: hidden;
-  /* Ocultar texto que excede o limite */
   text-overflow: ellipsis;
-  /* Adicionar reticências para texto longo */
   white-space: nowrap;
-  /* Impedir quebras de linha */
 }
 
+/* Divider entre os dados */
 .divider {
   height: 40px;
   background-color: #474747;
@@ -94,22 +82,21 @@
   width: 2px;
 }
 
+/* Contato do paciente */
 .paciente-contato {
   display: flex;
   flex-direction: column;
-  /* Empilhar detalhes de contato verticalmente */
   width: 35%;
-  /* Largura fixa para contato */
 }
 
+/* Texto em destaque */
 .consulta-oncogenetica {
   font-weight: bold;
-  /* Destacar o texto de consulta oncogenética */
   margin-top: 10px;
-  /* Espaço acima deste texto */
   width: 20%;
 }
 
+/* Paginação */
 .pagination {
   display: flex;
   justify-content: center;
@@ -136,86 +123,79 @@
   font-size: 16px;
 }
 
+/* Botões de relatório */
 .report-buttons {
-
   width: 20%;
   display: flex;
   flex-direction: row;
-  /* Empilhar os ícones verticalmente */
 }
 
 .report-buttons button {
   background: none;
-  /* Remover fundo do botão */
   border: none;
-  /* Remover borda */
   cursor: pointer;
-  /* Mostrar cursor de ponteiro ao passar o mouse */
   display: flex;
-  /* Usar flexbox para centralizar os ícones */
   align-items: center;
-  /* Centralizar ícones verticalmente */
 }
 
 .report-buttons button:hover {
-  /* Efeito ao passar o mouse, se desejado */
   transform: scale(1.05);
-  /* Aumentar levemente o ícone */
 }
 
 .report-buttons button:hover::after {
   opacity: 1;
-  /* Mostrar tooltip ao passar o mouse */
   visibility: visible;
-  /* Tornar o tooltip visível */
 }
 
-/* Estilos para tablet */
+/* Responsividade - Tablets (até 1024px) */
 @media (max-width: 1024px) {
   .paciente-card {
     flex-direction: column;
-    /* Empilhar o conteúdo verticalmente no tablet */
     align-items: flex-start;
-    /* Alinhar itens ao início */
+    height: auto; /* Para acomodar mais conteúdo */
+  }
+
+  .paciente-info, .paciente-details, .paciente-contato {
+    width: 100%; /* Fazer com que ocupem toda a largura */
   }
 
   .divider {
-    margin: 5px 0;
-    /* Reduzir espaço ao redor dos divisores no tablet */
+    display: none; /* Remover a linha divisória em tablets */
   }
 }
 
-/* Estilos para mobile */
+/* Responsividade - Mobile (até 768px) */
 @media (max-width: 768px) {
   .meus-pacientes {
-    padding: 15px;
-    /* Reduzir padding no mobile */
+    padding: 10px;
+    height: auto;
   }
 
   .search-box {
     padding: 8px;
-    /* Ajustar padding para a caixa de pesquisa */
+    font-size: 14px; /* Texto menor para dispositivos móveis */
   }
 
   .paciente-card {
     padding: 10px;
-    /* Reduzir padding nos cartões para mobile */
-    gap: 15px;
-    /* Reduzir espaço entre itens no cartão */
+    gap: 10px;
+    height: auto; /* Ajustar a altura automática */
   }
 
   .paciente-icon {
     font-size: 20px;
-    /* Ícone um pouco menor no mobile */
   }
 
   .paciente-nome {
-    font-size: 18px;
-    /* Ajustar tamanho da fonte para o nome */
+    font-size: 16px; /* Ajustar o tamanho da fonte */
   }
 
   .consulta-oncogenetica {
     font-size: 14px;
-    /* Fonte menor para o texto de consulta */
+  }
+
+  .report-buttons {
+    width: 100%;
+    justify-content: space-around; /* Espaçar os botões no mobile */
   }
 }

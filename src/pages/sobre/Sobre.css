@@ -1,6 +1,6 @@
 .sobre-container {
   padding: 80px;
-  background: linear-gradient(90deg, #0E1736 -0.01%, #4FBCCD 73.49%, #87D1DD 99.99%);
+
   width: 100%;
 }
 
@@ -15,8 +15,10 @@
   gap: 64px;
 }
 
-.h2-sobre, .p-sobre, .li-sobre {
-  color: white;
+.h2-sobre,
+.p-sobre,
+.li-sobre {
+  color: var(--primary-700);
 }
 
 .section1-text {
@@ -48,55 +50,84 @@
   color: var(--primary-500);
 }
 
+.sobre-bar {
+  margin: 70px auto;
+  background: linear-gradient(90deg, #0E1736 -0.01%, #4FBCCD 73.49%, #87D1DD 99.99%);
+  height: 7px;
+  width: 40%;
+}
+
 /* Responsive Styles */
-@media (max-width: 1024px) { /* Tablets */
+@media (max-width: 1024px) {
+
+  /* Tablets */
   .sobre-container {
-    padding: 60px 20px; /* Reduced padding */
+    padding: 60px 20px;
+    /* Reduced padding */
   }
 
   .logo-sobre {
-    width: 250px; /* Adjusted logo size */
-    margin-right: 20px; /* Reduced margin */
+    width: 250px;
+    /* Adjusted logo size */
+    margin-right: 20px;
+    /* Reduced margin */
   }
 
   .sobre-section1 {
-    flex-direction: column; /* Stack items vertically */
-    align-items: center; /* Center align */
+    flex-direction: column;
+    /* Stack items vertically */
+    align-items: center;
+    /* Center align */
   }
 
   .sobre-section2 {
-    grid-template-columns: 1fr 1fr; /* Two columns */
-    gap: 40px; /* Reduced gap */
+    grid-template-columns: 1fr 1fr;
+    /* Two columns */
+    gap: 40px;
+    /* Reduced gap */
   }
 
   .register-button {
-    font-size: 16px; /* Slightly larger font size */
+    font-size: 16px;
+    /* Slightly larger font size */
   }
 }
 
-@media (max-width: 768px) { /* Mobile devices */
+@media (max-width: 768px) {
+
+  /* Mobile devices */
   .sobre-container {
-    padding: 40px 40px; /* Further reduced padding */
+    padding: 40px 40px;
+    /* Further reduced padding */
   }
 
   .logo-sobre {
-    width: 200px; /* Adjusted logo size for mobile */
-    margin-right: 0; /* Removed margin */
-    margin-bottom: 20px; /* Add space below logo */
+    width: 200px;
+    /* Adjusted logo size for mobile */
+    margin-right: 0;
+    /* Removed margin */
+    margin-bottom: 20px;
+    /* Add space below logo */
   }
 
   .sobre-section1 {
-    flex-direction: column; /* Stack items vertically */
-    align-items: center; /* Center align */
-    gap: 32px; /* Reduced gap */
+    flex-direction: column;
+    /* Stack items vertically */
+    align-items: center;
+    /* Center align */
+    gap: 32px;
+    /* Reduced gap */
   }
 
   .sobre-section2 {
-    grid-template-columns: 1fr; /* Single column */
-    gap: 20px; /* Reduced gap */
+    grid-template-columns: 1fr;
+    /* Single column */
+    gap: 20px;
+    /* Reduced gap */
   }
 
   .register-button {
-    font-size: 14px; /* Smaller font size for mobile */
+    font-size: 14px;
+    /* Smaller font size for mobile */
   }
 }

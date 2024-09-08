@@ -16,6 +16,8 @@ body {
   background-repeat: no-repeat;
   background-attachment: fixed; /* Keeps background fixed while scrolling */
   min-height: calc(100vh - 96px); /* Adjust for header/footer height */
+  position: relative; /* Ensure the stacking context is set */
+  z-index: 1; /* Lower z-index than the bar */
 }
 
 /* Search Input Styles */
