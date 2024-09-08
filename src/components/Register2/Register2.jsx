@@ -53,7 +53,7 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
       setIsLoading(true); // Inicia o carregamento
       // Enviar dados para a API local
       const response = await axios.post(
-        "http://localhost:3000/api/register",
+        "https://regapi-raizes-svrz.vercel.app/api/register",
         userData,
         {
           headers: {
