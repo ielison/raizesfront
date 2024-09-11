@@ -53,7 +53,7 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
       setIsLoading(true); // Inicia o carregamento
       // Enviar dados para a API local
       const response = await axios.post(
-        "https://testserver-2p40.onrender.com/teste/api/register",
+        "https://testserver-2p40.onrender.com/api/register",
         userData,
         {
           headers: {
