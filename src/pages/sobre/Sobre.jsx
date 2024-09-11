@@ -1,127 +1,49 @@
-import { useState } from "react";
 import "./Sobre.css";
-import Logo from "../../assets/logo-sobre.svg";
-import Register1 from "../../components/Register1/Register1"; // Import the Register1 modal
+import Logo from "../../assets/LOGO 1.png";
 
 export default function Sobre() {
-  const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
-
-  const openRegisterModal = () => {
-    console.log("ahe");
-    setRegisterModalOpen(true);
-  };
-
-  const closeRegisterModal = () => {
-    setRegisterModalOpen(false);
-  };
-
   return (
-    <>
-      <div className="sobre-container">
+    <div className="sobre-container">
+      <div className="background-image"></div>
+      <div className="content-container">
+        <div className="logo-container">
+          <img className="logo-sobre" src={Logo} alt="Logo Raízes" />
+        </div>
         <main className="sobre-content">
           <section className="sobre-section1">
             <div className="section1-text">
-              <h2 className="h2-sobre">Sobre Nós</h2>
               <p className="p-sobre">
-                O Projeto Raízes nasceu em 2024 a partir da visão inovadora e do
-                trabalho dedicado de Thalita Targino, uma enfermeira
-                oncogeneticista apaixonada pela coleta e análise da história
-                familiar de câncer. Com uma vasta experiência na área de
-                oncologia e genética, Thalita identificou a necessidade de uma
-                ferramenta eficaz para auxiliar profissionais de saúde na
-                identificação de indivíduos com alto risco de câncer
-                hereditário.
+                O Projeto Raízes surgiu em 2024, como fruto do trabalho de
+                doutorado de Thalita Targino, enfermeira oncogeneticista, que
+                sempre teve sua trajetória profissional conectada à genética. Ao
+                longo da graduação, Thalita foi iniciação científica em um
+                laboratório de genética, mas foi durante o mestrado que ela
+                encontrou sua verdadeira paixão: a oncogenética, uma área que
+                também guiou sua prática clínica durante a residência em
+                oncologia, quando lidou diretamente com pacientes e suas
+                histórias.
+              </p>
+              <p className="p-sobre">
+                Durante esses dois anos de imersão na prática clínica, Thalita
+                percebeu a necessidade urgente de uma plataforma que apoiasse os
+                profissionais de saúde na coleta da história familiar de câncer
+                de seus pacientes. A dificuldade em identificar pessoas com alto
+                risco de câncer e fornecer estratégias de prevenção
+                personalizadas foi o que impulsionou a criação do Projeto
+                Raízes.
+              </p>
+              <p className="p-sobre">
+                Hoje, o Raízes é uma plataforma de apoio à decisão clínica,
+                desenvolvida para agilizar e facilitar a identificação de
+                indivíduos em alto risco de câncer hereditário. Mais do que uma
+                plataforma, é um recurso que acolhe, simplifica e fortalece a
+                atuação dos profissionais de saúde. Aqui, cada história de vida
+                importa, e estamos juntos para fazer a diferença.
               </p>
             </div>
-            <div>
-              <img className="logo-sobre" src={Logo} alt="Logo Raízes" />
-            </div>
-          </section>
-
-          <div className="sobre-bar"></div>
-          <section className="sobre-section2">
-            <div className="section2-missao">
-              <h2 className="h2-sobre">Nossa Missão</h2>
-              <p className="p-sobre">
-                A missão do Projeto Raízes é aprimorar a prática clínica e
-                oferecer suporte fundamental para a identificação precoce de
-                riscos hereditários de câncer. Acreditamos que a coleta
-                detalhada e precisa da história familiar de câncer é um passo
-                crucial para proporcionar cuidados personalizados e
-                direcionados. Nossa ferramenta é projetada para ajudar os
-                profissionais de saúde a tomar decisões informadas, baseadas em
-                dados concretos, facilitando o encaminhamento para serviços
-                especializados em genética e, assim, melhorando a qualidade do
-                atendimento oferecido aos pacientes.
-              </p>
-            </div>
-            <div className="section2-oferecemos">
-              <h2 className="h2-sobre">O Que Oferecemos</h2>
-              <ul>
-                <li className="li-sobre">
-                  <strong>Identificar Pacientes de Alto Risco:</strong> Realizar
-                  uma triagem detalhada para identificar indivíduos com maior
-                  probabilidade de condições hereditárias de câncer.
-                </li>
-                <li className="li-sobre">
-                  <strong>Tomar Decisões Informadas:</strong> Acessar dados
-                  essenciais para fazer escolhas clínicas bem fundamentadas e
-                  orientadas para o paciente.
-                </li>
-                <li className="li-sobre">
-                  <strong>Facilitar Encaminhamentos:</strong> Auxiliar e
-                  agilizar o processo de encaminhamento para serviços de
-                  genética e outras especialidades conforme necessário.
-                </li>
-              </ul>
-            </div>
-
-            <div className="section2-visao">
-              <h2 className="h2-sobre">Nossa Visão</h2>
-              <p className="p-sobre">
-                Nosso objetivo é transformar a forma como a história familiar de
-                câncer é coletada e utilizada, proporcionando uma abordagem mais
-                sistemática e eficiente para a avaliação de risco. Ao melhorar a
-                comunicação e a integração entre profissionais de saúde e
-                especialistas em genética, buscamos contribuir para um
-                diagnóstico precoce e para a implementação de estratégias
-                preventivas mais eficazes.
-              </p>
-            </div>
-          </section>
-
-          <div className="sobre-bar"></div>
-
-          <section className="sobre-section3">
-            <h2 className="h2-sobre">Agradecimentos</h2>
-            <p className="p-sobre">
-              Agradecemos profundamente o seu empenho em cuidar da saúde dos
-              seus pacientes e de suas famílias. Seu trabalho é fundamental na
-              construção de um futuro onde o câncer pode ser detectado e tratado
-              com mais eficácia e onde cada paciente recebe o cuidado e a
-              atenção que merece.
-            </p>
-            <p className="p-sobre">
-              Ainda não tem uma conta? Não perca a oportunidade de fazer parte
-              deste projeto inovador.{" "}
-              <span className="register-button" onClick={openRegisterModal}>
-                Registre-se agora mesmo!
-              </span>
-            </p>
-            <p className="p-sobre">
-              Junte-se a nós na missão de transformar a saúde e o cuidado com o
-              câncer através do conhecimento e da inovação.
-            </p>
           </section>
         </main>
-
-        {isRegisterModalOpen && (
-          <Register1
-            isOpen={isRegisterModalOpen}
-            onClose={closeRegisterModal}
-          />
-        )}
       </div>
-    </>
+    </div>
   );
 }
