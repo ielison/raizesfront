@@ -17,9 +17,9 @@ export default function LoginModal({ isOpen, onClose, handleRegisterClick }) {
     try {
       // Fazendo requisição GET para o endpoint de login
        const response = await fetch(
-        `https://testserver-2p40.onrender.com/api/login?email=${encodeURIComponent(email)}&senha=${encodeURIComponent(password)}`, 
-        { method: 'GET' }
-      );
+  `https://testserver-2p40.onrender.com/api/login?email=${encodeURIComponent(email)}&senha=${encodeURIComponent(password)}`, 
+  { method: 'GET' }
+);
 
       // Verifica se a resposta é 200 (login bem-sucedido)
       if (response.status === 200) {
