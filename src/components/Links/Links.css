@@ -2,8 +2,10 @@
 body {
   margin: 0;
   padding: 0;
-  overflow-x: hidden; /* Prevent horizontal scrolling */
-  font-family: Arial, sans-serif; /* Set default font family */
+  overflow-x: hidden;
+  /* Prevent horizontal scrolling */
+  font-family: Arial, sans-serif;
+  /* Set default font family */
 }
 
 /* Container Styles */
@@ -14,10 +16,14 @@ body {
   background-image: url('../../assets/background.png');
   background-size: cover;
   background-repeat: no-repeat;
-  background-attachment: fixed; /* Keeps background fixed while scrolling */
-  min-height: calc(100vh - 96px); /* Adjust for header/footer height */
-  position: relative; /* Ensure the stacking context is set */
-  z-index: 1; /* Lower z-index than the bar */
+  background-attachment: fixed;
+  /* Keeps background fixed while scrolling */
+  min-height: calc(100vh - 96px);
+  /* Adjust for header/footer height */
+  position: relative;
+  /* Ensure the stacking context is set */
+  z-index: 1;
+  /* Lower z-index than the bar */
 }
 
 /* Search Input Styles */
@@ -27,7 +33,8 @@ body {
 
 .linksuteis__search-field {
   width: 100%;
-  padding: 10px 40px; /* Add padding to the input */
+  padding: 10px 40px;
+  /* Add padding to the input */
   border: none;
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -36,10 +43,13 @@ body {
 .linksuteis__search-icon {
   position: absolute;
   top: 50%;
-  left: 10px; /* Adjust icon position */
+  left: 10px;
+  /* Adjust icon position */
   transform: translateY(-50%);
-  width: 20px; /* Set icon width */
-  height: 20px; /* Set icon height */
+  width: 20px;
+  /* Set icon width */
+  height: 20px;
+  /* Set icon height */
 }
 
 /* Tab Styles */
@@ -47,7 +57,8 @@ body {
   display: flex;
   justify-content: center;
   margin: 20px 0;
-  width: 100%; /* Adjust width for responsiveness */
+  width: 100%;
+  /* Adjust width for responsiveness */
 }
 
 .linksuteis__tab {
@@ -55,37 +66,49 @@ body {
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  background-color: #e0e0e0; /* Tab background color */
+  background-color: #e0e0e0;
+  /* Tab background color */
   transition: background-color 0.3s;
 }
 
 .linksuteis__tab.active {
-  background-color: #b0b0b0; /* Active tab background color */
+  background-color: #b0b0b0;
+  /* Active tab background color */
 }
 
 /* Link Grid Styles */
 .linksuteis__link-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Responsive columns */
+  display: flex;
+  /* Use flexbox para o layout */
+  flex-direction: row;
+  /* Direção da linha */
+  justify-content: center;
+  /* Centraliza os itens horizontalmente */
+  flex-wrap: wrap;
+  /* Permite que os itens se movam para a linha seguinte, se necessário */
   gap: 20px;
+  /* Espaçamento entre os itens */
   margin: 20px 0;
 }
 
+
 .linksuteis__link-item {
-  background-color: #fff; /* Background color for link items */
+  background-color: #fff;
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   padding: 10px;
   transition: transform 0.3s;
-  display: flex; /* Use flex for better alignment */
-  flex-direction: column; /* Stack content vertically */
-  justify-content: center; /* Center content */
-  height: 200px; /* Set a fixed height for uniformity */
-  word-break: break-word; /* Break words to prevent overflow */
+  display: flex; 
+  flex-direction: column; 
+  justify-content: center; 
+  height: 200px; 
+  word-break: break-word; 
+  width: 300px; /* Define um min-width opcional */
 }
 
 .linksuteis__link-item:hover {
-  transform: scale(1.05); /* Scale on hover */
+  transform: scale(1.05);
+  /* Scale on hover */
 }
 
 /* State Filter Styles */
@@ -99,13 +122,15 @@ body {
 .linksuteis__state-dropdown {
   margin-left: 10px;
   padding: 5px;
-  border: 1px solid #ccc; /* Add border to dropdown */
+  border: 1px solid #ccc;
+  /* Add border to dropdown */
   border-radius: 4px;
 }
 
 /* Service Item Styles */
 .linksuteis__service-item {
-  background-color: #fff; /* Background color for service items */
+  background-color: #fff;
+  /* Background color for service items */
   border-radius: 4px;
   padding: 10px;
   margin: 10px 0;
@@ -125,28 +150,32 @@ body {
   padding: 5px 10px;
   border: none;
   border-radius: 4px;
-  background-color: #007bff; /* Button background color */
+  background-color: #007bff;
+  /* Button background color */
   color: white;
   cursor: pointer;
   transition: background-color 0.3s;
 }
 
 .linksuteis__pagination button:disabled {
-  background-color: #ccc; /* Disabled button color */
+  background-color: #ccc;
+  /* Disabled button color */
   cursor: not-allowed;
 }
 
-.label-estado{
+.label-estado {
   color: white;
 }
 
 /* Responsive Styles */
 @media (max-width: 768px) {
   .linksuteis__link-grid {
-    grid-template-columns: 1fr; /* 1 column for smaller screens */
+    grid-template-columns: 1fr;
+    /* 1 column for smaller screens */
   }
 
   .linksuteis__search-field {
-    width: calc(100% - 40px); /* Adjust width for small screens */
+    width: calc(100% - 40px);
+    /* Adjust width for small screens */
   }
 }
