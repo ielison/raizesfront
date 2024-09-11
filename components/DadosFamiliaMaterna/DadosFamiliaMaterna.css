@@ -1,0 +1,134 @@
+.dfm-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dfm-modal-content {
+  display: flex;
+  flex-direction: row;
+  background: #fff;
+  border-radius: 8px;
+  width: 760px;
+  /* Largura fixa */
+  height: 650px;
+  /* Altura fixa */
+  overflow: hidden;
+  /* Esconde o conteúdo que ultrapassar */
+}
+
+.dfm-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+}
+
+.dfm-form-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.dfm-close-button {
+  border: none;
+  background: transparent;
+  font-size: 24px;
+  cursor: pointer;
+  color: #000;
+  align-self: flex-start;
+  margin-left: auto;
+}
+
+.dfm-title {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #000;
+}
+
+.dfm-label {
+  display: block;
+  margin-bottom: 10px;
+  color: #000;
+}
+
+.dfm-input[type="number"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.dfm-checkbox {
+  margin-right: 10px;
+}
+
+.dfm-btn-back {
+  background: white;
+  border: 1px solid var(--primary-500);
+  border-radius: 4px;
+  color: var(--primary-500);
+
+}
+
+.dfm-btn-back:hover {
+
+  background: var(--secondary-500);
+  color: black;
+  border-color: white;
+}
+
+.dfm-btn-next {
+  background: var(--primary-500);
+}
+
+.dfm-btn-next:hover {
+  background: var(--primary-700);
+}
+
+.dfm-toggle-button {
+  background: white;
+  color: var(--primary-500);
+  border: 1px solid var(--primary-500);
+  padding: 5px 10px;
+  margin-top: 5px;
+}
+
+.dfm-toggle-button:hover {
+  background: #007bff;
+  color: #fff;
+}
+
+.dfm-form-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.dfm-checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.dfm-checkbox-group label {
+  margin-right: 15px;
+}
+
+.dfm-idade {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.dfm-idade span {
+  display: flex;
+  flex-direction: column;
+}

@@ -1,0 +1,79 @@
+.sobre-container {
+  width: 100%;
+}
+
+.background-image {
+  background-image: url('../../assets/background.png');
+  background-size: cover;
+  background-position: center;
+  height: 300px;
+  /* Ajuste a altura conforme necessário */
+}
+
+.content-container {
+  padding: 30px;
+  position: relative;
+}
+
+.logo-container {
+  position: absolute;
+  top: -50px;
+  /* Ajuste o valor conforme necessário para que a logo fique acima do texto */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.logo-sobre {
+  width: 250px;
+  /* Ajuste o tamanho da logo conforme necessário */
+}
+
+.sobre-content {
+  margin-top: 100px;
+  /* Ajuste para que o texto comece abaixo da logo */
+}
+
+.h2-sobre,
+.p-sobre {
+  color: var(--primary-700);
+}
+
+.section1-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* Responsive Styles */
+@media (max-width: 1024px) {
+  .content-container {
+    padding: 60px 20px;
+  }
+
+  .logo-sobre {
+    width: 180px;
+  }
+
+  .sobre-content {
+    margin-top: 80px;
+  }
+}
+
+@media (max-width: 768px) {
+  .content-container {
+    padding: 40px 20px;
+  }
+
+  .logo-sobre {
+    width: 150px;
+  }
+
+  .sobre-content {
+    margin-top: 60px;
+  }
+}
