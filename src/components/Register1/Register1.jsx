@@ -1,5 +1,6 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
+import Select from "react-select";
 import Register2 from "../Register2/Register2"; // Import Register2 component
 import "./Register1.css";
 
@@ -20,9 +21,28 @@ export default function Register1({ isOpen, onClose }) {
     celular: "",
     profissionalDaSaude: "",
     graduacao: "",
-    titulo: "",
+    titulo: [],
     instituicao: "",
   });
+
+  const tituloOptions = [
+    { value: "Especialização", label: "Especialização" },
+    { value: "MBA", label: "MBA" },
+    { value: "Mestrado acadêmico", label: "Mestrado acadêmico" },
+    { value: "Mestrado profissional", label: "Mestrado profissional" },
+    { value: "Doutorado", label: "Doutorado" },
+    { value: "Pós-doc", label: "Pós-doc" },
+  ];
+
+  const handleSelectChange = (selectedOptions) => {
+    const values = selectedOptions
+      ? selectedOptions.map((option) => option.value)
+      : [];
+    setFormData({
+      ...formData,
+      titulo: values, // Atualizando o campo com as opções selecionadas
+    });
+  };
 
   const [isRegister2Open, setRegister2Open] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
@@ -54,8 +74,9 @@ export default function Register1({ isOpen, onClose }) {
   };
 
   const handleAdvance = (e) => {
-    e.preventDefault();
-    setRegister2Open(true);
+    e.preventDefault(); // Prevent the form from submitting
+    console.log("Advancing to Register2");
+    setRegister2Open(true); // Open Register2
   };
 
   const handleBack = () => {
@@ -65,6 +86,19 @@ export default function Register1({ isOpen, onClose }) {
   const handleFinish = () => {
     console.log("Finalizing registration with data:", formData);
     // Add your finish logic here, like sending data to an API
+  };
+
+  const handleProfessionalChange = (value) => {
+    setFormData({
+      ...formData,
+      profissionalDaSaude: value,
+    });
+    // Mostrar o info-box se "Não sou um profissional da saúde" for selecionado
+    if (value === false) {
+      setShowInfo(true);
+    } else {
+      setShowInfo(false);
+    }
   };
 
   return (
@@ -80,17 +114,11 @@ export default function Register1({ isOpen, onClose }) {
             </div>
             <p>Informe seus dados para criar uma conta.</p>
             <div className="stepper-wrapper">
-              <div
-                className={`stepper-item ${
-                  isRegister2Open ? "completed" : "active"
-                }`}
-              >
+              <div className={`stepper-item ${isRegister2Open ? "completed" : "active"}`}>
                 <div className="step-counter">1</div>
                 <div className="step-name">Informações Básicas</div>
               </div>
-              <div
-                className={`stepper-item ${isRegister2Open ? "active" : ""}`}
-              >
+              <div className={`stepper-item ${isRegister2Open ? "active" : ""}`}>
                 <div className="step-counter">2</div>
                 <div className="step-name">Segunda Etapa</div>
               </div>
@@ -228,9 +256,7 @@ export default function Register1({ isOpen, onClose }) {
                     name="profissionalDaSaude"
                     value="true"
                     checked={formData.profissionalDaSaude === true}
-                    onChange={() =>
-                      setFormData({ ...formData, profissionalDaSaude: true })
-                    }
+                    onChange={() => handleProfessionalChange(true)}
                   />
                   Sou um profissional da saúde
                 </label>
@@ -240,35 +266,17 @@ export default function Register1({ isOpen, onClose }) {
                     name="profissionalDaSaude"
                     value="false"
                     checked={formData.profissionalDaSaude === false}
-                    onChange={() =>
-                      setFormData({ ...formData, profissionalDaSaude: false })
-                    }
+                    onChange={() => handleProfessionalChange(false)}
                   />
                   Não sou um profissional da saúde
                 </label>
-
-                <span
-                  className="register1-info-button"
-                  onClick={() => setShowInfo(!showInfo)}
-                >
-                  ℹ️
-                </span>
               </div>
               {showInfo && (
                 <div className="info-box">
-                  A plataforma Raízes foi desenvolvida para ser utilizada por
-                  profissionais de saúde, com o objetivo de auxiliar na
-                  identificação de indivíduos com alto risco de câncer
-                  hereditário. Embora não seja impedido o uso por não
-                  profissionais, é fundamental destacar que a interpretação das
-                  informações fornecidas pela plataforma é facilitada quando
-                  realizada com o suporte de um profissional de saúde. Por isso,
-                  recomendamos fortemente que o uso e a aplicação das
-                  informações sejam feitos sob acompanhamento de um profissional
-                  qualificado.
+                  <p>Informações adicionais para não profissionais da saúde.</p>
                 </div>
               )}
-              <label>Graduação</label>
+              <label>Graduação em</label>
               <input
                 type="text"
                 name="graduacao"
@@ -277,14 +285,18 @@ export default function Register1({ isOpen, onClose }) {
                 onChange={handleChange}
                 className="register1-form-input"
               />
-              <label>Título</label>
-              <input
-                type="text"
+              <label>Pós-Graduação</label>
+              <Select
+                isMulti
                 name="titulo"
-                placeholder="Título"
-                value={formData.titulo}
-                onChange={handleChange}
+                options={tituloOptions}
+                value={tituloOptions.filter((option) =>
+                  formData.titulo.includes(option.value)
+                )}
+                onChange={handleSelectChange}
                 className="register1-form-input"
+                classNamePrefix="select"
+                placeholder="Selecione suas pós-graduações"
               />
               <label>Instituição</label>
               <input
@@ -295,19 +307,24 @@ export default function Register1({ isOpen, onClose }) {
                 onChange={handleChange}
                 className="register1-form-input"
               />
-              <button type="submit" className="register1-form-button">
-                Avançar
-              </button>
+
+              <div className="register1-actions">
+                <button type="submit" className="register1-button">
+                  Avançar
+                </button>
+              </div>
             </form>
           </div>
         </div>
       )}
-      <Register2
+      {isRegister2Open && (
+        <Register2
         isOpen={isRegister2Open}
         onClose={handleBack}
         formData={formData}
         onFinish={handleFinish}
       />
+      )}
     </>
   );
 }
