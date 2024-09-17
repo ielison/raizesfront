@@ -3,11 +3,14 @@ import PropTypes from "prop-types";
 import { useAuth } from "../../context/AuthContext"; // Importing AuthContext
 import "./LoginModal.css";
 import { useState } from "react";
+import closedEyeIcon from "../../assets/closed-eye.svg"; // Ajuste o caminho conforme necessário
+import openEyeIcon from "../../assets/open-eye.svg"; //
 
 export default function LoginModal({ isOpen, onClose, handleRegisterClick }) {
   const navigate = useNavigate();
   const { login } = useAuth(); // Using the login function from AuthContext
   const [errorMessage, setErrorMessage] = useState("");
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
@@ -73,15 +76,27 @@ export default function LoginModal({ isOpen, onClose, handleRegisterClick }) {
               required
             />
           </div>
-          <div className="login-modal-form-group">
+         <div className="login-modal-form-group">
             <label htmlFor="password">Senha:</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="Digite a sua senha"
-              required
-            />
+            <div className="password-input-container">
+              <input
+                type={passwordVisible ? "text" : "password"} // Alterna visibilidade da senha
+                id="password"
+                name="password"
+                placeholder="Digite a sua senha"
+                required
+              />
+              <button
+                type="button"
+                className="toggle-password-visibility"
+                onClick={() => setPasswordVisible((prev) => !prev)} // Alterna o estado
+              >
+                <img
+                  src={passwordVisible ? closedEyeIcon : openEyeIcon}
+                  alt={passwordVisible ? "Ocultar senha" : "Mostrar senha"}
+                />
+              </button>
+            </div>
           </div>
           <a href="#" className="login-modal-forgot-password">
             Esqueci a senha
