@@ -11,6 +11,25 @@
   z-index: 1010;
 }
 
+.password-input-container {
+  position: relative;
+}
+
+.toggle-password-visibility {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.toggle-password-visibility img {
+  width: 20px; /* Ajuste o tamanho conforme necessário */
+  height: 20px; /* Ajuste o tamanho conforme necessário */
+}
+
 .login-modal-content {
   width: 90%; /* Largura responsiva para telas pequenas */
   max-width: 760px; /* Largura máxima */
