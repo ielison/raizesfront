@@ -12,6 +12,43 @@
   display: flex;
   flex-direction: column;
 }
+.error-message{
+  font-size: 12px;
+  font-style: italic;
+  color: red;
+}
+
+.register1-form-input.border-green {
+  border: 2px solid green;
+}
+
+.register1-form-input.error {
+  border: 2px solid red;
+}
+
+.password-input-group {
+  position: relative;
+}
+
+.toggle-password-visibility {
+  position: absolute;
+  right: 10px; /* Ajuste conforme necessário */
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.toggle-password-visibility img{
+  width: 20px;
+
+}
+
+.fonte-p{
+  font-size: 12px;
+  font-style: italic;
+}
 
 .register1-header {
   display: flex;
@@ -24,6 +61,7 @@
   border: none;
   font-size: 18px;
   cursor: pointer;
+  color: #333;
 }
 
 .stepper-wrapper {
