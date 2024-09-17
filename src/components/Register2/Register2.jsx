@@ -24,9 +24,7 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
     if (!acceptedTerms) {
       alert("Você deve aceitar os termos para continuar.");
       return;
-    }
-
-    
+    }    
 
     // Preparar os dados do usuário
     const userData = {
@@ -84,7 +82,7 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
       } else {
         console.error("Erro ao registrar usuário:", error.message || error);
         alert(
-          "Não foi possível registrar o usuário. Tente novamente mais tarde."
+          "Não foi possível registrar o usuário. Tente novamente mais tarde. Ou entre em contato com o suporte do Raízes no email: suporte@raizesapp.com"
         );
       }
     } finally {
@@ -92,14 +90,14 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
     }
   };
 
-  const handleBack = () => {
+  /* const handleBack = () => {
     onBack(); // Volta para Register1
-  };
+  }; */
 
   if (!isOpen) return null; // Se não estiver aberto, não renderiza nada
 
   return (
-    <div className="register2-modal-overlay" onClick={onClose}>
+    <div className="register2-modal-overlay" >
       <div
         className="register2-modal-content"
         onClick={(e) => e.stopPropagation()}
@@ -201,7 +199,7 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
               vinculado a estes termos.
             </p>
           </div>
-          <div>
+          <div className="input-reg2">
             <input
               type="checkbox"
               id="accept-terms"
@@ -214,7 +212,7 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
               Aceito os termos de usuário conforme apresentado
             </label>
           </div>
-          <div>
+          <div className="input-reg2">
             <input
               type="checkbox"
               id="subscribe-news"
@@ -227,7 +225,7 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
               da ferramenta.
             </label>
           </div>
-          <div>
+          <div className="input-reg2">
             <input
               type="checkbox"
               id="subscribe-updates"
@@ -242,7 +240,7 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
           </div>
         </div>
         <div className="register2-buttons-section">
-          <button onClick={handleBack} className="register2-back-button">
+          <button onClick={onClose} className="register2-back-button">
             Voltar
           </button>
           <button
@@ -261,8 +259,8 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
 Register2.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  onBack: PropTypes.func.isRequired,
   formData: PropTypes.object.isRequired,
 };
 
 export default Register2;
+
