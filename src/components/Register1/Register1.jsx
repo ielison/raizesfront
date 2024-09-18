@@ -263,6 +263,12 @@ export default function Register1({ isOpen, onClose }) {
                   onBlur={() => handleFieldBlur("senha")}
                   className={`register1-form-input ${
                     touchedFields.senha && !formData.senha ? "error" : ""
+                  } ${
+                    formData.senha &&
+                    formData.senha === formData.confirmarSenha &&
+                    touchedFields.confirmarSenha
+                      ? "border-green"
+                      : ""
                   }`}
                 />
                 <button
