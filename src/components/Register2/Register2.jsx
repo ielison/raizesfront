@@ -277,7 +277,7 @@ Register2.propTypes = {
     numeroRua: PropTypes.string,
     telefone: PropTypes.string,
     celular: PropTypes.string,
-    profissionalDaSaude: PropTypes.bool.isRequired,
+    profissionalDaSaude: PropTypes.bool,
     graduacao: PropTypes.string,
     instituicao: PropTypes.string,
     sobrenome: PropTypes.string,
