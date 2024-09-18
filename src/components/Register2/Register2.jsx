@@ -204,7 +204,7 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
               vinculado a estes termos.
             </p>
           </div>
-          <div>
+          <div className="input-reg2">
             <input
               type="checkbox"
               id="accept-terms"
@@ -217,7 +217,7 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
               Aceito os termos de usuário conforme apresentado
             </label>
           </div>
-          <div>
+          <div className="input-reg2">
             <input
               type="checkbox"
               id="subscribe-news"
@@ -230,7 +230,7 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
               da ferramenta.
             </label>
           </div>
-          <div>
+          <div className="input-reg2">
             <input
               type="checkbox"
               id="subscribe-updates"
