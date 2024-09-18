@@ -20,11 +20,17 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
   const handleFinish = async (e) => {
     e.preventDefault(); // Prevenir o envio padrão do formulário
 
+    // Verifica se todos os campos obrigatórios estão preenchidos
+    if (!formData.nome || !formData.email || !formData.senha) {
+      alert("Por favor, preencha todos os campos obrigatórios: Nome, Email e Senha.");
+      return;
+    }
+
     // Verifica se os termos foram aceitos
     if (!acceptedTerms) {
       alert("Você deve aceitar os termos para continuar.");
       return;
-    }    
+    }
 
     // Preparar os dados do usuário
     const userData = {
@@ -44,8 +50,7 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
       receberEmail: subscribeNews,
     };
 
-    // Adicione o console.log aqui para ver o payload
-    console.log("Payload enviado para a API:", userData);
+    //console.log("Payload enviado para a API:", userData);
 
     try {
       setIsLoading(true); // Inicia o carregamento
@@ -82,7 +87,7 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
       } else {
         console.error("Erro ao registrar usuário:", error.message || error);
         alert(
-          "Não foi possível registrar o usuário. Tente novamente mais tarde. Ou entre em contato com o suporte do Raízes no email: suporte@raizesapp.com"
+          "Não foi possível registrar o usuário. Tente novamente mais tarde."
         );
       }
     } finally {
@@ -90,14 +95,14 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
     }
   };
 
-  /* const handleBack = () => {
+  const handleBack = () => {
     onBack(); // Volta para Register1
-  }; */
+  };
 
   if (!isOpen) return null; // Se não estiver aberto, não renderiza nada
 
   return (
-    <div className="register2-modal-overlay" >
+    <div className="register2-modal-overlay" onClick={onClose}>
       <div
         className="register2-modal-content"
         onClick={(e) => e.stopPropagation()}
@@ -199,7 +204,7 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
               vinculado a estes termos.
             </p>
           </div>
-          <div className="input-reg2">
+          <div>
             <input
               type="checkbox"
               id="accept-terms"
@@ -212,7 +217,7 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
               Aceito os termos de usuário conforme apresentado
             </label>
           </div>
-          <div className="input-reg2">
+          <div>
             <input
               type="checkbox"
               id="subscribe-news"
@@ -225,7 +230,7 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
               da ferramenta.
             </label>
           </div>
-          <div className="input-reg2">
+          <div>
             <input
               type="checkbox"
               id="subscribe-updates"
@@ -240,7 +245,7 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
           </div>
         </div>
         <div className="register2-buttons-section">
-          <button onClick={onClose} className="register2-back-button">
+          <button onClick={handleBack} className="register2-back-button">
             Voltar
           </button>
           <button
@@ -259,8 +264,25 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
 Register2.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  formData: PropTypes.object.isRequired,
+  onBack: PropTypes.func.isRequired,
+  formData: PropTypes.shape({
+    nome: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
+    senha: PropTypes.string.isRequired,
+    cep: PropTypes.string,
+    pais: PropTypes.string,
+    estado: PropTypes.string,
+    cidade: PropTypes.string,
+    rua: PropTypes.string,
+    numeroRua: PropTypes.string,
+    telefone: PropTypes.string,
+    celular: PropTypes.string,
+    profissionalDaSaude: PropTypes.bool.isRequired,
+    graduacao: PropTypes.string,
+    instituicao: PropTypes.string,
+    sobrenome: PropTypes.string,
+    titulo: PropTypes.string,
+  }).isRequired,
 };
 
 export default Register2;
-
