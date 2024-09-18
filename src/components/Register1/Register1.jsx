@@ -33,6 +33,7 @@ export default function Register1({ isOpen, onClose }) {
   const [showInfo, setShowInfo] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [confirmPasswordFocus, setConfirmPasswordFocus] = useState(false);
 
   const tituloOptions = [
     { value: "Especialização", label: "Especialização" },
@@ -43,15 +44,20 @@ export default function Register1({ isOpen, onClose }) {
     { value: "Pós-doc", label: "Pós-doc" },
   ];
 
-  
   if (!isOpen) return null;
 
   const handleFieldFocus = (name) => {
     setTouchedFields((prev) => ({ ...prev, [name]: true }));
+    if (name === "confirmarSenha") {
+      setConfirmPasswordFocus(true);
+    }
   };
 
   const handleFieldBlur = (name) => {
     setTouchedFields((prev) => ({ ...prev, [name]: true }));
+    if (name === "confirmarSenha") {
+      setConfirmPasswordFocus(false);
+    }
   };
 
   const handleSelectChange = (selectedOptions) => {
@@ -63,7 +69,6 @@ export default function Register1({ isOpen, onClose }) {
       titulo: values, // Atualizando o campo com as opções selecionadas
     });
   };
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -277,7 +282,7 @@ export default function Register1({ isOpen, onClose }) {
 
               <label>Confirmar Senha *</label>
               <div className="password-input-group">
-                <input
+              <input
                   type={showConfirmPassword ? "text" : "password"}
                   name="confirmarSenha"
                   placeholder="Confirmar Senha"
@@ -286,17 +291,10 @@ export default function Register1({ isOpen, onClose }) {
                   onFocus={() => handleFieldFocus("confirmarSenha")}
                   onBlur={() => handleFieldBlur("confirmarSenha")}
                   className={`register1-form-input 
-                    ${
-                      touchedFields.confirmarSenha && !formData.confirmarSenha
-                        ? "error"
-                        : ""
-                    } 
-                    ${
-                      formData.confirmarSenha === formData.senha &&
-                      touchedFields.confirmarSenha
-                        ? "border-green"
-                        : ""
-                    }`}
+                    ${touchedFields.confirmarSenha && !formData.confirmarSenha ? "error" : ""} 
+                    ${confirmPasswordFocus ? "border-red" : ""}
+                    ${formData.confirmarSenha === formData.senha && touchedFields.confirmarSenha ? "border-green" : ""}
+                  `}
                 />
                 <button
                   type="button"
