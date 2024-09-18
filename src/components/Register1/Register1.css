@@ -22,6 +22,14 @@
   border: 2px solid green;
 }
 
+.register1-form-input:focus.border-red {
+  border: 2px solid red; /* Borda vermelha ao focar */
+}
+
+.register1-form-input:focus.border-green  {
+  border: 2px solid green;
+}
+
 .register1-form-input.error {
   border: 2px solid red;
 }
@@ -201,6 +209,8 @@
   visibility: visible; /* Exibe a tooltip ao passar o mouse */
   opacity: 1; /* Fade in da tooltip */
 }
+
+
 
 .register1-form-input:focus {
   border-color: #007BFF;
