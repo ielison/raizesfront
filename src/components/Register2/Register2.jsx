@@ -6,7 +6,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useState } from "react";
 import axios from "axios";
 
-const Register2 = ({ isOpen, onClose, onBack, formData }) => {
+const Register2 = ({ isOpen, onClose, formData }) => {
   const navigate = useNavigate();
   const { setUser } = useUser();
   const { login } = useAuth();
@@ -22,7 +22,9 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
 
     // Verifica se todos os campos obrigatórios estão preenchidos
     if (!formData.nome || !formData.email || !formData.senha) {
-      alert("Por favor, preencha todos os campos obrigatórios: Nome, Email e Senha.");
+      alert(
+        "Por favor, preencha todos os campos obrigatórios: Nome, Email e Senha."
+      );
       return;
     }
 
@@ -50,7 +52,7 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
       receberEmail: subscribeNews,
     };
 
-    //console.log("Payload enviado para a API:", userData);
+    console.log("Payload enviado para a API:", userData);
 
     try {
       setIsLoading(true); // Inicia o carregamento
@@ -95,9 +97,6 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
     }
   };
 
-  const handleBack = () => {
-    onBack(); // Volta para Register1
-  };
 
   if (!isOpen) return null; // Se não estiver aberto, não renderiza nada
 
@@ -245,7 +244,7 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
           </div>
         </div>
         <div className="register2-buttons-section">
-          <button onClick={handleBack} className="register2-back-button">
+          <button onClick={onClose} className="register2-back-button">
             Voltar
           </button>
           <button
@@ -264,7 +263,6 @@ const Register2 = ({ isOpen, onClose, onBack, formData }) => {
 Register2.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  onBack: PropTypes.func.isRequired,
   formData: PropTypes.shape({
     nome: PropTypes.string.isRequired,
     email: PropTypes.string.isRequired,
