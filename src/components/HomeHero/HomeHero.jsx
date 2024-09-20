@@ -26,12 +26,12 @@ export default function HomeHero() {
         </p>
         <ul className="homeHero__list">
           <li className="homeHero__list-item">
-            Facilitar o encaminhamento de indivíduos de alto risco a serviços
-            especializados.
-          </li>
-          <li className="homeHero__list-item">
             Coletar e registrar a história pessoal e familiar de câncer de seu
             paciente por meio de perguntas direcionadas.
+          </li>
+          <li className="homeHero__list-item">
+            Facilitar o encaminhamento de indivíduos de alto risco a serviços
+            especializados.
           </li>
         </ul>
         <button

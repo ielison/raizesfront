@@ -13,12 +13,12 @@ export default function Hero() {
         </p>
         <ul className="hero-list">
           <li className="hero-list-item">
-            Facilitar o encaminhamento de indivíduos de alto risco a serviços
-            especializados.
-          </li>
-          <li className="hero-list-item">
             Coletar e registrar a história pessoal e familiar de câncer de seu
             paciente por meio de perguntas direcionadas.
+          </li>
+          <li className="hero-list-item">
+            Facilitar o encaminhamento de indivíduos de alto risco a serviços
+            especializados.
           </li>
         </ul>
         <button className="hero-startButton">Começar avaliação</button>
