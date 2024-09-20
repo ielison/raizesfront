@@ -1,6 +1,5 @@
 import "./HomeHero.css";
-import Etapa1Modal from "../Etapa1Modal/Etapa1Modal";
-import DadosPaciente from "../DadosPaciente/DadosPaciente";
+import PacienteModal from "../PacienteModal/PacienteModal";
 import { useModals } from "../../context/ModalContext";
 import { useUser } from "../../context/UserContext";
 
@@ -9,16 +8,11 @@ export default function HomeHero() {
   const { openModal, closeModal, currentModal } = useModals();
 
   const handleStartClick = () => {
-    openModal("Etapa1Modal");
+    openModal("PacienteModal");
   };
 
   const handleCloseModal = () => {
     closeModal();
-  };
-
-  const handleStartEvaluation = () => {
-    closeModal();
-    openModal("DadosPaciente");
   };
 
   return (
@@ -47,11 +41,8 @@ export default function HomeHero() {
           Começar avaliação
         </button>
       </div>
-      {currentModal === "Etapa1Modal" && (
-        <Etapa1Modal onClose={handleCloseModal} onStartEvaluation={handleStartEvaluation} />
-      )}
-      {currentModal === "DadosPaciente" && (
-        <DadosPaciente onClose={handleCloseModal} />
+      {currentModal === "PacienteModal" && (
+        <PacienteModal onClose={handleCloseModal} idUser={user?.idUser} />
       )}
     </div>
   );
