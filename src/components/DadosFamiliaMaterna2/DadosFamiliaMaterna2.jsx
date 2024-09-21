@@ -170,6 +170,7 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
                 <label className="dfm-label">
                   Qual foi o tipo de câncer que ela teve?
                   <Select
+                    isMulti
                     placeholder="Selecione o tipo de câncer"
                     options={cancerOptions}
                     value={motherCancerDetails.type}
