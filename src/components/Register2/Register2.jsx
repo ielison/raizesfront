@@ -11,6 +11,8 @@ const Register2 = ({ isOpen, onClose, formData }) => {
   const { setUser } = useUser();
   const { login } = useAuth();
 
+//ok
+  
   // Estados locais
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [subscribeNews, setSubscribeNews] = useState(false);
