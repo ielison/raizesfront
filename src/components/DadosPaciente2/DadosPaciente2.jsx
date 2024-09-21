@@ -1,25 +1,52 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import "./DadosPaciente2.css";
 import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
 
 export default function DadosPaciente2({ onFormChange }) {
-  const [diagnoses, setDiagnoses] = useState([{ type: [], age: "" }]);
-  const [hasCancer, setHasCancer] = useState(false);
-  const [hasOtherDiagnosis, setHasOtherDiagnosis] = useState(false);
-
-  // State to hold user data
-  const [userData, setUserData] = useState({
-    nome: "",
-    sexo: "",
-    idade: 0,
-    teveCancer: false,
-    qualCancer: "",
-    idadeDiagnostico: 0,
-    telefone: "",
-    dataConsulta: "",
+  const [diagnoses, setDiagnoses] = useState(() => {
+    const storedDiagnoses = JSON.parse(localStorage.getItem("diagnoses"));
+    return storedDiagnoses || [{ type: [], age: "" }];
   });
+
+  const [hasCancer, setHasCancer] = useState(() => {
+    const storedHasCancer = JSON.parse(localStorage.getItem("hasCancer"));
+    return storedHasCancer !== null ? storedHasCancer : false;
+  });
+
+  const [hasOtherDiagnosis, setHasOtherDiagnosis] = useState(() => {
+    const storedHasOtherDiagnosis = JSON.parse(
+      localStorage.getItem("hasOtherDiagnosis")
+    );
+    return storedHasOtherDiagnosis !== null ? storedHasOtherDiagnosis : false;
+  });
+
+  const [userData, setUserData] = useState(() => {
+    const storedUserData = JSON.parse(localStorage.getItem("userData"));
+    return (
+      storedUserData || {
+        nome: "",
+        sexo: "",
+        idade: 0,
+        teveCancer: false,
+        qualCancer: "",
+        idadeDiagnostico: 0,
+        telefone: "",
+        dataConsulta: "",
+      }
+    );
+  });
+
+  useEffect(() => {
+    localStorage.setItem("userData", JSON.stringify(userData));
+    localStorage.setItem("diagnoses", JSON.stringify(diagnoses));
+    localStorage.setItem("hasCancer", JSON.stringify(hasCancer)); // Salvando hasCancer
+    localStorage.setItem(
+      "hasOtherDiagnosis",
+      JSON.stringify(hasOtherDiagnosis)
+    ); // Salvando hasOtherDiagnosis
+  }, [userData, diagnoses, hasCancer, hasOtherDiagnosis]);
 
   const handleAddDiagnosis = () => {
     setDiagnoses([...diagnoses, { type: [], age: "" }]);
@@ -30,28 +57,28 @@ export default function DadosPaciente2({ onFormChange }) {
     setHasOtherDiagnosis(newHasOtherDiagnosis);
     onFormChange({ outroCancer: newHasOtherDiagnosis });
 
-    // Reset outroCancerList if the user changes the selection
     if (!newHasOtherDiagnosis) {
-      setDiagnoses([{ type: [], age: "" }]); // Resetting the diagnoses state
-      onFormChange({ outroCancerList: [] }); // Clear the outroCancerList
+      setDiagnoses([{ type: [], age: "" }]);
+      onFormChange({ outroCancerList: [] });
     }
   };
 
   const handleFieldChange = (field, value) => {
-    const updatedUserData = { ...userData, [field]: value };
+    const updatedUserData = {
+      ...userData,
+      [field]: value,
+      outroCancer: hasOtherDiagnosis,
+    };
     setUserData(updatedUserData);
-    console.log("User Data Updated:", updatedUserData);
-    
-    // Update the form with the complete userData object
+
     onFormChange({
       usuariPrincipal: {
         ...updatedUserData,
-        qualCancer: updatedUserData.qualCancer || "", // Ensuring it's a string
-        outroCancer: hasOtherDiagnosis,
-        outroCancerList: diagnoses.map(d => ({
-          idCancer: 0, // Placeholder
-          tipoCancer: d.type.map(opt => opt.label).join(", ") || "", // Ensuring it's a string
-          idadeDiagnostico: d.age ? Number(d.age) : 0 // Convert to number or default to 0
+        qualCancer: updatedUserData.qualCancer || "",
+        outroCancerList: diagnoses.map((d) => ({
+          idCancer: 0,
+          tipoCancer: d.type.map((opt) => opt.label).join(", ") || "",
+          idadeDiagnostico: d.age ? Number(d.age) : 0,
         })),
       },
     });
@@ -60,19 +87,25 @@ export default function DadosPaciente2({ onFormChange }) {
   const handleDiagnosisChange = (index, field, value) => {
     const updatedDiagnoses = [...diagnoses];
     updatedDiagnoses[index][field] = value;
+
+    // Update userData with the current diagnoses
     setDiagnoses(updatedDiagnoses);
-    
-    // Update outroCancerList when the diagnosis changes
-    handleFieldChange('qualCancer', userData.qualCancer); // Re-trigger the form update
+    handleFieldChange(
+      "qualCancer",
+      updatedDiagnoses
+        .map((d) => d.type.map((opt) => opt.label).join(", "))
+        .join(", ")
+    );
   };
 
   return (
     <div className="dp-form-container">
       <label className="nome-paciente">
-        <span>Qual o nome do paciente?</span>
+        <span>Qual o nome do(a) paciente?</span>
         <input
           type="text"
           placeholder="Informe o nome do paciente"
+          value={userData.nome}
           onChange={(e) => handleFieldChange("nome", e.target.value)}
         />
       </label>
@@ -83,34 +116,43 @@ export default function DadosPaciente2({ onFormChange }) {
         <input
           type="tel"
           placeholder="Informe o telefone do paciente"
+          value={userData.telefone}
           onChange={(e) => handleFieldChange("telefone", e.target.value)}
         />
       </label>
 
       <div className="dp-row">
-        <label className="sexo-paciente" style={{ flex: 1, marginRight: "10px" }}>
+        <label
+          className="sexo-paciente"
+          style={{ flex: 1, marginRight: "10px" }}
+        >
           Sexo biológico
           <select
-            defaultValue=""
+            value={userData.sexo}
             onChange={(e) => handleFieldChange("sexo", e.target.value)}
           >
-            <option value="" disabled>Selecione</option>
+            <option value="" disabled>
+              Selecione
+            </option>
             <option value="feminino">Feminino</option>
             <option value="masculino">Masculino</option>
           </select>
         </label>
         <label style={{ flex: 1 }}>
-          Idade do Paciente
+          Idade do(a) Paciente
           <input
             type="number"
             min="0"
-            onChange={(e) => handleFieldChange("idade", Math.max(0, e.target.value))}
+            value={userData.idade}
+            onChange={(e) =>
+              handleFieldChange("idade", Math.max(0, e.target.value))
+            }
           />
         </label>
       </div>
 
       <label>
-        O Sr(a) já teve câncer?
+        O(A) Sr(a) já teve câncer?
         <div className="radio-group">
           <label>
             <input
@@ -145,28 +187,37 @@ export default function DadosPaciente2({ onFormChange }) {
         <>
           <div className="dp-row">
             <label style={{ flex: 1, marginRight: "10px" }}>
-              Qual tipo de câncer o Sr(a) teve?
+              Qual tipo de câncer o(a) Sr(a) teve?
               <Select
                 isMulti
                 options={cancerOptions}
                 placeholder="Selecione..."
                 onChange={(selectedOptions) => {
-                  handleFieldChange("qualCancer", selectedOptions.map(opt => opt.label).join(", "));
+                  handleFieldChange(
+                    "qualCancer",
+                    selectedOptions.map((opt) => opt.label).join(", ")
+                  );
                 }}
               />
             </label>
             <label style={{ flex: 1 }}>
-              Com que idade o Sr(a) recebeu o diagnóstico?
+              Com que idade recebeu o diagnóstico?
               <input
                 type="number"
                 min="0"
-                onChange={(e) => handleFieldChange("idadeDiagnostico", Math.max(0, e.target.value))}
+                value={userData.idadeDiagnostico}
+                onChange={(e) =>
+                  handleFieldChange(
+                    "idadeDiagnostico",
+                    Math.max(0, e.target.value)
+                  )
+                }
               />
             </label>
           </div>
 
           <label>
-            O Sr(a) recebeu algum outro diagnóstico de câncer?
+            O(A) Sr(a) recebeu algum outro diagnóstico de câncer?
             <div className="radio-group">
               <label>
                 <input
@@ -203,7 +254,9 @@ export default function DadosPaciente2({ onFormChange }) {
                         options={cancerOptions}
                         placeholder="Selecione..."
                         value={diagnosis.type}
-                        onChange={(selectedOptions) => handleDiagnosisChange(index, 'type', selectedOptions)}
+                        onChange={(selectedOptions) =>
+                          handleDiagnosisChange(index, "type", selectedOptions)
+                        }
                       />
                     </label>
                     <label style={{ flex: 1 }}>
@@ -212,7 +265,13 @@ export default function DadosPaciente2({ onFormChange }) {
                         type="number"
                         min="0"
                         value={diagnosis.age}
-                        onChange={(e) => handleDiagnosisChange(index, 'age', Math.max(0, e.target.value))}
+                        onChange={(e) =>
+                          handleDiagnosisChange(
+                            index,
+                            "age",
+                            Math.max(0, e.target.value)
+                          )
+                        }
                       />
                     </label>
                   </div>

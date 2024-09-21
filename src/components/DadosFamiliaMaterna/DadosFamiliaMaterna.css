@@ -30,14 +30,14 @@
   flex-direction: row;
 }
 
-.dfm-form-container {
+/* .dfm-form-container {
   display: flex;
   flex-direction: column;
   width: 100%;
   padding: 20px;
   overflow-y: auto;
 }
-
+ */
 .dfm-close-button {
   border: none;
   background: transparent;

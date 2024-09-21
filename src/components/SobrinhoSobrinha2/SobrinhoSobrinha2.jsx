@@ -134,7 +134,7 @@ export default function SobrinhosSobrinhas2({ onFormChange }) {
                   }}
                 />
               </label>
-              <label>
+              <label className="parentesco-ss">
                 Parentesco
                 <select
                   value={detail.relation}
@@ -144,7 +144,7 @@ export default function SobrinhosSobrinhas2({ onFormChange }) {
                     setCancerDetails(newDetails);
                   }}
                 >
-                  <option value="">Selecione</option>
+                  <option value="">Selecione o parentesco</option>
                   <option value="sobrinho">Sobrinho</option>
                   <option value="sobrinha">Sobrinha</option>
                   <option value="meio-sobrinho">Meio-sobrinho</option>

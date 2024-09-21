@@ -144,11 +144,11 @@
   flex-direction: column;
 }
 
-.nome-paciente span {
+/* .nome-paciente span {
   color: #797979;
   font-weight: 700;
   font-size: 18px;
-}
+} */
 
 .nome-paciente input {
   height: 32px;

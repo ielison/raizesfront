@@ -71,8 +71,12 @@ const Register2 = ({ isOpen, onClose, formData }) => {
 
       // Verifica se o status da resposta é 204
       if (response.status === 204) {
+        const data = await response.json();
         setUser({ nome: formData.nome });
-        login();
+
+        login(data.idUser);
+        //console.log(data.email, data.idUser, );
+        
         navigate("/home");
       } else {
         alert(

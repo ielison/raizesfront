@@ -3,8 +3,10 @@ import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
 import "./PrimosPrimasMaternos2.css";
+import InfoIcon from "../../assets/information-2-fill.svg"; // Importe o SVG aqui
 
 export default function PrimosPrimasMaternos2() {
+  const [tooltipIndex, setTooltipIndex] = useState(null);
   const [noKnowledge, setNoKnowledge] = useState(false);
   const [primosHadCancer, setPrimosHadCancer] = useState(null);
   const [primosDetails, setPrimosDetails] = useState([
@@ -133,12 +135,29 @@ export default function PrimosPrimasMaternos2() {
                   >
                     {primo.showAgeDropdown ? "Digitar idade" : "Não sei"}
                   </button>
+                  <img
+                    src={InfoIcon}
+                    alt="Info"
+                    className="info-icon-idade"
+                    onClick={() =>
+                      setTooltipIndex(index === tooltipIndex ? null : index)
+                    } // Alterna o tooltip ao clicar
+                  />
+                  {tooltipIndex === index && ( // Exiba o tooltip apenas se o index coincidir
+                    <div className="tooltip-idade--pp">
+                      Caso seu paciente não saiba a idade exata do diagnóstico
+                      de câncer em um familiar, questione se foi antes ou depois
+                      dos 50 anos. Essa estimativa é mais fácil de lembrar e
+                      ainda oferece um corte de idade útil para a avaliação de
+                      risco.
+                    </div>
+                  )}
                 </label>
               </div>
             ))}
             <button
               type="button"
-              className="ppm-btn-add"
+              className="nn-btn-add"
               onClick={handleAddMore}
             >
               Informar+

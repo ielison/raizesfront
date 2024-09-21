@@ -99,7 +99,7 @@ export default function FamiliaresDistantesMaterno2() {
     <div className="fdm-content">
       <label>
         Algum outro familiar do seu lado materno já teve câncer?
-        <div className="radio-group">
+        <div className="radio-group--fdm">
           <label>
             <input
               type="radio"
@@ -130,6 +130,8 @@ export default function FamiliaresDistantesMaterno2() {
         </div>
       </label>
 
+
+      
       {distantesHadCancer && (
         <>
           {distantesDetails.map((distante, index) => (
@@ -137,6 +139,7 @@ export default function FamiliaresDistantesMaterno2() {
               <label>
                 Parentesco:
                 <Select
+                  placeholder="Selecione o parentesco"
                   options={relationshipOptions}
                   value={relationshipOptions.find(
                     (option) => option.value === distante.relationship
@@ -161,8 +164,9 @@ export default function FamiliaresDistantesMaterno2() {
                 )}
               </label>
               <label>
-                Tipo de câncer:
+                Tipo de câncer ou neoplasia:
                 <Select
+                  placeholder="Selecione o tipo de câncer"
                   options={cancerOptions}
                   value={distante.type}
                   onChange={(selectedOption) => {
@@ -204,7 +208,9 @@ export default function FamiliaresDistantesMaterno2() {
               </label>
             </div>
           ))}
-          <button onClick={handleAddMore}>Adicionar outro familiar</button>
+          <button className="nn-btn-add" onClick={handleAddMore}>
+            Informar +
+          </button>
         </>
       )}
     </div>

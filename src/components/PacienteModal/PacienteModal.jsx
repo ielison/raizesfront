@@ -148,6 +148,7 @@ export default function PacienteModal({ onClose }) {
         teveCancer: false,
         qtdTiosCancer: 0,
         sexo: "",
+        ladoParterno: "",
         outroCancerList: [
           {
             id: 0,
@@ -198,49 +199,84 @@ export default function PacienteModal({ onClose }) {
     ],
   });
 
+  useEffect(() => {
+    localStorage.setItem('formData', JSON.stringify(data));
+  }, [data]);
+
+  const handleModalClose = () => {
+    localStorage.setItem('formData', JSON.stringify(data));
+    onClose();
+  };
+  const mergeTios = (tiosMaterno, tiosPaterno) => {
+    const merged = new Set();
+
+    tiosMaterno.forEach((tio) => {
+      merged.add(JSON.stringify(tio));
+    });
+
+    tiosPaterno.forEach((tio) => {
+      merged.add(JSON.stringify(tio));
+    });
+
+    return Array.from(merged).map((tio) => JSON.parse(tio));
+  };
+
   const handleFormChange = (updatedFields) => {
     console.log("Updating Form Fields:", updatedFields);
-  
-    const { usuariPrincipal, mae, pai, filhosList, netosList, irmaosList, sobrinhosList, tiosListMaterno, tiosListPaterno, avosList, primosList, outroFamiliarList } = updatedFields;
-  
+
+    const {
+      usuariPrincipal,
+      mae,
+      pai,
+      filhosList,
+      netosList,
+      irmaosList,
+      sobrinhosList,
+      tiosListMaterno = [], // Define um valor padrão se não for passado
+      tiosListPaterno = [], // Define um valor padrão se não for passado
+      avosList,
+      primosList,
+      outroFamiliarList,
+    } = updatedFields;
+
+    console.log("Tios Materno:", tiosListMaterno);
+    console.log("Tios Paterno:", tiosListPaterno);
+
     // Função para mesclar e filtrar tios
-    const mergeTios = (materno, paterno) => {
-      const allTios = [...materno, ...paterno];
-      
-      // Cria um mapa para garantir que apenas a última atualização é mantida
-      const tiosMap = new Map();
-      allTios.forEach(tio => {
-        tiosMap.set(tio.id, tio); // `id` deve ser uma propriedade única
-      });
-      
-      return Array.from(tiosMap.values());
-    };
-  
+    const mergedTios = mergeTios(
+      tiosListMaterno.length ? tiosListMaterno : data.tiosList.filter(tio => tio.ladoParterno === "materno"),
+      tiosListPaterno.length ? tiosListPaterno : data.tiosList.filter(tio => tio.ladoParterno === "paterno")
+    );
+
     setData((prevData) => ({
       ...prevData,
-      usuariPrincipal: {
-        ...prevData.usuariPrincipal,
-        ...usuariPrincipal,
-      },
-      mae: {
-        ...prevData.mae,
-        ...mae,
-      },
-      pai: {
-        ...prevData.pai,
-        ...pai,
-      },
-      filhosList: filhosList ? filhosList : prevData.filhosList,
-      netosList: netosList ? netosList : prevData.netosList,
-      irmaosList: irmaosList ? irmaosList : prevData.irmaosList,
-      sobrinhosList: sobrinhosList ? sobrinhosList : prevData.sobrinhosList,
-      tiosList: mergeTios(tiosListMaterno || [], tiosListPaterno || []), // Mescla as listas de tios
-      avosList: avosList ? avosList : prevData.avosList,
-      primosList: primosList ? primosList : prevData.primosList,
-      outroFamiliarList: outroFamiliarList ? outroFamiliarList : prevData.outroFamiliarList,
+      usuariPrincipal: { ...prevData.usuariPrincipal, ...usuariPrincipal },
+      mae: { ...prevData.mae, ...mae },
+      pai: { ...prevData.pai, ...pai },
+      filhosList: filhosList || prevData.filhosList,
+      netosList: netosList || prevData.netosList,
+      irmaosList: irmaosList || prevData.irmaosList,
+      sobrinhosList: sobrinhosList || prevData.sobrinhosList,
+      tiosList: mergedTios,
+      avosList: avosList || prevData.avosList,
+      primosList: primosList || prevData.primosList,
+      outroFamiliarList: outroFamiliarList || prevData.outroFamiliarList,
     }));
   };
-  
+
+  useEffect(() => {
+    localStorage.setItem('formData', JSON.stringify(data));
+    return () => {
+      //localStorage.removeItem('formData'); // Clear on unmount
+    };
+  }, [data]);
+
+  useEffect(() => {
+    const savedData = localStorage.getItem('formData');
+    if (savedData) {
+      setData(JSON.parse(savedData));
+    }
+  }, []);
 
   const steps = useMemo(
     () => [
@@ -253,20 +289,52 @@ export default function PacienteModal({ onClose }) {
             label: "Dados do paciente",
             component: <SubItem1 onFormChange={handleFormChange} />,
           },
-          { id: 1, label: "Filhos e filhas", component: <SubItem2  onFormChange={handleFormChange}  /> },
-          { id: 2, label: "Netos e netas", component: <SubItem3 onFormChange={handleFormChange}  />  },
-          { id: 3, label: "Irmãos e irmãs", component: <SubItem4 onFormChange={handleFormChange}  /> },
-          { id: 4, label: "Sobrinhos e sobrinhas", component: <SubItem5 onFormChange={handleFormChange} /> },
+          {
+            id: 1,
+            label: "Filhos e filhas",
+            component: <SubItem2 onFormChange={handleFormChange} />,
+          },
+          {
+            id: 2,
+            label: "Netos e netas",
+            component: <SubItem3 onFormChange={handleFormChange} />,
+          },
+          {
+            id: 3,
+            label: "Irmãos e irmãs",
+            component: <SubItem4 onFormChange={handleFormChange} />,
+          },
+          {
+            id: 4,
+            label: "Sobrinhos e sobrinhas",
+            component: <SubItem5 onFormChange={handleFormChange} />,
+          },
         ],
       },
       {
         id: 1,
         label: "Etapa 2",
         subItems: [
-          { id: 0, label: "Dados da família materna", component: <SubItem6 onFormChange={handleFormChange} /> },
-          { id: 1, label: "Avós", component: <SubItem7 onFormChange={handleFormChange} /> },
-          { id: 2, label: "Primos e primas", component: <SubItem8 onFormChange={handleFormChange} /> },
-          { id: 3, label: "Familiares distantes", component: <SubItem9 onFormChange={handleFormChange} /> },
+          {
+            id: 0,
+            label: "Dados da família materna",
+            component: <SubItem6 onFormChange={handleFormChange} />,
+          },
+          {
+            id: 1,
+            label: "Avós",
+            component: <SubItem7 onFormChange={handleFormChange} />,
+          },
+          {
+            id: 2,
+            label: "Primos e primas",
+            component: <SubItem8 onFormChange={handleFormChange} />,
+          },
+          {
+            id: 3,
+            label: "Familiares distantes",
+            component: <SubItem9 onFormChange={handleFormChange} />,
+          },
         ],
       },
       {
@@ -278,9 +346,21 @@ export default function PacienteModal({ onClose }) {
             label: "Dados da família paterna",
             component: <SubItem10 onFormChange={handleFormChange} />,
           },
-          { id: 1, label: "Avós", component: <SubItem11 onFormChange={handleFormChange} /> },
-          { id: 2, label: "Primos e primas", component: <SubItem12 onFormChange={handleFormChange} /> },
-          { id: 3, label: "Familiares distantes", component: <SubItem13 onFormChange={handleFormChange} /> },
+          {
+            id: 1,
+            label: "Avós",
+            component: <SubItem11 onFormChange={handleFormChange} />,
+          },
+          {
+            id: 2,
+            label: "Primos e primas",
+            component: <SubItem12 onFormChange={handleFormChange} />,
+          },
+          {
+            id: 3,
+            label: "Familiares distantes",
+            component: <SubItem13 onFormChange={handleFormChange} />,
+          },
         ],
       },
     ],
@@ -289,6 +369,7 @@ export default function PacienteModal({ onClose }) {
 
   const handleNext = () => {
     console.log(`Step: ${currentStep}, Subitem: ${currentSubItem}`); // Debug log
+    console.log("Estado atual de tiosList:", data.tiosList);
 
     const currentDate = new Date().toISOString();
 
@@ -351,6 +432,7 @@ export default function PacienteModal({ onClose }) {
     }
   };
 
+ 
   const handleBack = () => {
     if (currentSubItem > 0) {
       setCurrentSubItem(currentSubItem - 1);
@@ -391,7 +473,7 @@ export default function PacienteModal({ onClose }) {
   return (
     <div className="pacienteModal__overlay">
       <div className="pacienteModal__container" ref={modalRef}>
-        <button className="pacienteModal__close" onClick={onClose}>
+        <button className="pacienteModal__close" onClick={handleModalClose}>
           &times;
         </button>
 
@@ -493,7 +575,7 @@ function SubItem2({ onFormChange }) {
   return (
     <div>
       <div>Etapa 1 - Filhos e filhas</div>
-      <FilhosFilhas2 onFormChange={onFormChange}/>
+      <FilhosFilhas2 onFormChange={onFormChange} />
     </div>
   );
 }
@@ -502,7 +584,7 @@ function SubItem3({ onFormChange }) {
   return (
     <div>
       <div>Etapa 1 - Netos e netas</div>
-      <NetosNetas2 onFormChange={onFormChange}/>
+      <NetosNetas2 onFormChange={onFormChange} />
     </div>
   );
 }
@@ -511,7 +593,7 @@ function SubItem4({ onFormChange }) {
   return (
     <>
       <div>Etapa 1 - Irmãos e irmãs</div>
-      <IrmaosIrmas2 onFormChange={onFormChange}/>
+      <IrmaosIrmas2 onFormChange={onFormChange} />
     </>
   );
 }
@@ -520,7 +602,7 @@ function SubItem5({ onFormChange }) {
   return (
     <div>
       <div>Etapa 1 - Sobrinhos e sobrinhas</div>
-      <SobrinhoSobrinha2  onFormChange={onFormChange}/>
+      <SobrinhoSobrinha2 onFormChange={onFormChange} />
     </div>
   );
 }
@@ -529,7 +611,7 @@ function SubItem6({ onFormChange }) {
   return (
     <div>
       <div>Etapa 2 - Dados da família materna</div>
-      <DadosFamiliaMaterna2  onFormChange={onFormChange} />
+      <DadosFamiliaMaterna2 onFormChange={onFormChange} />
     </div>
   );
 }
@@ -538,7 +620,7 @@ function SubItem7({ onFormChange }) {
   return (
     <div>
       <div>Etapa 2 - Avós maternos</div>
-      <AvosMaternos2  onFormChange={onFormChange}/>
+      <AvosMaternos2 onFormChange={onFormChange} />
     </div>
   );
 }
@@ -547,7 +629,7 @@ function SubItem8({ onFormChange }) {
   return (
     <div>
       <div>Etapa 2 - Primos e primas</div>
-      <PrimosPrimasMaternos2  onFormChange={onFormChange} />
+      <PrimosPrimasMaternos2 onFormChange={onFormChange} />
     </div>
   );
 }
@@ -556,16 +638,16 @@ function SubItem9({ onFormChange }) {
   return (
     <div>
       <div>Etapa 2 - Familiares distantes</div>
-      <FamiliaresDistantesMaterno2  onFormChange={onFormChange} />
+      <FamiliaresDistantesMaterno2 onFormChange={onFormChange} />
     </div>
   );
 }
 
-function SubItem10({ onFormChange  }) {
+function SubItem10({ onFormChange }) {
   return (
     <div>
       <div>Etapa 3 - Dados da família paterna</div>
-      <DadosFamiliaPaterna2  onFormChange={onFormChange} />
+      <DadosFamiliaPaterna2 onFormChange={onFormChange} />
     </div>
   );
 }
@@ -574,7 +656,7 @@ function SubItem11({ onFormChange }) {
   return (
     <div>
       <div>Etapa 3 - Avós paternos</div>
-      <AvosPaternos2  onFormChange={onFormChange} />
+      <AvosPaternos2 onFormChange={onFormChange} />
     </div>
   );
 }
@@ -583,7 +665,7 @@ function SubItem12({ onFormChange }) {
   return (
     <div>
       <div>Etapa 3 - Primos e primas</div>
-      <PrimosPrimasPaternos2  onFormChange={onFormChange} />
+      <PrimosPrimasPaternos2 onFormChange={onFormChange} />
     </div>
   );
 }
@@ -592,7 +674,7 @@ function SubItem13({ onFormChange }) {
   return (
     <div>
       <div>Etapa 3 - Familiares distantes</div>
-      <FamiliaresDistantesPaterno2  onFormChange={onFormChange} />
+      <FamiliaresDistantesPaterno2 onFormChange={onFormChange} />
     </div>
   );
 }
@@ -602,6 +684,18 @@ PacienteModal.propTypes = {
   idUser: PropTypes.number.isRequired,
 };
 
-SubItem1.propTypes, SubItem2.propTypes, SubItem3.propTypes, SubItem4.propTypes, SubItem5.propTypes, SubItem6.propTypes, SubItem7.propTypes, SubItem8.propTypes, SubItem9.propTypes, SubItem10.propTypes, SubItem11.propTypes, SubItem12.propTypes, SubItem13.propTypes = {
-  onFormChange: PropTypes.func.isRequired,
-};
+SubItem1.propTypes,
+  SubItem2.propTypes,
+  SubItem3.propTypes,
+  SubItem4.propTypes,
+  SubItem5.propTypes,
+  SubItem6.propTypes,
+  SubItem7.propTypes,
+  SubItem8.propTypes,
+  SubItem9.propTypes,
+  SubItem10.propTypes,
+  SubItem11.propTypes,
+  SubItem12.propTypes,
+  (SubItem13.propTypes = {
+    onFormChange: PropTypes.func.isRequired,
+  });

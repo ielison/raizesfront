@@ -17,30 +17,38 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
     age: initialData?.mae?.outroCancerList[0]?.idadeDiagnostico || "",
   });
   const [hasMaternalUnclesAunts, setHasMaternalUnclesAunts] = useState(
-    initialData?.tiosList?.length > 0 || false
+    initialData?.tiosListMaterno?.length > 0 || false
   );
   const [uncleAuntQuantities, setUncleAuntQuantities] = useState({
     tios:
-      initialData?.tiosList?.filter((item) => item.sexo === "masculino")
+      initialData?.tiosListMaterno?.filter((item) => item.sexo === "masculino")
         .length || "",
     tias:
-      initialData?.tiosList?.filter((item) => item.sexo === "feminino")
+      initialData?.tiosListMaterno?.filter((item) => item.sexo === "feminino")
         .length || "",
   });
   const [uncleAuntCancer, setUncleAuntCancer] = useState(
-    initialData?.tiosList?.some((item) => item.teveCancer) || false
+    initialData?.tiosListMaterno?.some((item) => item.teveCancer) || false
   );
   const [uncleAuntCancerDetails, setUncleAuntCancerDetails] = useState(
-    // eslint-disable-next-line no-unused-vars
-    initialData?.tiosList?.map((tio, index) => ({
-      type: tio.outroCancerList[0]?.tipoCancer || [],
+    initialData?.tiosListMaterno?.map((tio) => ({
+      type: tio.outroCancerList[0]?.tipoCancer || null,
       parentesco: tio.sexo === "masculino" ? "tio" : "tia",
       age: tio.outroCancerList[0]?.idadeDiagnostico || "",
-    })) || [{ type: [], parentesco: "", age: "" }]
+    })) || [{ type: null, parentesco: "", age: "" }]
   );
   const [showAgeDropdowns, setShowAgeDropdowns] = useState([false]);
 
   useEffect(() => {
+    console.log("Valores antes da atualização:", {
+      motherHadCancer,
+      motherCancerDetails,
+      hasMaternalUnclesAunts,
+      uncleAuntQuantities,
+      uncleAuntCancer,
+      uncleAuntCancerDetails,
+    });
+
     const updatedUserData = {
       mae: {
         id: 0,
@@ -53,7 +61,7 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
           },
         ],
       },
-      tiosList: hasMaternalUnclesAunts
+      tiosListMaterno: hasMaternalUnclesAunts
         ? uncleAuntCancerDetails.map((detail, index) => ({
             id: index,
             temTios: true,
@@ -72,7 +80,7 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
           }))
         : [],
     };
-  
+
     console.log("User Data Updated:", updatedUserData);
     onFormChange(updatedUserData);
   }, [
@@ -84,7 +92,6 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
     uncleAuntCancerDetails,
     onFormChange,
   ]);
-  
 
   const handleNoKnowledgeChange = () => {
     setNoKnowledge(!noKnowledge);
@@ -107,9 +114,14 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
   const handleAddCancerDetail = () => {
     setUncleAuntCancerDetails([
       ...uncleAuntCancerDetails,
-      { type: [], parentesco: "", age: "" },
+      { type: null, parentesco: "", age: "" },
     ]);
     setShowAgeDropdowns([...showAgeDropdowns, false]);
+  };
+
+  const validateAge = (value) => {
+    // Ensure age is a non-negative number or an empty string
+    return value >= 0 || value === "";
   };
 
   return (
@@ -192,12 +204,14 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
                         <input
                           type="number"
                           value={motherCancerDetails.age}
-                          onChange={(e) =>
-                            setMotherCancerDetails((prev) => ({
-                              ...prev,
-                              age: e.target.value,
-                            }))
-                          }
+                          onChange={(e) => {
+                            if (validateAge(e.target.value)) {
+                              setMotherCancerDetails((prev) => ({
+                                ...prev,
+                                age: e.target.value,
+                              }));
+                            }
+                          }}
                           className="dfm-input"
                         />
                       )}
@@ -247,35 +261,36 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
                   <input
                     type="number"
                     value={uncleAuntQuantities.tios}
-                    onChange={(e) =>
-                      setUncleAuntQuantities((prev) => ({
-                        ...prev,
-                        tios: e.target.value,
-                      }))
-                    }
-                    placeholder="Quantidade"
+                    onChange={(e) => {
+                      if (validateAge(e.target.value)) {
+                        setUncleAuntQuantities((prev) => ({
+                          ...prev,
+                          tios: e.target.value,
+                        }));
+                      }
+                    }}
                     className="dfm-input"
                   />
                 </label>
-
                 <label className="dfm-label">
                   Quantas tias?
                   <input
                     type="number"
                     value={uncleAuntQuantities.tias}
-                    onChange={(e) =>
-                      setUncleAuntQuantities((prev) => ({
-                        ...prev,
-                        tias: e.target.value,
-                      }))
-                    }
-                    placeholder="Quantidade"
+                    onChange={(e) => {
+                      if (validateAge(e.target.value)) {
+                        setUncleAuntQuantities((prev) => ({
+                          ...prev,
+                          tias: e.target.value,
+                        }));
+                      }
+                    }}
                     className="dfm-input"
                   />
                 </label>
 
                 <label className="dfm-label">
-                  Algum deles já teve câncer?
+                  Algum deles teve câncer?
                   <div className="dfm-checkbox-group">
                     <label>
                       <input
@@ -303,77 +318,78 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
                 {uncleAuntCancer && (
                   <>
                     {uncleAuntCancerDetails.map((detail, index) => (
-                      <div key={index} className="dfm-details">
-                        <label className="dfm-label">
-                          Tipo de câncer para {detail.parentesco}
-                          <Select
-                            placeholder="Selecione o tipo de câncer"
-                            options={cancerOptions}
-                            value={detail.type}
-                            onChange={(selectedOption) => {
-                              const updatedDetails = [
-                                ...uncleAuntCancerDetails,
-                              ];
-                              updatedDetails[index].type = selectedOption;
-                              setUncleAuntCancerDetails(updatedDetails);
-                            }}
-                            className="dfm-select"
-                          />
-                        </label>
-
-                        <label className="dfm-label">
-                          <div className="dfm-idade">
-                            <span>
-                              Idade
-                              {showAgeDropdowns[index + 1] ? (
-                                <Select
-                                  placeholder="Selecione a idade"
-                                  options={ageOptions}
-                                  value={detail.age}
-                                  onChange={(selectedOption) => {
-                                    const updatedDetails = [
-                                      ...uncleAuntCancerDetails,
-                                    ];
-                                    updatedDetails[index].age = selectedOption;
-                                    setUncleAuntCancerDetails(updatedDetails);
-                                  }}
-                                  className="dfm-select"
-                                />
-                              ) : (
-                                <input
-                                  type="number"
-                                  value={detail.age}
-                                  onChange={(e) => {
-                                    const updatedDetails = [
-                                      ...uncleAuntCancerDetails,
-                                    ];
-                                    updatedDetails[index].age = e.target.value;
-                                    setUncleAuntCancerDetails(updatedDetails);
-                                  }}
-                                  className="dfm-input"
-                                />
-                              )}
-                            </span>
-                            <button
-                              type="button"
-                              onClick={() => handleAgeToggle(index + 1)}
-                              className="dfm-toggle-button"
-                            >
-                              {showAgeDropdowns[index + 1]
-                                ? "Digitar idade"
-                                : "Não sei"}
-                            </button>
-                          </div>
-                        </label>
+                      <div key={index} className="dfm-cancer-detail">
+                        <Select
+                          placeholder="Selecione o tipo de câncer"
+                          options={cancerOptions}
+                          value={detail.type}
+                          onChange={(selectedOption) => {
+                            setUncleAuntCancerDetails((prev) =>
+                              prev.map((d, i) =>
+                                i === index
+                                  ? { ...d, type: selectedOption }
+                                  : d
+                              )
+                            );
+                          }}
+                          className="dfm-select"
+                        />
+                        <div className="dfm-idade">
+                          <span>
+                            Idade
+                            {showAgeDropdowns[index + 1] ? (
+                              <Select
+                                placeholder="Selecione a idade"
+                                options={ageOptions}
+                                value={detail.age}
+                                onChange={(selectedOption) => {
+                                  setUncleAuntCancerDetails((prev) =>
+                                    prev.map((d, i) =>
+                                      i === index
+                                        ? { ...d, age: selectedOption }
+                                        : d
+                                    )
+                                  );
+                                }}
+                                className="dfm-select"
+                              />
+                            ) : (
+                              <input
+                                type="number"
+                                value={detail.age}
+                                onChange={(e) => {
+                                  if (validateAge(e.target.value)) {
+                                    setUncleAuntCancerDetails((prev) =>
+                                      prev.map((d, i) =>
+                                        i === index
+                                          ? { ...d, age: e.target.value }
+                                          : d
+                                      )
+                                    );
+                                  }
+                                }}
+                                className="dfm-input"
+                              />
+                            )}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => handleAgeToggle(index + 1)}
+                            className="dfm-toggle-button"
+                          >
+                            {showAgeDropdowns[index + 1]
+                              ? "Digitar idade"
+                              : "Não sei"}
+                          </button>
+                        </div>
                       </div>
                     ))}
-
                     <button
                       type="button"
                       onClick={handleAddCancerDetail}
                       className="dfm-add-button"
                     >
-                      Adicionar outro câncer
+                      Adicionar detalhe de câncer
                     </button>
                   </>
                 )}
@@ -388,30 +404,43 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
 
 DadosFamiliaMaterna2.propTypes = {
   onFormChange: PropTypes.func.isRequired,
+  initialData: PropTypes.object,
+};
+
+
+DadosFamiliaMaterna2.propTypes = {
+  onFormChange: PropTypes.func.isRequired,
   initialData: PropTypes.shape({
     noKnowledge: PropTypes.bool,
     mae: PropTypes.shape({
       teveCancer: PropTypes.bool,
       outroCancerList: PropTypes.arrayOf(
         PropTypes.shape({
-          tipoCancer: PropTypes.object,
-          idadeDiagnostico: PropTypes.oneOfType([
+          idadeDiagnostico: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+          tipoCancer: PropTypes.oneOfType([
             PropTypes.string,
-            PropTypes.number,
+            PropTypes.shape({
+              value: PropTypes.string,
+              label: PropTypes.string,
+            }),
           ]),
         })
       ),
     }),
-    tiosList: PropTypes.arrayOf(
+    tiosListMaterno: PropTypes.arrayOf(
       PropTypes.shape({
         teveCancer: PropTypes.bool,
+        ladoParterno: PropTypes.string,
         sexo: PropTypes.string,
         outroCancerList: PropTypes.arrayOf(
           PropTypes.shape({
-            tipoCancer: PropTypes.object,
-            idadeDiagnostico: PropTypes.oneOfType([
+            idadeDiagnostico: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+            tipoCancer: PropTypes.oneOfType([
               PropTypes.string,
-              PropTypes.number,
+              PropTypes.shape({
+                value: PropTypes.string,
+                label: PropTypes.string,
+              }),
             ]),
           })
         ),

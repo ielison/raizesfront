@@ -3,12 +3,14 @@ import Select from "react-select";
 import PropTypes from "prop-types";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
+import InfoIcon from "../../assets/information-2-fill.svg"; // Importe o SVG aqui
 import "./NetosNetas2.css";
 
 export default function NetosNetas2({ onFormChange }) {
   const [hasGrandchildren, setHasGrandchildren] = useState(null);
   const [hasCancer, setHasCancer] = useState(false);
   const [grandchildren, setGrandchildren] = useState([]);
+  const [tooltipIndex, setTooltipIndex] = useState(null);
 
   useEffect(() => {
     const netosList = grandchildren.map((grandchild) => ({
@@ -20,7 +22,9 @@ export default function NetosNetas2({ onFormChange }) {
       sexo: grandchild.sex,
       outroCancerList: grandchild.type.map((tipo) => ({
         id: 0, // Use um valor padrão ou gere IDs únicos conforme necessário
-        idadeDiagnostico: grandchild.age ? grandchild.age.value || grandchild.age : 0,
+        idadeDiagnostico: grandchild.age
+          ? grandchild.age.value || grandchild.age
+          : 0,
         tipoCancer: tipo.label,
       })),
     }));
@@ -30,19 +34,29 @@ export default function NetosNetas2({ onFormChange }) {
   }, [grandchildren, hasCancer, onFormChange]);
 
   const handleAddGrandchild = () => {
-    setGrandchildren([...grandchildren, { id: grandchildren.length, sex: "", type: [], age: "", showAgeDropdown: false }]);
+    setGrandchildren([
+      ...grandchildren,
+      {
+        id: grandchildren.length,
+        sex: "",
+        type: [],
+        age: "",
+        showAgeDropdown: false,
+      },
+    ]);
   };
 
   const toggleAgeDropdown = (index) => {
     const newGrandchildren = [...grandchildren];
-    newGrandchildren[index].showAgeDropdown = !newGrandchildren[index].showAgeDropdown;
+    newGrandchildren[index].showAgeDropdown =
+      !newGrandchildren[index].showAgeDropdown;
     setGrandchildren(newGrandchildren);
   };
 
   return (
     <div className="nn-form-container">
       <label>
-        O Sr(a) tem netos e netas?
+        O(A) Sr(a) tem netos e netas?
         <div className="radio-group">
           <label>
             <input
@@ -68,7 +82,7 @@ export default function NetosNetas2({ onFormChange }) {
       {hasGrandchildren && (
         <>
           <label>
-            Algum deles já teve câncer?
+            Algum deles já teve câncer ou algum outro tipo de neoplasia?
             <div className="radio-group">
               <label>
                 <input
@@ -96,11 +110,11 @@ export default function NetosNetas2({ onFormChange }) {
               {grandchildren.map((grandchild, index) => (
                 <div key={index} className="grandchild-container">
                   <label>
-                    Sexo
+                    Parentesco
                     <Select
                       options={[
-                        { value: "masculino", label: "Masculino" },
-                        { value: "feminino", label: "Feminino" },
+                        { value: "neto", label: "Neto" },
+                        { value: "neta", label: "Neta" },
                       ]}
                       onChange={(selectedOption) => {
                         const newGrandchildren = [...grandchildren];
@@ -111,7 +125,7 @@ export default function NetosNetas2({ onFormChange }) {
                     />
                   </label>
                   <label>
-                    Tipo de câncer
+                    Selecione o tipo de câncer ou neoplasia
                     <Select
                       isMulti
                       placeholder="Selecione o tipo de câncer"
@@ -145,7 +159,8 @@ export default function NetosNetas2({ onFormChange }) {
                           onChange={(e) => {
                             const value = e.target.value;
                             const newGrandchildren = [...grandchildren];
-                            newGrandchildren[index].age = value >= 0 ? value : 0; // Prevent negative values
+                            newGrandchildren[index].age =
+                              value >= 0 ? value : 0; // Prevent negative values
                             setGrandchildren(newGrandchildren);
                           }}
                         />
@@ -157,6 +172,24 @@ export default function NetosNetas2({ onFormChange }) {
                     >
                       {grandchild.showAgeDropdown ? "Digitar idade" : "Não sei"}
                     </button>
+                    <img
+                      src={InfoIcon}
+                      alt="Info"
+                      className="info-icon-idade"
+                      onClick={() =>
+                        setTooltipIndex(index === tooltipIndex ? null : index)
+                      } // Alterna o tooltip ao clicar
+                    />
+
+                    {tooltipIndex === index && ( // Exiba o tooltip apenas se o index coincidir
+                      <div className="tooltip-idade">
+                        Caso seu paciente não saiba a idade exata do diagnóstico
+                        de câncer em um familiar, questione se foi antes ou
+                        depois dos 50 anos. Essa estimativa é mais fácil de
+                        lembrar e ainda oferece um corte de idade útil para a
+                        avaliação de risco.
+                      </div>
+                    )}
                   </label>
                 </div>
               ))}

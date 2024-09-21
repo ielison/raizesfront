@@ -3,8 +3,10 @@ import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
 import "./AvosMaternos2.css";
+import InfoIcon from "../../assets/information-2-fill.svg"; // Importe o SVG aqui
 
 export default function AvosMaternos2() {
+  const [tooltipIndex, setTooltipIndex] = useState(null);
   const [noKnowledge, setNoKnowledge] = useState(false);
   const [grandmotherHadCancer, setGrandmotherHadCancer] = useState(false);
   const [grandfatherHadCancer, setGrandfatherHadCancer] = useState(false);
@@ -19,16 +21,26 @@ export default function AvosMaternos2() {
     showAgeDropdown: false,
   });
 
-  const [additionalGrandmotherCancer, setAdditionalGrandmotherCancer] = useState([]);
-  const [additionalGrandfatherCancer, setAdditionalGrandfatherCancer] = useState([]);
+  const [additionalGrandmotherCancer, setAdditionalGrandmotherCancer] =
+    useState([]);
+  const [additionalGrandfatherCancer, setAdditionalGrandfatherCancer] =
+    useState([]);
 
   const handleNoKnowledgeChange = () => {
     setNoKnowledge((prev) => !prev);
     if (!noKnowledge) {
       setGrandmotherHadCancer(false);
       setGrandfatherHadCancer(false);
-      setGrandmotherCancerDetails({ type: null, age: "", showAgeDropdown: false });
-      setGrandfatherCancerDetails({ type: null, age: "", showAgeDropdown: false });
+      setGrandmotherCancerDetails({
+        type: null,
+        age: "",
+        showAgeDropdown: false,
+      });
+      setGrandfatherCancerDetails({
+        type: null,
+        age: "",
+        showAgeDropdown: false,
+      });
       setAdditionalGrandmotherCancer([]);
       setAdditionalGrandfatherCancer([]);
     }
@@ -97,7 +109,9 @@ export default function AvosMaternos2() {
             <label>
               <input
                 type="checkbox"
-                checked={!grandmotherHadCancer && !grandfatherHadCancer && !noKnowledge}
+                checked={
+                  !grandmotherHadCancer && !grandfatherHadCancer && !noKnowledge
+                }
                 onChange={handleNoGrandparentsCancerChange}
                 className="avosm-checkbox"
               />
@@ -126,7 +140,10 @@ export default function AvosMaternos2() {
                     options={cancerOptions}
                     value={grandmotherCancerDetails.type}
                     onChange={(selectedOption) =>
-                      setGrandmotherCancerDetails((prev) => ({ ...prev, type: selectedOption }))
+                      setGrandmotherCancerDetails((prev) => ({
+                        ...prev,
+                        type: selectedOption,
+                      }))
                     }
                     className="avosm-select"
                   />
@@ -135,10 +152,14 @@ export default function AvosMaternos2() {
                   Idade
                   {grandmotherCancerDetails.showAgeDropdown ? (
                     <Select
+                     placeholder="Selecione a idade"
                       options={ageOptions}
                       value={grandmotherCancerDetails.age}
                       onChange={(selectedOption) =>
-                        setGrandmotherCancerDetails((prev) => ({ ...prev, age: selectedOption }))
+                        setGrandmotherCancerDetails((prev) => ({
+                          ...prev,
+                          age: selectedOption,
+                        }))
                       }
                       className="avosm-select"
                     />
@@ -147,7 +168,10 @@ export default function AvosMaternos2() {
                       type="number"
                       value={grandmotherCancerDetails.age}
                       onChange={(e) =>
-                        setGrandmotherCancerDetails((prev) => ({ ...prev, age: e.target.value }))
+                        setGrandmotherCancerDetails((prev) => ({
+                          ...prev,
+                          age: e.target.value,
+                        }))
                       }
                       className="avosm-input"
                     />
@@ -157,7 +181,9 @@ export default function AvosMaternos2() {
                     onClick={() => handleAgeToggle(setGrandmotherCancerDetails)}
                     className="avosm-toggle-button"
                   >
-                    {grandmotherCancerDetails.showAgeDropdown ? "Digitar idade" : "Não sei"}
+                    {grandmotherCancerDetails.showAgeDropdown
+                      ? "Digitar idade"
+                      : "Não sei"}
                   </button>
                 </label>
 
@@ -181,6 +207,7 @@ export default function AvosMaternos2() {
                       Idade
                       {details.showAgeDropdown ? (
                         <Select
+                          placeholder="Selecione a idade"
                           options={ageOptions}
                           value={details.age}
                           onChange={(selectedOption) => {
@@ -204,18 +231,37 @@ export default function AvosMaternos2() {
                       )}
                       <button
                         type="button"
-                        onClick={() => handleAdditionalGrandmotherAgeToggle(index)}
+                        onClick={() =>
+                          handleAdditionalGrandmotherAgeToggle(index)
+                        }
                         className="avosm-toggle-button"
                       >
                         {details.showAgeDropdown ? "Digitar idade" : "Não sei"}
                       </button>
+                      <img
+                        src={InfoIcon}
+                        alt="Info"
+                        className="info-icon-idade"
+                        onClick={() =>
+                          setTooltipIndex(index === tooltipIndex ? null : index)
+                        } // Alterna o tooltip ao clicar
+                      />
+                      {tooltipIndex === index && ( // Exiba o tooltip apenas se o index coincidir
+                        <div className="tooltip-idade">
+                          Caso seu paciente não saiba a idade exata do
+                          diagnóstico de câncer em um familiar, questione se foi
+                          antes ou depois dos 50 anos. Essa estimativa é mais
+                          fácil de lembrar e ainda oferece um corte de idade
+                          útil para a avaliação de risco.
+                        </div>
+                      )}
                     </label>
                   </div>
                 ))}
                 <button
                   type="button"
                   onClick={addMoreGrandmotherCancer}
-                  className="avosm-add-button"
+                  className="nn-btn-add"
                 >
                   Informar+
                 </button>
@@ -231,7 +277,10 @@ export default function AvosMaternos2() {
                     options={cancerOptions}
                     value={grandfatherCancerDetails.type}
                     onChange={(selectedOption) =>
-                      setGrandfatherCancerDetails((prev) => ({ ...prev, type: selectedOption }))
+                      setGrandfatherCancerDetails((prev) => ({
+                        ...prev,
+                        type: selectedOption,
+                      }))
                     }
                     className="avosm-select"
                   />
@@ -240,10 +289,14 @@ export default function AvosMaternos2() {
                   Idade
                   {grandfatherCancerDetails.showAgeDropdown ? (
                     <Select
+                       placeholder="Selecione a idade"
                       options={ageOptions}
                       value={grandfatherCancerDetails.age}
                       onChange={(selectedOption) =>
-                        setGrandfatherCancerDetails((prev) => ({ ...prev, age: selectedOption }))
+                        setGrandfatherCancerDetails((prev) => ({
+                          ...prev,
+                          age: selectedOption,
+                        }))
                       }
                       className="avosm-select"
                     />
@@ -252,7 +305,10 @@ export default function AvosMaternos2() {
                       type="number"
                       value={grandfatherCancerDetails.age}
                       onChange={(e) =>
-                        setGrandfatherCancerDetails((prev) => ({ ...prev, age: e.target.value }))
+                        setGrandfatherCancerDetails((prev) => ({
+                          ...prev,
+                          age: e.target.value,
+                        }))
                       }
                       className="avosm-input"
                     />
@@ -262,7 +318,9 @@ export default function AvosMaternos2() {
                     onClick={() => handleAgeToggle(setGrandfatherCancerDetails)}
                     className="avosm-toggle-button"
                   >
-                    {grandfatherCancerDetails.showAgeDropdown ? "Digitar idade" : "Não sei"}
+                    {grandfatherCancerDetails.showAgeDropdown
+                      ? "Digitar idade"
+                      : "Não sei"}
                   </button>
                 </label>
 
@@ -286,6 +344,7 @@ export default function AvosMaternos2() {
                       Idade
                       {details.showAgeDropdown ? (
                         <Select
+                         placeholder="Selecione a idade"
                           options={ageOptions}
                           value={details.age}
                           onChange={(selectedOption) => {
@@ -309,18 +368,37 @@ export default function AvosMaternos2() {
                       )}
                       <button
                         type="button"
-                        onClick={() => handleAdditionalGrandfatherAgeToggle(index)}
+                        onClick={() =>
+                          handleAdditionalGrandfatherAgeToggle(index)
+                        }
                         className="avosm-toggle-button"
                       >
                         {details.showAgeDropdown ? "Digitar idade" : "Não sei"}
                       </button>
+                      <img
+                        src={InfoIcon}
+                        alt="Info"
+                        className="info-icon-idade"
+                        onClick={() =>
+                          setTooltipIndex(index === tooltipIndex ? null : index)
+                        } // Alterna o tooltip ao clicar
+                      />
+                      {tooltipIndex === index && ( // Exiba o tooltip apenas se o index coincidir
+                        <div className="tooltip-idade">
+                          Caso seu paciente não saiba a idade exata do
+                          diagnóstico de câncer em um familiar, questione se foi
+                          antes ou depois dos 50 anos. Essa estimativa é mais
+                          fácil de lembrar e ainda oferece um corte de idade
+                          útil para a avaliação de risco.
+                        </div>
+                      )}
                     </label>
                   </div>
                 ))}
                 <button
                   type="button"
                   onClick={addMoreGrandfatherCancer}
-                  className="avosm-add-button"
+                  className="nn-btn-add"
                 >
                   Informar+
                 </button>

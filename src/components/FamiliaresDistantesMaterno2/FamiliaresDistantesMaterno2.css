@@ -1,4 +1,3 @@
-
 .fdm-modal-content {
   display: flex;
   flex-direction: row;
@@ -15,6 +14,13 @@
   width: 100%;
   padding: 20px;
   overflow-y: auto;
+}
+
+.radio-group--fdm {
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .fdm-close-button {
@@ -50,14 +56,8 @@
   margin-bottom: 10px;
 }
 
-.btn-add {
-  background: #28a745;
-  color: #fff;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 10px;
+input[type="text" i] {
+  height: 32px;
 }
 
 .btn-back,

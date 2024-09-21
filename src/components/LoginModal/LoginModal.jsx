@@ -6,6 +6,7 @@ import { useState } from "react";
 import closedEyeIcon from "../../assets/closed-eye.svg"; // Ajuste o caminho conforme necessário
 import openEyeIcon from "../../assets/open-eye.svg"; //
 
+
 export default function LoginModal({ isOpen, onClose, handleRegisterClick }) {
   const navigate = useNavigate();
   const { login } = useAuth(); // Using the login function from AuthContext
@@ -19,15 +20,19 @@ export default function LoginModal({ isOpen, onClose, handleRegisterClick }) {
 
     try {
       // Fazendo requisição GET para o endpoint de login
-       const response = await fetch(
-  `https://testserver-2p40.onrender.com/api/login?email=${encodeURIComponent(email)}&senha=${encodeURIComponent(password)}`, 
-  { method: 'GET' }
-);
+      const response = await fetch(
+        `http://localhost:3000/api/login?email=${encodeURIComponent(
+          email
+        )}&senha=${encodeURIComponent(password)}`,
+        { method: "GET" }
+      );
 
       // Verifica se a resposta é 200 (login bem-sucedido)
       if (response.status === 200) {
-        login(); // Aciona o login do AuthContext
+        const data = await response.json();
+        login(data.idUser); // Aciona o login do AuthContext
         navigate("/home"); // Redireciona para a página home
+        console.log("Dados retornados pela API:", data);
       } else {
         // Caso contrário, trata como erro
         const data = await response.json();
@@ -76,7 +81,7 @@ export default function LoginModal({ isOpen, onClose, handleRegisterClick }) {
               required
             />
           </div>
-         <div className="login-modal-form-group">
+          <div className="login-modal-form-group">
             <label htmlFor="password">Senha:</label>
             <div className="password-input-container">
               <input
