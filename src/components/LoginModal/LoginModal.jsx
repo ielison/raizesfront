@@ -21,7 +21,7 @@ export default function LoginModal({ isOpen, onClose, handleRegisterClick }) {
     try {
       // Fazendo requisição GET para o endpoint de login
       const response = await fetch(
-        `http://localhost:3000/api/login?email=${encodeURIComponent(
+        `https://testserver-2p40.onrender.com/api/login?email=${encodeURIComponent(
           email
         )}&senha=${encodeURIComponent(password)}`,
         { method: "GET" }
