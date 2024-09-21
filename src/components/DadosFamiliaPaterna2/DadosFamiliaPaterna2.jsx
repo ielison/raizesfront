@@ -387,9 +387,9 @@ export default function DadosFamiliaPaterna2({ onFormChange, initialData }) {
                     <button
                       type="button"
                       onClick={handleAddCancerDetail}
-                      className="dfm-add-button"
+                      className="nn-btn-add"
                     >
-                      Adicionar detalhe de câncer
+                      Informar + 
                     </button>
                   </>
                 )}
