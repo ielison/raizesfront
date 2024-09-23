@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import Select from "react-select";
 import PropTypes from "prop-types";
 import { cancerOptions } from "../../data/cancerOptions";
-import { ageOptions } from "../../data/ageOptions";
+import { ageOptions } from "../../data/ageOptions"; // Import ageOptions
 import InfoIcon from "../../assets/information-2-fill.svg"; // Importe o SVG aqui
+import DeleteIcon from "../../assets/trash.svg"; // Importe o ícone de deletar aqui
 import "./NetosNetas2.css";
 
 export default function NetosNetas2({ onFormChange }) {
@@ -13,43 +14,41 @@ export default function NetosNetas2({ onFormChange }) {
   const [tooltipIndex, setTooltipIndex] = useState(null);
 
   useEffect(() => {
-    const netosList = grandchildren.map((grandchild) => ({
-      id: grandchild.id || 0, // Use um valor padrão ou gere IDs únicos conforme necessário
-      temNeto: true,
-      qtdNetos: grandchildren.length,
-      teveCancer: hasCancer,
-      qtdNetosCancer: grandchild.type.length > 0 ? 1 : 0, // Contar netos que tiveram câncer
-      sexo: grandchild.sex,
-      outroCancerList: grandchild.type.map((tipo) => ({
-        id: 0, // Use um valor padrão ou gere IDs únicos conforme necessário
-        idadeDiagnostico: grandchild.age
-          ? grandchild.age.value || grandchild.age
-          : 0,
-        tipoCancer: tipo.label,
+    // Atualiza os dados dos netos e netas ao mudar
+    onFormChange({
+      netosList: grandchildren.map((grandchild, index) => ({
+        id: index,
+        temNetos: true,
+        qtdNetos: grandchildren.length,
+        teveCancer: hasCancer,
+        qtdNetosCancer: grandchild.type.length > 0 ? grandchild.type.length : 0,
+        sexo: grandchild.sex,
+        mesmoPais: true,
+        outroCancerList: grandchild.type.map((opt) => ({
+          id: opt.id || 0, // ID único para cada tipo de câncer
+          idadeDiagnostico: opt.age?.value || opt.age || "", // Idade do diagnóstico do tipo de câncer
+          tipoCancer: opt.label,
+        })),
       })),
-    }));
-
-    // Envia os dados formatados para o onFormChange
-    onFormChange({ netosList });
+    });
   }, [grandchildren, hasCancer, onFormChange]);
 
   const handleAddGrandchild = () => {
     setGrandchildren([
       ...grandchildren,
-      {
-        id: grandchildren.length,
-        sex: "",
-        type: [],
-        age: "",
-        showAgeDropdown: false,
-      },
+      { sex: "", type: [], showAgeDropdowns: {} }, // showAgeDropdowns será um objeto para controlar dropdowns múltiplos
     ]);
   };
 
-  const toggleAgeDropdown = (index) => {
+  const handleDeleteGrandchild = (indexToDelete) => {
+    setGrandchildren(grandchildren.filter((_, index) => index !== indexToDelete));
+  };
+
+  const toggleAgeDropdown = (index, typeId) => {
     const newGrandchildren = [...grandchildren];
-    newGrandchildren[index].showAgeDropdown =
-      !newGrandchildren[index].showAgeDropdown;
+    const showAgeDropdowns = newGrandchildren[index].showAgeDropdowns || {};
+    showAgeDropdowns[typeId] = !showAgeDropdowns[typeId];
+    newGrandchildren[index].showAgeDropdowns = showAgeDropdowns;
     setGrandchildren(newGrandchildren);
   };
 
@@ -57,11 +56,12 @@ export default function NetosNetas2({ onFormChange }) {
     <div className="nn-form-container">
       <label>
         O(A) Sr(a) tem netos e netas?
-        <div className="radio-group">
+        <div className="checkbox-group">
           <label>
             <input
               type="radio"
               name="hasGrandchildren"
+              value="sim"
               checked={hasGrandchildren === true}
               onChange={() => setHasGrandchildren(true)}
             />
@@ -71,6 +71,7 @@ export default function NetosNetas2({ onFormChange }) {
             <input
               type="radio"
               name="hasGrandchildren"
+              value="nao"
               checked={hasGrandchildren === false}
               onChange={() => setHasGrandchildren(false)}
             />
@@ -83,11 +84,12 @@ export default function NetosNetas2({ onFormChange }) {
         <>
           <label>
             Algum deles já teve câncer ou algum outro tipo de neoplasia?
-            <div className="radio-group">
+            <div className="checkbox-group">
               <label>
                 <input
                   type="radio"
                   name="hasCancer"
+                  value="sim"
                   checked={hasCancer === true}
                   onChange={() => setHasCancer(true)}
                 />
@@ -97,6 +99,7 @@ export default function NetosNetas2({ onFormChange }) {
                 <input
                   type="radio"
                   name="hasCancer"
+                  value="nao"
                   checked={hasCancer === false}
                   onChange={() => setHasCancer(false)}
                 />
@@ -118,7 +121,7 @@ export default function NetosNetas2({ onFormChange }) {
                       ]}
                       onChange={(selectedOption) => {
                         const newGrandchildren = [...grandchildren];
-                        newGrandchildren[index].sex = selectedOption.value; // Set the sex of the grandchild
+                        newGrandchildren[index].sex = selectedOption.value;
                         setGrandchildren(newGrandchildren);
                       }}
                       placeholder="Selecione o sexo"
@@ -133,64 +136,85 @@ export default function NetosNetas2({ onFormChange }) {
                       value={grandchild.type}
                       onChange={(selectedOptions) => {
                         const newGrandchildren = [...grandchildren];
-                        newGrandchildren[index].type = selectedOptions; // Set the cancer type
+                        newGrandchildren[index].type = selectedOptions.map((opt) => ({
+                          ...opt,
+                          age: "", // Inicializa o campo de idade para cada tipo de câncer
+                        }));
                         setGrandchildren(newGrandchildren);
                       }}
                     />
                   </label>
-                  <label className="nn-idade">
-                    <div className="nn">
-                      Idade
-                      {grandchild.showAgeDropdown ? (
-                        <Select
-                          placeholder="Selecione..."
-                          options={ageOptions}
-                          value={grandchild.age}
-                          onChange={(selectedOption) => {
-                            const newGrandchildren = [...grandchildren];
-                            newGrandchildren[index].age = selectedOption; // Set the age of the grandchild
-                            setGrandchildren(newGrandchildren);
-                          }}
-                        />
-                      ) : (
-                        <input
-                          type="number"
-                          value={grandchild.age}
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            const newGrandchildren = [...grandchildren];
-                            newGrandchildren[index].age =
-                              value >= 0 ? value : 0; // Prevent negative values
-                            setGrandchildren(newGrandchildren);
-                          }}
-                        />
-                      )}
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => toggleAgeDropdown(index)}
-                    >
-                      {grandchild.showAgeDropdown ? "Digitar idade" : "Não sei"}
-                    </button>
-                    <img
-                      src={InfoIcon}
-                      alt="Info"
-                      className="info-icon-idade"
-                      onClick={() =>
-                        setTooltipIndex(index === tooltipIndex ? null : index)
-                      } // Alterna o tooltip ao clicar
-                    />
 
-                    {tooltipIndex === index && ( // Exiba o tooltip apenas se o index coincidir
-                      <div className="tooltip-idade">
-                        Caso seu paciente não saiba a idade exata do diagnóstico
-                        de câncer em um familiar, questione se foi antes ou
-                        depois dos 50 anos. Essa estimativa é mais fácil de
-                        lembrar e ainda oferece um corte de idade útil para a
-                        avaliação de risco.
+                  {grandchild.type.map((cancerType, typeIndex) => (
+                    <label key={typeIndex} className="nn-idade">
+                      <div className="nn">
+                        Idade do diagnóstico ({cancerType.label})
+                        {grandchild.showAgeDropdowns?.[cancerType.value] ? (
+                          <Select
+                            placeholder="Selecione..."
+                            options={ageOptions}
+                            value={cancerType.age}
+                            onChange={(selectedOption) => {
+                              const newGrandchildren = [...grandchildren];
+                              newGrandchildren[index].type[typeIndex].age =
+                                selectedOption;
+                              setGrandchildren(newGrandchildren);
+                            }}
+                          />
+                        ) : (
+                          <input
+                            type="number"
+                            value={cancerType.age}
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              const newGrandchildren = [...grandchildren];
+                              newGrandchildren[index].type[typeIndex].age =
+                                value >= 0 ? value : 0;
+                              setGrandchildren(newGrandchildren);
+                            }}
+                          />
+                        )}
                       </div>
-                    )}
-                  </label>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          toggleAgeDropdown(index, cancerType.value)
+                        }
+                      >
+                        {grandchild.showAgeDropdowns?.[cancerType.value]
+                          ? "Digitar idade"
+                          : "Não sei"}
+                      </button>
+                      <img
+                        src={InfoIcon}
+                        alt="Info"
+                        className="info-icon-idade"
+                        onClick={() =>
+                          setTooltipIndex(
+                            index === tooltipIndex ? null : index
+                          )
+                        } // Alterna o tooltip ao clicar
+                      />
+
+                      {tooltipIndex === index && (
+                        <div className="tooltip-idade">
+                          Caso seu paciente não saiba a idade exata do
+                          diagnóstico de câncer em um familiar, questione se foi
+                          antes ou depois dos 50 anos. Essa estimativa é mais
+                          fácil de lembrar e ainda oferece um corte de idade útil
+                          para a avaliação de risco.
+                        </div>
+                      )}
+                    </label>
+                  ))}
+
+                  <button
+                    className="nn-btn-delete"
+                    type="button"
+                    onClick={() => handleDeleteGrandchild(index)}
+                  >
+                    <img src={DeleteIcon} alt="Deletar" />
+                  </button>
                 </div>
               ))}
               <button className="nn-btn-add" onClick={handleAddGrandchild}>

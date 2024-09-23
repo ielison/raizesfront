@@ -13,6 +13,11 @@
   /* Esconder overflow para layout fixo */
 }
 
+.ff-btn-delete button{
+  width: 24px;
+  height: 24px;
+}
+
 .tooltip-idade {
   position: absolute;
   background-color: white;

@@ -327,9 +327,7 @@ export default function DadosFamiliaPaterna2({ onFormChange, initialData }) {
                           onChange={(selectedOption) => {
                             setUncleAuntCancerDetails((prev) =>
                               prev.map((d, i) =>
-                                i === index
-                                  ? { ...d, type: selectedOption }
-                                  : d
+                                i === index ? { ...d, type: selectedOption } : d
                               )
                             );
                           }}
@@ -390,7 +388,7 @@ export default function DadosFamiliaPaterna2({ onFormChange, initialData }) {
                       onClick={handleAddCancerDetail}
                       className="nn-btn-add"
                     >
-                      Informar + 
+                      Informar +
                     </button>
                   </>
                 )}
@@ -408,7 +406,6 @@ DadosFamiliaPaterna2.propTypes = {
   initialData: PropTypes.object,
 };
 
-
 DadosFamiliaPaterna2.propTypes = {
   onFormChange: PropTypes.func.isRequired,
   initialData: PropTypes.shape({
@@ -417,7 +414,10 @@ DadosFamiliaPaterna2.propTypes = {
       teveCancer: PropTypes.bool,
       outroCancerList: PropTypes.arrayOf(
         PropTypes.shape({
-          idadeDiagnostico: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+          idadeDiagnostico: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.number,
+          ]),
           tipoCancer: PropTypes.oneOfType([
             PropTypes.string,
             PropTypes.shape({
@@ -435,7 +435,10 @@ DadosFamiliaPaterna2.propTypes = {
         sexo: PropTypes.string,
         outroCancerList: PropTypes.arrayOf(
           PropTypes.shape({
-            idadeDiagnostico: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+            idadeDiagnostico: PropTypes.oneOfType([
+              PropTypes.string,
+              PropTypes.number,
+            ]),
             tipoCancer: PropTypes.oneOfType([
               PropTypes.string,
               PropTypes.shape({

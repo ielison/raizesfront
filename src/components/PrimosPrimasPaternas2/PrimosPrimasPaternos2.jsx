@@ -2,7 +2,7 @@ import { useState } from "react";
 import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
-import "./PrimosPrimasPaternos2.css";
+import "./PrimosPrimasPaternos2.css"; // Altere para o CSS apropriado
 import InfoIcon from "../../assets/information-2-fill.svg"; // Importe o SVG aqui
 
 export default function PrimosPrimasPaternos2() {
@@ -10,7 +10,7 @@ export default function PrimosPrimasPaternos2() {
   const [noKnowledge, setNoKnowledge] = useState(false);
   const [primosHadCancer, setPrimosHadCancer] = useState(null);
   const [primosDetails, setPrimosDetails] = useState([
-    { relationship: "", type: null, age: "", showAgeDropdown: false },
+    { relationship: "", type: null, ages: [], showAgeDropdown: false },
   ]);
 
   const handleCancerChange = (value) => {
@@ -20,19 +20,39 @@ export default function PrimosPrimasPaternos2() {
     }
   };
 
-  const handleAddMore = () => {
-    setPrimosDetails([
-      ...primosDetails,
-      { relationship: "", type: null, age: "", showAgeDropdown: false },
+  const handleAddTypeCancer = (index, selectedOption) => {
+    const newDetails = [...primosDetails];
+    newDetails[index].type = selectedOption;
+
+    // Adiciona novos campos de idade para cada tipo de câncer selecionado
+    const newAges = selectedOption.map((cancer) => ({
+      cancerName: cancer.label, // Guarda o nome do câncer
+      age: "",
+      showAgeDropdown: false,
+    }));
+    newDetails[index].ages = newAges; // Adiciona a propriedade ages
+    setPrimosDetails(newDetails);
+  };
+
+  // Função para adicionar um novo primo ou prima
+  const handleAddPrimo = () => {
+    setPrimosDetails((prevDetails) => [
+      ...prevDetails,
+      { relationship: "", type: null, ages: [], showAgeDropdown: false },
     ]);
   };
 
+  // Função para remover um primo ou prima
+  const handleRemovePrimo = (index) => {
+    setPrimosDetails((prevDetails) => prevDetails.filter((_, i) => i !== index));
+  };
+
   return (
-    <div className="ppm-form-container">
-      <div className="ppm-grupo">
+    <div className="ppp-form-container">
+      <div className="ppp-grupo">
         <label>
           Algum primo ou prima do seu lado paterno já teve câncer?
-          <div className="ppm-checkbox-group">
+          <div className="ppp-checkbox-group">
             <label>
               <input
                 type="radio"
@@ -92,74 +112,73 @@ export default function PrimosPrimasPaternos2() {
                     placeholder="Selecione os tipos de câncer desse familiar"
                     options={cancerOptions}
                     value={primo.type}
-                    onChange={(selectedOption) => {
-                      const newDetails = [...primosDetails];
-                      newDetails[index].type = selectedOption;
-                      setPrimosDetails(newDetails);
-                    }}
+                    onChange={(selectedOption) => handleAddTypeCancer(index, selectedOption)}
                   />
                 </label>
-                <label>
-                  Idade:
-                  {primo.showAgeDropdown ? (
-                    <Select
-                      placeholder="Selecione.."
-                      options={ageOptions}
-                      value={primo.age}
-                      onChange={(selectedOption) => {
+                {primo.type && primo.ages.map((ageDetail, ageIndex) => (
+                  <label key={ageIndex}>
+                    Idade do diagnóstico de {ageDetail.cancerName}:
+                    {ageDetail.showAgeDropdown ? (
+                      <Select
+                        placeholder="Selecione.."
+                        options={ageOptions}
+                        value={ageDetail.age}
+                        onChange={(selectedOption) => {
+                          const newDetails = [...primosDetails];
+                          newDetails[index].ages[ageIndex].age = selectedOption;
+                          setPrimosDetails(newDetails);
+                        }}
+                      />
+                    ) : (
+                      <input
+                        type="number"
+                        value={ageDetail.age}
+                        onChange={(e) => {
+                          const newDetails = [...primosDetails];
+                          newDetails[index].ages[ageIndex].age = e.target.value;
+                          setPrimosDetails(newDetails);
+                        }}
+                      />
+                    )}
+                    <button
+                      type="button"
+                      className="ppp-toggle-button"
+                      onClick={() => {
                         const newDetails = [...primosDetails];
-                        newDetails[index].age = selectedOption;
+                        newDetails[index].ages[ageIndex].showAgeDropdown =
+                          !newDetails[index].ages[ageIndex].showAgeDropdown;
                         setPrimosDetails(newDetails);
                       }}
+                    >
+                      {ageDetail.showAgeDropdown ? "Digitar idade" : "Não sei"}
+                    </button>
+                    <img
+                      src={InfoIcon}
+                      alt="Info"
+                      className="info-icon-idade"
+                      onClick={() =>
+                        setTooltipIndex(ageIndex === tooltipIndex ? null : ageIndex)
+                      }
                     />
-                  ) : (
-                    <input
-                      type="number"
-                      value={primo.age}
-                      onChange={(e) => {
-                        const newDetails = [...primosDetails];
-                        newDetails[index].age = e.target.value;
-                        setPrimosDetails(newDetails);
-                      }}
-                    />
-                  )}
-                  <button
-                    type="button"
-                    className="ppm-toggle-button"
-                    onClick={() => {
-                      const newDetails = [...primosDetails];
-                      newDetails[index].showAgeDropdown =
-                        !newDetails[index].showAgeDropdown;
-                      setPrimosDetails(newDetails);
-                    }}
-                  >
-                    {primo.showAgeDropdown ? "Digitar idade" : "Não sei"}
-                  </button>
-                  <img
-                    src={InfoIcon}
-                    alt="Info"
-                    className="info-icon-idade"
-                    onClick={() =>
-                      setTooltipIndex(index === tooltipIndex ? null : index)
-                    } // Alterna o tooltip ao clicar
-                  />
-                  {tooltipIndex === index && ( // Exiba o tooltip apenas se o index coincidir
-                    <div className="tooltip-idade--pp">
-                      Caso seu paciente não saiba a idade exata do diagnóstico
-                      de câncer em um familiar, questione se foi antes ou depois
-                      dos 50 anos. Essa estimativa é mais fácil de lembrar e
-                      ainda oferece um corte de idade útil para a avaliação de
-                      risco.
-                    </div>
-                  )}
-                </label>
+                    {tooltipIndex === ageIndex && (
+                      <div className="tooltip-idade--pp">
+                        Caso seu paciente não saiba a idade exata do diagnóstico
+                        de câncer em um familiar, questione se foi antes ou depois
+                        dos 50 anos. Essa estimativa é mais fácil de lembrar e
+                        ainda oferece um corte de idade útil para a avaliação de
+                        risco.
+                      </div>
+                    )}
+                  </label>
+                ))}
+                {/* Botão para remover primo */} 
+                <button type="button" onClick={() => handleRemovePrimo(index)} className="ppp-delete-button">
+                  Deletar
+                </button>
               </div>
             ))}
-            <button
-              type="button"
-              className="dp-btn-add" 
-              onClick={handleAddMore}
-            >
+            {/* Botão para adicionar novos primos */}
+            <button type="button" className="nn-btn-add" onClick={handleAddPrimo}>
               Informar +
             </button>
           </>

@@ -11,6 +11,25 @@
   /* Esconde o conteúdo que ultrapassar */
 }
 
+.tooltip-idade-ii {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  width: 500px;
+  transform: translateY(-100%); /* Move o tooltip para cima */
+  margin-bottom: 85px; /* Espaço entre o tooltip e o ícone */
+  color: #3f3f3f;
+}
+
+.info-icon-idade {
+  width: 24px;
+  cursor: pointer;
+  margin-left: 5px; /* Espacamento entre o botão e o ícone */
+}
 
 .avosm-form-container {
   display: flex;

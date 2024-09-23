@@ -58,6 +58,7 @@
 /* Estilos para inputs lado a lado */
 .dp-row {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   margin-bottom: 15px;
   /* Espaçamento entre as linhas */
@@ -136,11 +137,11 @@
   font-size: 18px;
 } */
 
-input[type="tel"] {
+.telefone-paciente input[type="tel"] {
   width: 100%;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
 }
 
 .nome-paciente input {

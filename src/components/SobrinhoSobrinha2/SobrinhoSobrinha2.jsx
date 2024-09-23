@@ -4,193 +4,249 @@ import PropTypes from "prop-types";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
 import "./SobrinhoSobrinha2.css";
+import InfoIcon from "../../assets/information-2-fill.svg";
 
 export default function SobrinhosSobrinhas2({ onFormChange }) {
-  const [quantities, setQuantities] = useState({
-    sobrinhos: "",
-    meioSobrinhos: "",
-  });
-  const [hasCancer, setHasCancer] = useState(null);
-  const [cancerDetails, setCancerDetails] = useState([
-    { type: [], relation: "", age: "" },
-  ]);
-  const [showAgeDropdowns, setShowAgeDropdowns] = useState([false]); // Track age dropdowns for each child
+  const [relationships, setRelationships] = useState([]);
+  const [hasCancer, setHasCancer] = useState(false);
+  const [siblings, setSiblings] = useState([]);
+  const [tooltipIndex, setTooltipIndex] = useState(null);
+
+  const relationshipLabels = {
+    sobrinhos: "Sobrinho",
+    sobrinhas: "Sobrinha",
+    meioSobrinhos: "Meio-sobrinho",
+    meiaSobrinhas: "Meia-sobrinha",
+    naoPossuoSobrinhos: "Não possuo sobrinho",
+  };
 
   useEffect(() => {
-    const sobrinhosList = cancerDetails.map((detail, index) => ({
-      id: index,
-      temSobrinhos: quantities.sobrinhos > 0 || quantities.meioSobrinhos > 0,
-      qtdSobrinhos: Number(quantities.sobrinhos),
-      qtdSobrinhosCancer: detail.type.length > 0 ? 1 : 0,
+    const sobrinhosList = siblings.map((sibling) => ({
+      id: sibling.id || 0,
+      temSobrinhos: true,
+      qtdSobrinhos: siblings.length,
       teveCancer: hasCancer,
-      meioSobrinho: detail.relation.includes("meio"),
-      sexo: detail.relation.includes("sobrinho") ? "masculino" : "feminino",
-      outroCancerList: detail.type.map((tipo) => ({
+      qtdeSobrinhosCancer: sibling.type.length > 0 ? 1 : 0,
+      outroCancerList: sibling.type.map((tipo) => ({
         id: 0,
-        idadeDiagnostico: detail.age ? detail.age.value || detail.age : 0,
+        idadeDiagnostico: sibling.age ? sibling.age.value || sibling.age : 0,
         tipoCancer: tipo.label,
       })),
     }));
 
-    // Envia os dados formatados para o PacienteModal
     onFormChange({ sobrinhosList });
-  }, [quantities, hasCancer, cancerDetails, onFormChange]);
+  }, [siblings, hasCancer, onFormChange]);
 
-  const handleQuantityChange = (e) => {
-    const { name, value } = e.target;
-    const quantityValue = Math.max(0, value); // Ensure non-negative value for quantities
-    setQuantities((prev) => ({ ...prev, [name]: quantityValue }));
+  const handleRelationshipChange = (e) => {
+    const { value } = e.target;
+
+    if (value === "naoPossuoSobrinhos") {
+      setRelationships(["naoPossuoSobrinhos"]);
+    } else {
+      setRelationships((prev) =>
+        prev.includes(value)
+          ? prev.filter((item) => item !== value)
+          : [...prev.filter((item) => item !== "naoPossuoSobrinhos"), value]
+      );
+    }
   };
 
-  const handleAddCancerDetail = () => {
-    setCancerDetails([...cancerDetails, { type: [], relation: "", age: "" }]);
-    setShowAgeDropdowns([...showAgeDropdowns, false]); // Add a new entry for the new child
+  const handleAddSibling = () => {
+    setSiblings([
+      ...siblings,
+      {
+        id: siblings.length,
+        type: [],
+        age: "",
+        showAgeDropdown: false,
+      },
+    ]);
   };
 
-  const handleAgeToggle = (index) => {
-    const newShowAgeDropdowns = [...showAgeDropdowns];
-    newShowAgeDropdowns[index] = !newShowAgeDropdowns[index]; // Toggle only the clicked child's dropdown
-    setShowAgeDropdowns(newShowAgeDropdowns);
+  const handleDeleteSibling = (index) => {
+    const newSiblings = siblings.filter((_, i) => i !== index);
+    setSiblings(newSiblings);
   };
 
-  const handleCancerCheckboxChange = (value) => {
-    setHasCancer(value === "alguns");
+  const toggleAgeDropdown = (index) => {
+    const newSiblings = [...siblings];
+    newSiblings[index].showAgeDropdown = !newSiblings[index].showAgeDropdown;
+    setSiblings(newSiblings);
   };
 
-  const handleAgeChange = (index, value) => {
-    const ageValue = Math.max(0, value); // Ensure non-negative value for age
-    const newDetails = [...cancerDetails];
-    newDetails[index].age = ageValue;
-    setCancerDetails(newDetails);
+  const handleQuantityChange = (index, value) => {
+    const newSiblings = [...siblings];
+    newSiblings[index].quantity = value;
+    setSiblings(newSiblings);
   };
 
   return (
-    <div className="sobrinhos-sobrinhas-form-container">
-      <label>
-        Quantos filhos que os irmãos ou meio-irmãos possuem?
-        <div className="sobrinhos-sobrinhas-quantity-group">
-          <label>
-            Sobrinhos
-            <input
-              type="number"
-              name="sobrinhos"
-              value={quantities.sobrinhos}
-              onChange={handleQuantityChange}
-              placeholder="Quantidade"
-              min="0" // Ensure the input cannot be less than 0
-            />
-          </label>
-          <label>
-            Meio-sobrinhos
-            <input
-              type="number"
-              name="meioSobrinhos"
-              value={quantities.meioSobrinhos}
-              onChange={handleQuantityChange}
-              placeholder="Quantidade"
-              min="0" // Ensure the input cannot be less than 0
-            />
-          </label>
-        </div>
-      </label>
-      <label>
-        Algum dos seus sobrinhos já teve câncer?
-        <div className="sobrinhos-sobrinhas-checkbox-group">
-          <label>
-            <input
-              type="checkbox"
-              value="alguns"
-              checked={hasCancer === true}
-              onChange={() => handleCancerCheckboxChange("alguns")}
-            />
-            Sim
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              value="nenhum"
-              checked={hasCancer === false}
-              onChange={() => handleCancerCheckboxChange("nenhum")}
-            />
-            Não
-          </label>
-        </div>
-      </label>
-      {hasCancer && (
-        <>
-          {cancerDetails.map((detail, index) => (
-            <div key={index}>
-              <label>
-                Tipo de câncer
-                <Select
-                  placeholder="Selecione o tipo de câncer"
-                  isMulti
-                  options={cancerOptions}
-                  value={detail.type}
-                  onChange={(selectedOptions) => {
-                    const newDetails = [...cancerDetails];
-                    newDetails[index].type = selectedOptions;
-                    setCancerDetails(newDetails);
-                  }}
+    <div className="ss-modal-content" onClick={(e) => e.stopPropagation()}>
+      <div className="ss-form-container">
+        <label className="ss-possui-sobrinho">
+          <span>O(A) Sr(a) possui sobrinho ou meio-sobrinho?</span>
+          <div className="ss-radio-group">
+            {Object.entries(relationshipLabels).map(([key, label]) => (
+              <label key={key}>
+                <input
+                  type="checkbox"
+                  name="relationship"
+                  value={key}
+                  checked={relationships.includes(key)}
+                  onChange={handleRelationshipChange}
                 />
+                {label}
               </label>
-              <label className="parentesco-ss">
-                Parentesco
-                <select
-                  value={detail.relation}
-                  onChange={(e) => {
-                    const newDetails = [...cancerDetails];
-                    newDetails[index].relation = e.target.value;
-                    setCancerDetails(newDetails);
-                  }}
-                >
-                  <option value="">Selecione o parentesco</option>
-                  <option value="sobrinho">Sobrinho</option>
-                  <option value="sobrinha">Sobrinha</option>
-                  <option value="meio-sobrinho">Meio-sobrinho</option>
-                  <option value="meio-sobrinha">Meio-sobrinha</option>
-                </select>
-              </label>
-              <label className="ii-idade">
-                <div className="ii-idade-div">
-                  Idade
-                  {showAgeDropdowns[index] ? (
-                    <Select
-                      placeholder="Selecione a idade"
-                      options={ageOptions}
-                      value={detail.age}
-                      onChange={(selectedOption) => {
-                        const newDetails = [...cancerDetails];
-                        newDetails[index].age = selectedOption;
-                        setCancerDetails(newDetails);
-                      }}
-                    />
-                  ) : (
+            ))}
+          </div>
+        </label>
+        {relationships.length > 0 &&
+          !relationships.includes("naoPossuoSobrinhos") && (
+            <>
+              {relationships.map((relation, index) => (
+                <label key={index}>
+                  {relationshipLabels[relation]}
+                  <input
+                    type="number"
+                    placeholder="Quantidade"
+                    onChange={(e) =>
+                      handleQuantityChange(index, Number(e.target.value))
+                    }
+                    min="0"
+                  />
+                </label>
+              ))}
+              <label>
+                Algum deles foi acometido por algum câncer ou neoplasia?
+                <div className="ss-radio-group">
+                  <label>
                     <input
-                      type="number"
-                      value={detail.age}
-                      onChange={(e) =>
-                        handleAgeChange(index, Number(e.target.value))
-                      }
-                      min="0" // Ensure the input cannot be less than 0
+                      type="radio"
+                      name="hasCancer"
+                      value="sim"
+                      checked={hasCancer === true}
+                      onChange={() => setHasCancer(true)}
                     />
-                  )}
+                    Sim
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="hasCancer"
+                      value="nao"
+                      checked={hasCancer === false}
+                      onChange={() => setHasCancer(false)}
+                    />
+                    Não
+                  </label>
                 </div>
-                <button
-                  className="btn-naosei"
-                  type="button"
-                  onClick={() => handleAgeToggle(index)} // Pass the index to toggle the specific child's dropdown
-                >
-                  {showAgeDropdowns[index] ? "Digitar idade" : "Não sei"}
-                </button>
               </label>
-            </div>
-          ))}
-          <button className="ss-btn-add" onClick={handleAddCancerDetail}>
-            Informar +
-          </button>
-        </>
-      )}
+              {hasCancer && (
+                <>
+                  {siblings.map((sibling, index) => (
+                    <div key={index}>
+                      <label>
+                        Parentesco
+                        <Select
+                          options={relationships.map(rel => ({
+                            value: rel,
+                            label: relationshipLabels[rel]
+                          }))}
+                          onChange={(selectedOption) => {
+                            const newSiblings = [...siblings];
+                            newSiblings[index].relation = selectedOption.value;
+                            setSiblings(newSiblings);
+                          }}
+                          placeholder="Selecione o parentesco"
+                        />
+                      </label>
+                      <label>
+                        Tipo de câncer ou neoplasia
+                        <Select
+                          isMulti
+                          placeholder="Selecione o tipo de câncer"
+                          options={cancerOptions}
+                          value={sibling.type}
+                          onChange={(selectedOptions) => {
+                            const newSiblings = [...siblings];
+                            newSiblings[index].type = selectedOptions;
+                            setSiblings(newSiblings);
+                          }}
+                        />
+                      </label>
+                      <label className="ss-idade">
+                        <div className="ss-idade-div">
+                          Idade
+                          {sibling.showAgeDropdown ? (
+                            <Select
+                              options={ageOptions}
+                              placeholder="Selecione a idade"
+                              value={sibling.age}
+                              onChange={(selectedOption) => {
+                                const newSiblings = [...siblings];
+                                newSiblings[index].age = selectedOption;
+                                setSiblings(newSiblings);
+                              }}
+                            />
+                          ) : (
+                            <input
+                              type="number"
+                              placeholder="Digite a idade"
+                              value={sibling.age}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                const newSiblings = [...siblings];
+                                newSiblings[index].age = value >= 0 ? value : 0;
+                                setSiblings(newSiblings);
+                              }}
+                            />
+                          )}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => toggleAgeDropdown(index)}
+                        >
+                          {sibling.showAgeDropdown
+                            ? "Digitar idade"
+                            : "Não sei"}
+                        </button>
+                        <img
+                          src={InfoIcon}
+                          alt="Info"
+                          className="info-icon-idade"
+                          onClick={() =>
+                            setTooltipIndex(
+                              index === tooltipIndex ? null : index
+                            )
+                          }
+                        />
+                        {tooltipIndex === index && (
+                          <div className="tooltip-idade-ss">
+                            Caso seu paciente não saiba a idade exata do
+                            diagnóstico de câncer em um familiar, questione se
+                            foi antes ou depois dos 50 anos. Essa estimativa é
+                            mais fácil de lembrar e ainda oferece um corte de
+                            idade útil para a avaliação de risco.
+                          </div>
+                        )}
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteSibling(index)}
+                        className="ss-btn-delete"
+                      >
+                        Deletar
+                      </button>
+                    </div>
+                  ))}
+                  <button className="ss-btn-add" onClick={handleAddSibling}>
+                    Informar +
+                  </button>
+                </>
+              )}
+            </>
+          )}
+      </div>
     </div>
   );
 }

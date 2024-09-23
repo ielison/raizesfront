@@ -15,10 +15,10 @@ export default function IrmaosIrmas2({ onFormChange }) {
   const relationshipLabels = {
     irmaos: "Irmãos",
     irma: "Irmãs",
-    meioIrmaosPaterno: "Meio-irmãos (paterno)",
-    meioIrmasPaterno: "Meio-irmãs (paterno)",
-    meioIrmaosMaterno: "Meio-irmãos (materno)",
-    meioIrmasMaterno: "Meio-irmãs (materno)",
+    meioIrmaosPaterno: "Meios-irmãos (paterno)",
+    meioIrmasPaterno: "Meios-irmãs (paterno)",
+    meioIrmaosMaterno: "Meios-irmãos (materno)",
+    meioIrmasMaterno: "Meios-irmãs (materno)",
     naoPossuoIrmaos: "Não possuo irmãos",
   };
 
@@ -68,6 +68,11 @@ export default function IrmaosIrmas2({ onFormChange }) {
     ]);
   };
 
+  const handleRemoveSibling = (index) => {
+    const newSiblings = siblings.filter((_, idx) => idx !== index);
+    setSiblings(newSiblings);
+  };
+
   const toggleAgeDropdown = (index) => {
     const newSiblings = [...siblings];
     newSiblings[index].showAgeDropdown = !newSiblings[index].showAgeDropdown;
@@ -84,7 +89,7 @@ export default function IrmaosIrmas2({ onFormChange }) {
     <div className="ii-modal-content" onClick={(e) => e.stopPropagation()}>
       <div className="ii-form-container">
         <label className="ii-possui-irmao">
-          <span>O(A) Sr(a) possui irmãos, meio-irmãos ou meio-irmãs?</span>
+          <span>O(A) Sr(a) possui irmãos ou  meios-irmãos?</span>
           <div className="ii-radio-group">
             {Object.entries(relationshipLabels).map(([key, label]) => (
               <label key={key}>
@@ -172,6 +177,7 @@ export default function IrmaosIrmas2({ onFormChange }) {
                             newSiblings[index].type = selectedOptions;
                             setSiblings(newSiblings);
                           }}
+                          onClick={(e) => e.stopPropagation()} 
                         />
                       </label>
                       <label className="ii-idade">
@@ -230,6 +236,14 @@ export default function IrmaosIrmas2({ onFormChange }) {
                           </div>
                         )}
                       </label>
+                      {/* Botão para remover irmão */}
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveSibling(index)}
+                        className="ii-btn-remove"
+                      >
+                        Deletar
+                      </button>
                     </div>
                   ))}
                   <button className="ii-btn-add" onClick={handleAddSibling}>

@@ -1,29 +1,31 @@
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import "./DadosPaciente2.css";
+import InputMask from "react-input-mask";
 import Select from "react-select";
+import DeleteIcon from "../../assets/trash.svg"; // Importe o ícone de deletar aqui
 import { cancerOptions } from "../../data/cancerOptions";
 
 export default function DadosPaciente2({ onFormChange }) {
   const [diagnoses, setDiagnoses] = useState(() => {
-    const storedDiagnoses = JSON.parse(localStorage.getItem("diagnoses"));
+    const storedDiagnoses = JSON.parse(sessionStorage.getItem("diagnoses"));
     return storedDiagnoses || [{ type: [], age: "" }];
   });
 
   const [hasCancer, setHasCancer] = useState(() => {
-    const storedHasCancer = JSON.parse(localStorage.getItem("hasCancer"));
+    const storedHasCancer = JSON.parse(sessionStorage.getItem("hasCancer"));
     return storedHasCancer !== null ? storedHasCancer : false;
   });
 
   const [hasOtherDiagnosis, setHasOtherDiagnosis] = useState(() => {
     const storedHasOtherDiagnosis = JSON.parse(
-      localStorage.getItem("hasOtherDiagnosis")
+      sessionStorage.getItem("hasOtherDiagnosis")
     );
     return storedHasOtherDiagnosis !== null ? storedHasOtherDiagnosis : false;
   });
 
   const [userData, setUserData] = useState(() => {
-    const storedUserData = JSON.parse(localStorage.getItem("userData"));
+    const storedUserData = JSON.parse(sessionStorage.getItem("userData"));
     return (
       storedUserData || {
         nome: "",
@@ -39,10 +41,10 @@ export default function DadosPaciente2({ onFormChange }) {
   });
 
   useEffect(() => {
-    localStorage.setItem("userData", JSON.stringify(userData));
-    localStorage.setItem("diagnoses", JSON.stringify(diagnoses));
-    localStorage.setItem("hasCancer", JSON.stringify(hasCancer)); // Salvando hasCancer
-    localStorage.setItem(
+    sessionStorage.setItem("userData", JSON.stringify(userData));
+    sessionStorage.setItem("diagnoses", JSON.stringify(diagnoses));
+    sessionStorage.setItem("hasCancer", JSON.stringify(hasCancer)); // Salvando hasCancer
+    sessionStorage.setItem(
       "hasOtherDiagnosis",
       JSON.stringify(hasOtherDiagnosis)
     ); // Salvando hasOtherDiagnosis
@@ -50,6 +52,21 @@ export default function DadosPaciente2({ onFormChange }) {
 
   const handleAddDiagnosis = () => {
     setDiagnoses([...diagnoses, { type: [], age: "" }]);
+  };
+
+  const handleRemoveDiagnosis = (index) => {
+    const updatedDiagnoses = diagnoses.filter((_, i) => i !== index);
+    setDiagnoses(updatedDiagnoses);
+    onFormChange({
+      usuariPrincipal: {
+        ...userData,
+        outroCancerList: updatedDiagnoses.map((d) => ({
+          idCancer: 0,
+          tipoCancer: d.type.map((opt) => opt.label).join(", ") || "",
+          idadeDiagnostico: d.age ? Number(d.age) : 0,
+        })),
+      },
+    });
   };
 
   const handleOtherDiagnosisChange = (e) => {
@@ -64,9 +81,11 @@ export default function DadosPaciente2({ onFormChange }) {
   };
 
   const handleFieldChange = (field, value) => {
+    const processedValue =
+      field === "telefone" ? value.replace(/\D/g, "") : value;
     const updatedUserData = {
       ...userData,
-      [field]: value,
+      [field]: processedValue,
       outroCancer: hasOtherDiagnosis,
     };
     setUserData(updatedUserData);
@@ -111,21 +130,23 @@ export default function DadosPaciente2({ onFormChange }) {
       </label>
 
       {/* Campo de Telefone */}
-      <label className="telefone-paciente">
-        <span>Telefone</span>
-        <input
-          type="tel"
-          placeholder="Informe o telefone do paciente"
-          value={userData.telefone}
-          onChange={(e) => handleFieldChange("telefone", e.target.value)}
-        />
-      </label>
+      <div className="dp-row">
+        <label className="telefone-paciente">
+          <span>Telefone</span>
+          <InputMask
+            style={{ flex: 1 }}
+            mask="(99) 99999-9999"
+            placeholder="Informe o telefone do paciente"
+            value={userData.telefone}
+            onChange={(e) => handleFieldChange("telefone", e.target.value)}
+          >
+            {(inputProps) => <input type="tel" {...inputProps} />}
+          </InputMask>
+        </label>
+      </div>
 
       <div className="dp-row">
-        <label
-          className="sexo-paciente"
-          style={{ flex: 1, marginRight: "10px" }}
-        >
+        <label className="sexo-paciente" style={{ flex: 1 }}>
           Sexo biológico
           <select
             value={userData.sexo}
@@ -260,7 +281,7 @@ export default function DadosPaciente2({ onFormChange }) {
                       />
                     </label>
                     <label style={{ flex: 1 }}>
-                      Idade
+                      Idade do diagnóstico
                       <input
                         type="number"
                         min="0"
@@ -275,6 +296,13 @@ export default function DadosPaciente2({ onFormChange }) {
                       />
                     </label>
                   </div>
+                  <button
+                    className="ff-btn-delete"
+                    type="button"
+                    onClick={() => handleRemoveDiagnosis(index)}
+                  >
+                    <img src={DeleteIcon} alt="Deletar" />
+                  </button>
                 </div>
               ))}
               <button className="dp-btn-add" onClick={handleAddDiagnosis}>

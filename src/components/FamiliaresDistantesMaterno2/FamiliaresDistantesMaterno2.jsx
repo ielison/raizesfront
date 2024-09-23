@@ -25,9 +25,8 @@ export default function FamiliaresDistantesMaterno2() {
   const [distantesDetails, setDistantesDetails] = useState([
     {
       relationship: "",
-      type: null,
-      age: "",
-      showAgeDropdown: false,
+      cancerTypes: [],
+      showAgeDropdowns: [],
       customRelationship: "",
     },
   ]);
@@ -39,9 +38,8 @@ export default function FamiliaresDistantesMaterno2() {
       setDistantesDetails([
         {
           relationship: "",
-          type: null,
-          age: "",
-          showAgeDropdown: false,
+          cancerTypes: [],
+          showAgeDropdowns: [],
           customRelationship: "",
         },
       ]);
@@ -53,12 +51,16 @@ export default function FamiliaresDistantesMaterno2() {
       ...distantesDetails,
       {
         relationship: "",
-        type: null,
-        age: "",
-        showAgeDropdown: false,
+        cancerTypes: [],
+        showAgeDropdowns: [],
         customRelationship: "",
       },
     ]);
+  };
+
+  const handleDelete = (index) => {
+    const newDetails = distantesDetails.filter((_, i) => i !== index);
+    setDistantesDetails(newDetails);
   };
 
   const handleRelationshipChange = (selectedOption, index) => {
@@ -79,9 +81,28 @@ export default function FamiliaresDistantesMaterno2() {
     setDistantesDetails(newDetails);
   };
 
-  const handleAgeToggle = (index) => {
+  const handleCancerTypeChange = (selectedOption, index) => {
     const newDetails = [...distantesDetails];
-    newDetails[index].showAgeDropdown = !newDetails[index].showAgeDropdown;
+    newDetails[index].cancerTypes = selectedOption || [];
+
+    // Update showAgeDropdowns to match the number of selected cancer types
+    newDetails[index].showAgeDropdowns = new Array(selectedOption.length).fill(
+      false
+    );
+
+    setDistantesDetails(newDetails);
+  };
+
+  const handleAgeToggle = (typeIndex, detailIndex) => {
+    const newDetails = [...distantesDetails];
+    newDetails[detailIndex].showAgeDropdowns[typeIndex] =
+      !newDetails[detailIndex].showAgeDropdowns[typeIndex];
+    setDistantesDetails(newDetails);
+  };
+
+  const handleAgeChange = (e, typeIndex, detailIndex) => {
+    const newDetails = [...distantesDetails];
+    newDetails[detailIndex].cancerTypes[typeIndex].age = e.target.value;
     setDistantesDetails(newDetails);
   };
 
@@ -120,12 +141,10 @@ export default function FamiliaresDistantesMaterno2() {
         </div>
       </label>
 
-
-      
       {distantesHadCancer && (
         <>
           {distantesDetails.map((distante, index) => (
-            <div key={index}>
+            <div key={index} className="distante-details">
               <label>
                 Parentesco:
                 <Select
@@ -156,48 +175,60 @@ export default function FamiliaresDistantesMaterno2() {
               <label>
                 Tipo de câncer ou neoplasia:
                 <Select
+                  isMulti
                   placeholder="Selecione o tipo de câncer"
                   options={cancerOptions}
-                  value={distante.type}
-                  onChange={(selectedOption) => {
-                    const newDetails = [...distantesDetails];
-                    newDetails[index].type = selectedOption;
-                    setDistantesDetails(newDetails);
-                  }}
+                  value={distante.cancerTypes}
+                  onChange={(selectedOption) =>
+                    handleCancerTypeChange(selectedOption, index)
+                  }
                 />
               </label>
-              <label>
-                Idade:
-                {distante.showAgeDropdown ? (
-                  <Select
-                    options={ageOptions}
-                    value={distante.age}
-                    onChange={(selectedOption) => {
-                      const newDetails = [...distantesDetails];
-                      newDetails[index].age = selectedOption;
-                      setDistantesDetails(newDetails);
-                    }}
-                  />
-                ) : (
-                  <input
-                    type="text"
-                    placeholder="Digite a idade"
-                    value={distante.age}
-                    onChange={(e) => {
-                      const newDetails = [...distantesDetails];
-                      newDetails[index].age = e.target.value;
-                      setDistantesDetails(newDetails);
-                    }}
-                  />
-                )}
-                <button onClick={() => handleAgeToggle(index)}>
-                  {distante.showAgeDropdown
-                    ? "Digitar idade"
-                    : "Selecionar idade"}
-                </button>
-              </label>
+              {distante.cancerTypes.map((cancer, typeIndex) => (
+                <div key={typeIndex} className="cancer-detail">
+                  <label>
+                    Idade do diagnóstico de {cancer.label}
+                    {distante.showAgeDropdowns[typeIndex] ? (
+                      <Select
+                        options={ageOptions}
+                        value={
+                          cancer.age
+                            ? { label: cancer.age, value: cancer.age }
+                            : null
+                        }
+                        onChange={(selectedOption) => {
+                          const newDetails = [...distantesDetails];
+                          newDetails[index].cancerTypes[typeIndex].age =
+                            selectedOption?.value || "";
+                          setDistantesDetails(newDetails);
+                        }}
+                      />
+                    ) : (
+                      <input
+                        type="text"
+                        placeholder="Digite a idade"
+                        value={cancer.age || ""}
+                        onChange={(e) => handleAgeChange(e, typeIndex, index)}
+                      />
+                    )}
+                    <button onClick={() => handleAgeToggle(typeIndex, index)}>
+                      {distante.showAgeDropdowns[typeIndex]
+                        ? "Digitar idade"
+                        : "Não sei"}
+                    </button>
+                  </label>
+                </div>
+              ))}
+              {/* Botão de delete para remover o detalhe */}
+              <button
+                className="nn-btn-delete"
+                onClick={() => handleDelete(index)}
+              >
+                Deletar
+              </button>
             </div>
           ))}
+          {/* Botão "Informar +" movido para o final */}
           <button className="nn-btn-add" onClick={handleAddMore}>
             Informar +
           </button>
