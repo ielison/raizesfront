@@ -1,6 +1,5 @@
-// AuthContext.js
 import { createContext, useState, useContext } from "react";
-import PropTypes from 'prop-types'; // Import PropTypes
+import PropTypes from 'prop-types';
 
 const AuthContext = createContext();
 
@@ -10,23 +9,30 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [idUser, setIdUser] = useState(null);
+  const [nome, setNome] = useState(""); // Adiciona o estado para o nome
 
-  const login = () => {
+  const login = (idUser, nome) => {
+    //console.table([{ "Login": "Sucesso", "ID": idUser, "Nome": nome }]);
     setIsLoggedIn(true);
+    setIdUser(idUser); // Armazena o idUser
+    setNome(nome); // Armazena o nome
   };
 
   const logout = () => {
-    setIsLoggedIn(false); // Set login state to false
+    setIsLoggedIn(false);
+    setIdUser(null);
+    setNome(""); // Limpa o nome ao fazer logout
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout }}> {/* Include logout in the context */}
+    <AuthContext.Provider value={{ isLoggedIn, idUser, nome, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
-// Add PropTypes validation
+// Adiciona validação de PropTypes
 AuthProvider.propTypes = {
-  children: PropTypes.node.isRequired, // Validate children prop
+  children: PropTypes.node.isRequired,
 };
