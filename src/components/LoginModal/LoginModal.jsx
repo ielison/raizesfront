@@ -1,15 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import { useAuth } from "../../context/AuthContext"; // Importing AuthContext
+import { useAuth } from "../../context/AuthContext"; // Importando AuthContext
 import "./LoginModal.css";
 import { useState } from "react";
-import closedEyeIcon from "../../assets/closed-eye.svg"; // Ajuste o caminho conforme necessário
-import openEyeIcon from "../../assets/open-eye.svg"; //
-
+import closedEyeIcon from "../../assets/closed-eye.svg"; 
+import openEyeIcon from "../../assets/open-eye.svg"; 
 
 export default function LoginModal({ isOpen, onClose, handleRegisterClick }) {
   const navigate = useNavigate();
-  const { login } = useAuth(); // Using the login function from AuthContext
+  const { login } = useAuth(); 
   const [errorMessage, setErrorMessage] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
 
@@ -17,32 +16,30 @@ export default function LoginModal({ isOpen, onClose, handleRegisterClick }) {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
-
+  
     try {
-      // Fazendo requisição GET para o endpoint de login
       const response = await fetch(
-        `https://testserver-2p40.onrender.com/api/login?email=${encodeURIComponent(
-          email
-        )}&senha=${encodeURIComponent(password)}`,
+        `http://localhost:3000/api/login?email=${encodeURIComponent(email)}&senha=${encodeURIComponent(password)}`,
         { method: "GET" }
       );
-
-      // Verifica se a resposta é 200 (login bem-sucedido)
-      if (response.status === 200) {
+  
+      if (response.ok) { // Use response.ok em vez de response.status === 200
         const data = await response.json();
-        login(data.idUser); // Aciona o login do AuthContext
-        navigate("/home"); // Redireciona para a página home
+        login(data.idUser, data.nome); // Passa o idUser e nome para o AuthContext
+        navigate("/home");
         console.log("Dados retornados pela API:", data);
       } else {
-        // Caso contrário, trata como erro
         const data = await response.json();
         setErrorMessage(data.error || "E-mail ou senha inválidos.");
+        alert("E-mail ou senha incorretos.");
       }
     } catch (error) {
       setErrorMessage("Erro ao realizar login. Tente novamente.");
       console.error("Erro ao realizar login:", error);
+      alert("Erro ao realizar login. Tente novamente dentro de alguns instantes.");
     }
   };
+  
 
   if (!isOpen) return null;
 
@@ -50,7 +47,7 @@ export default function LoginModal({ isOpen, onClose, handleRegisterClick }) {
     <div className="login-modal-overlay" onClick={onClose}>
       <div className="login-modal-content" onClick={(e) => e.stopPropagation()}>
         <button className="login-modal-close-button" onClick={onClose}>
-          &times; {/* Close button with "x" */}
+          &times;
         </button>
         <h2>Olá, seja bem-vindo!</h2>
         <p>
@@ -68,8 +65,7 @@ export default function LoginModal({ isOpen, onClose, handleRegisterClick }) {
         </p>
         {errorMessage && (
           <p className="login-modal-error-message">{errorMessage}</p>
-        )}{" "}
-        {/* Display error message */}
+        )}
         <form onSubmit={handleLoginSubmit}>
           <div className="login-modal-form-group">
             <label htmlFor="email">E-mail:</label>
@@ -85,7 +81,7 @@ export default function LoginModal({ isOpen, onClose, handleRegisterClick }) {
             <label htmlFor="password">Senha:</label>
             <div className="password-input-container">
               <input
-                type={passwordVisible ? "text" : "password"} // Alterna visibilidade da senha
+                type={passwordVisible ? "text" : "password"}
                 id="password"
                 name="password"
                 placeholder="Digite a sua senha"
@@ -94,7 +90,7 @@ export default function LoginModal({ isOpen, onClose, handleRegisterClick }) {
               <button
                 type="button"
                 className="toggle-password-visibility"
-                onClick={() => setPasswordVisible((prev) => !prev)} // Alterna o estado
+                onClick={() => setPasswordVisible((prev) => !prev)}
               >
                 <img
                   src={passwordVisible ? closedEyeIcon : openEyeIcon}
@@ -105,8 +101,7 @@ export default function LoginModal({ isOpen, onClose, handleRegisterClick }) {
           </div>
           <a href="#" className="login-modal-forgot-password">
             Esqueci a senha
-          </a>{" "}
-          {/* Link for forgot password */}
+          </a>
           <div className="login-modal-submit-button-container">
             <button type="submit" className="login-modal-submit-button">
               Entrar
@@ -120,8 +115,7 @@ export default function LoginModal({ isOpen, onClose, handleRegisterClick }) {
             onClick={handleRegisterClick}
           >
             Registre-se aqui
-          </span>{" "}
-          {/* Register link */}
+          </span>
         </p>
       </div>
     </div>

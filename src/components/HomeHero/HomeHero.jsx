@@ -1,10 +1,10 @@
 import "./HomeHero.css";
 import PacienteModal from "../PacienteModal/PacienteModal";
 import { useModals } from "../../context/ModalContext";
-import { useUser } from "../../context/UserContext";
+import { useAuth } from "../../context/AuthContext"; // Importando AuthContext
 
 export default function HomeHero() {
-  const { user } = useUser(); 
+  const { nome, idUser } = useAuth(); // Obtendo nome e idUser do AuthContext
   const { openModal, closeModal, currentModal } = useModals();
 
   const handleStartClick = () => {
@@ -18,7 +18,7 @@ export default function HomeHero() {
   return (
     <div className="homeHero__container">
       <div className="homeHero__content">
-        <h1 className="homeHero__title">Olá, {user ? user.nome : "usuário"}!</h1>
+        <h1 className="homeHero__title">Olá, {nome || "usuário"}!</h1>
         <p className="homeHero__paragraph">
           Raízes é uma plataforma dedicada à identificação de indivíduos e
           famílias em situação de alto risco para câncer hereditário. Essa
@@ -34,15 +34,12 @@ export default function HomeHero() {
             especializados.
           </li>
         </ul>
-        <button
-          className="homeHero__startButton"
-          onClick={handleStartClick}
-        >
+        <button className="homeHero__startButton" onClick={handleStartClick}>
           Começar avaliação
         </button>
       </div>
       {currentModal === "PacienteModal" && (
-        <PacienteModal onClose={handleCloseModal} idUser={user?.idUser} />
+        <PacienteModal onClose={handleCloseModal} idUser={idUser} /> 
       )}
     </div>
   );
