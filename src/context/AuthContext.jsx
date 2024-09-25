@@ -13,7 +13,6 @@ export const AuthProvider = ({ children }) => {
   const [nome, setNome] = useState(""); // Adiciona o estado para o nome
 
   const login = (idUser, nome) => {
-    //console.table([{ "Login": "Sucesso", "ID": idUser, "Nome": nome }]);
     setIsLoggedIn(true);
     setIdUser(idUser); // Armazena o idUser
     setNome(nome); // Armazena o nome
