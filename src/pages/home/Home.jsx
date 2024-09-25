@@ -4,8 +4,12 @@ import "./Home.css";
 
 export default function Home() {
   useEffect(() => {
+    console.log("Home component mounted"); // Verificar se o componente foi montado
+
     // Função para fazer o ping ao servidor
     const pingServer = () => {
+      console.log("Attempting to ping server..."); // Indicar que a função de ping foi chamada
+
       fetch("https://testserver-2p40.onrender.com/teste")
         .then((response) => {
           if (response.ok) {
@@ -26,7 +30,10 @@ export default function Home() {
     const intervalId = setInterval(pingServer, 120000);
 
     // Limpar o intervalo ao desmontar o componente
-    return () => clearInterval(intervalId);
+    return () => {
+      console.log("Cleaning up interval");
+      clearInterval(intervalId);
+    };
   }, []); // O array vazio garante que o efeito só será executado uma vez, após o componente ser montado
 
   return (
