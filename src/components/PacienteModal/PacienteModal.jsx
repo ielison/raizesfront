@@ -28,7 +28,7 @@ export default function PacienteModal({ onClose }) {
 
   const [data, setData] = useState({
     idUser: idUser,
-    idQuiz: 0,
+    idQuiz: 1,
     usuariPrincipal: {
       quizId: 0,
       teveCancer: false,
@@ -200,11 +200,11 @@ export default function PacienteModal({ onClose }) {
   });
 
   useEffect(() => {
-    localStorage.setItem('formData', JSON.stringify(data));
+    localStorage.setItem("formData", JSON.stringify(data));
   }, [data]);
 
   const handleModalClose = () => {
-    localStorage.setItem('formData', JSON.stringify(data));
+    localStorage.setItem("formData", JSON.stringify(data));
     onClose();
   };
   const mergeTios = (tiosMaterno, tiosPaterno) => {
@@ -244,8 +244,12 @@ export default function PacienteModal({ onClose }) {
 
     // Função para mesclar e filtrar tios
     const mergedTios = mergeTios(
-      tiosListMaterno.length ? tiosListMaterno : data.tiosList.filter(tio => tio.ladoParterno === "materno"),
-      tiosListPaterno.length ? tiosListPaterno : data.tiosList.filter(tio => tio.ladoParterno === "paterno")
+      tiosListMaterno.length
+        ? tiosListMaterno
+        : data.tiosList.filter((tio) => tio.ladoParterno === "materno"),
+      tiosListPaterno.length
+        ? tiosListPaterno
+        : data.tiosList.filter((tio) => tio.ladoParterno === "paterno")
     );
 
     setData((prevData) => ({
@@ -265,14 +269,14 @@ export default function PacienteModal({ onClose }) {
   };
 
   useEffect(() => {
-    localStorage.setItem('formData', JSON.stringify(data));
+    localStorage.setItem("formData", JSON.stringify(data));
     return () => {
       //localStorage.removeItem('formData'); // Clear on unmount
     };
   }, [data]);
 
   useEffect(() => {
-    const savedData = localStorage.getItem('formData');
+    const savedData = localStorage.getItem("formData");
     if (savedData) {
       setData(JSON.parse(savedData));
     }
@@ -396,7 +400,7 @@ export default function PacienteModal({ onClose }) {
       setIsLoading(true);
       setExpandedStep(null);
       // Send data to API
-      fetch("http://your-api-endpoint.com", {
+      fetch("https://testserver-2p40.onrender.com/api/quiz", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -405,20 +409,25 @@ export default function PacienteModal({ onClose }) {
       })
         .then((response) => {
           if (response.ok) {
-            return response.json();
+            return response.text(); // Se a resposta for texto simples
+          } else {
+            throw new Error("Erro ao enviar os dados");
           }
-          throw new Error("Network response was not ok.");
         })
-        .then((result) => {
-          console.log("Data successfully sent:", result);
-          setIsCompleted(true);
+        .then((message) => {
+          console.log("Resposta da API:", message);
+          setIsCompleted(true); // Indica que a submissão foi concluída
+          setIsLoading(false); // Para a animação de carregamento
         })
         .catch((error) => {
-          console.error("There was a problem with the fetch operation:", error);
+          console.error("Erro:", error);
+          setIsLoading(false); // Para a animação em caso de erro
         })
         .finally(() => {
           setIsLoading(false);
           onClose(); // Close the modal after completing
+          localStorage.removeItem("formData"); // Limpa o localStorage
+          sessionStorage.clear(); // Limpa o sessionStorage, se necessário
           console.log("Cadastro finalizado, aguarde"); // Log for completed registration
         });
     } else {
@@ -432,7 +441,6 @@ export default function PacienteModal({ onClose }) {
     }
   };
 
- 
   const handleBack = () => {
     if (currentSubItem > 0) {
       setCurrentSubItem(currentSubItem - 1);
