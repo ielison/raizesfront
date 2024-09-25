@@ -13,9 +13,14 @@ export default function Hero() {
       fetch("https://testserver-2p40.onrender.com/teste")
         .then((response) => {
           if (response.ok) {
-            console.log("Ping bem-sucedido ao servidor.");
+            return response.text(); // Pegar o corpo da resposta como texto
           } else {
             console.error("Erro no ping ao servidor:", response.status);
+          }
+        })
+        .then((data) => {
+          if (data) {
+            console.log("Resposta da API:", data); // Exibir a resposta da API no console
           }
         })
         .catch((error) => {
