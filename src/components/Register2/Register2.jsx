@@ -20,79 +20,103 @@ const Register2 = ({ isOpen, onClose, formData }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleFinish = async (e) => {
-  e.preventDefault(); // Prevenir o envio padrão do formulário
-
-  // Verifica se todos os campos obrigatórios estão preenchidos
-  if (!formData.nome || !formData.email || !formData.senha) {
-    alert("Por favor, preencha todos os campos obrigatórios: Nome, Email e Senha.");
-    return;
-  }
-
-  // Verifica se os termos foram aceitos
-  if (!acceptedTerms) {
-    alert("Você deve aceitar os termos para continuar.");
-    return;
-  }
-
-  // Preparar os dados do usuário
-  const userData = {
-    usuarioId: 0,
-    nome: formData.nome,
-    email: formData.email,
-    senha: formData.senha,
-    cep: formData.cep,
-    pais: formData.pais,
-    cidade: formData.cidade,
-    rua: formData.rua,
-    numeroRua: formData.numeroRua || "",
-    telefone: formData.telefone,
-    celular: formData.celular,
-    profissionalDaSaude: formData.profissionalDaSaude,
-    graduacao: formData.graduacao,
-    receberEmail: subscribeNews,
-  };
-
-  console.log("Payload enviado para a API:", userData);
-
-  try {
-    setIsLoading(true); // Inicia o carregamento
-    // Enviar dados para a API local
-    const response = await axios.post(
-      "https://testserver-2p40.onrender.com/api/register",
-      userData,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "X-Requested-With": "XMLHttpRequest", // Para evitar ataques CSRF
-        },
-        timeout: 10000, // Timeout de 10 segundos
-      }
-    );
-
-    // Verifica se o status da resposta é 204 (sem conteúdo)
-    if (response.status === 204) {
-      setUser({ nome: formData.nome });
-      login(formData.email); // Usar o email ou outro identificador aqui
-      navigate("/home");
-    } else {
-      alert("Houve um erro ao registrar o usuário. Por favor, tente novamente.");
+    e.preventDefault(); // Prevenir o envio padrão do formulário
+  
+    // Verifica se todos os campos obrigatórios estão preenchidos
+    if (!formData.nome || !formData.email || !formData.senha) {
+      alert("Por favor, preencha todos os campos obrigatórios: Nome, Email e Senha.");
+      return;
     }
-  } catch (error) {
-    if (error.response) {
-      console.error("Erro ao registrar usuário:", error.response.data);
-      alert(
-        "Erro: " + error.response.data.message ||
-        "Não foi possível registrar o usuário. Tente novamente mais tarde."
+  
+    // Verifica se os termos foram aceitos
+    if (!acceptedTerms) {
+      alert("Você deve aceitar os termos para continuar.");
+      return;
+    }
+  
+    // Preparar os dados do usuário
+    const userData = {
+      usuarioId: 0,
+      nome: formData.nome,
+      email: formData.email,
+      senha: formData.senha,
+      cep: formData.cep,
+      pais: formData.pais,
+      cidade: formData.cidade,
+      rua: formData.rua,
+      numeroRua: formData.numeroRua || "",
+      telefone: formData.telefone,
+      celular: formData.celular,
+      profissionalDaSaude: formData.profissionalDaSaude,
+      graduacao: formData.graduacao,
+      receberEmail: subscribeNews,
+    };
+  
+    console.log("Payload enviado para a API:", userData);
+  
+    try {
+      setIsLoading(true); // Inicia o carregamento
+      // Enviar dados para a API local
+      const response = await axios.post(
+        "https://testserver-2p40.onrender.com/api/register",
+        userData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-Requested-With": "XMLHttpRequest", // Para evitar ataques CSRF
+          },
+          timeout: 10000, // Timeout de 10 segundos
+        }
       );
-    } else {
-      console.error("Erro ao registrar usuário:", error.message || error);
-      alert("Não foi possível registrar o usuário. Tente novamente mais tarde.");
+  
+      console.log("Resposta da API ao registrar o usuário:", response);
+  
+      // Verifica se o status da resposta é 204 (sem conteúdo)
+      if (response.status === 204) {
+        console.log("Usuário registrado com sucesso. Aguardando para fazer login...");
+  
+        // Delay antes do login
+        await new Promise(resolve => setTimeout(resolve, 2000)); // Aguarda 2 segundos
+  
+        // Realiza o login após a confirmação do registro
+        const loginResponse = await axios.get(
+          "https://testserver-2p40.onrender.com/api/login", {
+            params: { email: formData.email, senha: formData.senha }, // Envia os dados necessários
+            headers: {
+              "X-Requested-With": "XMLHttpRequest",
+            },
+          }
+        );
+  
+        console.log("Resposta da API ao fazer login:", loginResponse);
+  
+        // Verifica se o login foi bem-sucedido
+        if (loginResponse.status === 200) {
+          const { idUser, nome } = loginResponse.data;
+          console.log("Login bem-sucedido. ID do usuário:", idUser);
+          setUser({ nome }); // Atualiza o estado do usuário
+          login(idUser, nome); // Passa idUser e nome para useAuth
+          navigate("/home");
+        } else {
+          alert("Houve um erro ao fazer login. Por favor, tente novamente.");
+        }
+      } else {
+        alert("Houve um erro ao registrar o usuário. Por favor, tente novamente.");
+      }
+    } catch (error) {
+      if (error.response) {
+        console.error("Erro ao registrar usuário:", error.response.data);
+        alert(
+          "Erro: " + (error.response.data.message || "Não foi possível registrar o usuário. Tente novamente mais tarde.")
+        );
+      } else {
+        console.error("Erro ao registrar usuário:", error.message || error);
+        alert("Não foi possível registrar o usuário. Tente novamente mais tarde.");
+      }
+    } finally {
+      setIsLoading(false); // Finaliza o carregamento
     }
-  } finally {
-    setIsLoading(false); // Finaliza o carregamento
-  }
-};
-
+  };
 
   if (!isOpen) return null; // Se não estiver aberto, não renderiza nada
 
