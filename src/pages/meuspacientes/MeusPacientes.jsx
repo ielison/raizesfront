@@ -31,7 +31,7 @@ export default function MeusPacientes() {
           data.map(async (paciente) => {
             try {
               const consultaResponse = await fetch(
-                `http://localhost:3000/api/quiz/resultado/${paciente.idQuestionario}/${idUser}`
+                `https://testserver-2p40.onrender.com/api/quiz/resultado/${paciente.idQuestionario}/${idUser}`
               );
 
               if (consultaResponse.ok) {
