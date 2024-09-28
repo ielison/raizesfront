@@ -1,20 +1,16 @@
 import "./HomeHero.css";
-import PacienteModal from "../PacienteModal/PacienteModal";
 import { useModals } from "../../context/ModalContext";
 import { useAuth } from "../../context/AuthContext"; // Importando AuthContext
 
 export default function HomeHero() {
-  const { nome, idUser } = useAuth(); // Obtendo nome e idUser do AuthContext
-  const { openModal, closeModal, currentModal } = useModals();
+  const { nome,} = useAuth(); // Obtendo nome e idUser do AuthContext
+  const { openModal,  } = useModals();
 
   const handleStartClick = () => {
     openModal("PacienteModal");
   };
 
-  const handleCloseModal = () => {
-    closeModal();
-  };
-
+ 
   return (
     <div className="homeHero__container">
       <div className="homeHero__content">
@@ -38,9 +34,9 @@ export default function HomeHero() {
           Começar avaliação
         </button>
       </div>
-      {currentModal === "PacienteModal" && (
-        <PacienteModal onClose={handleCloseModal} idUser={idUser} /> 
-      )}
+     {/*  {currentModal === "PacienteModal" && (
+        <PacienteModal onClose={handleCloseModal} idUser={idUser} />
+      )} */}
     </div>
   );
 }
