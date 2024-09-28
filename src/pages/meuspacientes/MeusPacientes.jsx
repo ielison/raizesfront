@@ -40,11 +40,15 @@ export default function MeusPacientes() {
                   ? "Precisa consulta oncogenética"
                   : "Não precisa consulta oncogenética";
               } else {
-                paciente.consultaOncogenetica = "Não precisa consulta oncogenética";
+                paciente.consultaOncogenetica =
+                  "Não precisa consulta oncogenética";
               }
             } catch (error) {
-              console.error(`Erro ao verificar consulta oncogenética: ${error}`);
-              paciente.consultaOncogenetica = "Não precisa consulta oncogenética";
+              console.error(
+                `Erro ao verificar consulta oncogenética: ${error}`
+              );
+              paciente.consultaOncogenetica =
+                "Não precisa consulta oncogenética";
             }
 
             return paciente;
@@ -111,10 +115,238 @@ export default function MeusPacientes() {
     // Implementar lógica para abrir dadosPaciente com dados da API
   };
 
-  const baixarRelatorio = (pacienteId) => {
+  const baixarRelatorio = async (pacienteId) => {
     console.log(`Baixar relatório do paciente com ID: ${pacienteId}`);
-    // Implementar lógica para download do relatório
+    
+    try {
+      // Chamada para obter o resultado do quiz
+      const resultadoResponse = await fetch(
+        `https://testserver-2p40.onrender.com/api/quiz/resultado/${pacienteId}/${idUser}`
+      );
+  
+      if (!resultadoResponse.ok) {
+        throw new Error(`Erro ao obter resultado do quiz: ${resultadoResponse.status}`);
+      }
+  
+      const resultadoData = await resultadoResponse.json();
+      console.log('Resultado do quiz:', resultadoData); // Log da resposta do quiz
+      const precisaPesquisaOncogenetica = resultadoData; // Isso deve ser true ou false
+  
+      const response = await fetch(
+        `https://testserver-2p40.onrender.com/api/quiz/${pacienteId}`
+      );
+  
+      if (!response.ok) {
+        throw new Error(`Erro ao baixar relatório: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      console.log('Dados do paciente:', data); // Log da resposta dos dados do paciente
+  
+      // Adaptar os dados para o formato desejado
+      const relatorio = {
+        nome: data.usuariPrincipal.nome,
+        idade: data.usuariPrincipal.idade,
+        historicoPessoal: `${data.usuariPrincipal.qualCancer} aos ${data.usuariPrincipal.idadeDiagnostico} anos`,
+        familiares: [],
+        precisaPesquisaOncogenetica, // Adiciona o resultado do quiz aqui
+      };
+  
+      // Adicionar informações do pai
+      if (data.pai.teveCancer) {
+        relatorio.familiares.push({
+          grau: "pai",
+          tipoCancer:
+            data.pai.outroCancerList.length > 0
+              ? data.pai.outroCancerList[0].tipoCancer
+              : "desconhecido",
+          idadeDiagnostico:
+            data.pai.outroCancerList.length > 0
+              ? data.pai.outroCancerList[0].idadeDiagnostico
+              : 0,
+        });
+      }
+  
+      // Adicionar informações da mãe
+      if (data.mae.teveCancer) {
+        relatorio.familiares.push({
+          grau: "mãe",
+          tipoCancer:
+            data.mae.outroCancerList.length > 0
+              ? data.mae.outroCancerList[0].tipoCancer
+              : "desconhecido",
+          idadeDiagnostico:
+            data.mae.outroCancerList.length > 0
+              ? data.mae.outroCancerList[0].idadeDiagnostico
+              : 0,
+        });
+      }
+  
+      // Adicionar informações dos filhos
+      data.filhosList.forEach((filho) => {
+        if (filho.teveCancer) {
+          relatorio.familiares.push({
+            grau: "filho",
+            tipoCancer:
+              filho.outroCancerList.length > 0
+                ? filho.outroCancerList[0].tipoCancer
+                : "desconhecido",
+            idadeDiagnostico:
+              filho.outroCancerList.length > 0
+                ? filho.outroCancerList[0].idadeDiagnostico
+                : 0,
+          });
+        }
+      });
+  
+      // Adicionar informações dos netos
+      data.netosList.forEach((neto) => {
+        if (neto.teveCancer) {
+          relatorio.familiares.push({
+            grau: "neto",
+            tipoCancer:
+              neto.outroCancerList.length > 0
+                ? neto.outroCancerList[0].tipoCancer
+                : "desconhecido",
+            idadeDiagnostico:
+              neto.outroCancerList.length > 0
+                ? neto.outroCancerList[0].idadeDiagnostico
+                : 0,
+          });
+        }
+      });
+  
+      // Adicionar informações dos irmãos
+      data.irmaosList.forEach((irmao) => {
+        if (irmao.teveCancer) {
+          relatorio.familiares.push({
+            grau: "irmão",
+            tipoCancer:
+              irmao.outroCancerList.length > 0
+                ? irmao.outroCancerList[0].tipoCancer
+                : "desconhecido",
+            idadeDiagnostico:
+              irmao.outroCancerList.length > 0
+                ? irmao.outroCancerList[0].idadeDiagnostico
+                : 0,
+          });
+        }
+      });
+  
+      // Adicionar informações dos sobrinhos
+      data.sobrinhosList.forEach((sobrinho) => {
+        if (sobrinho.teveCancer) {
+          relatorio.familiares.push({
+            grau: "sobrinho",
+            tipoCancer:
+              sobrinho.outroCancerList.length > 0
+                ? sobrinho.outroCancerList[0].tipoCancer
+                : "desconhecido",
+            idadeDiagnostico:
+              sobrinho.outroCancerList.length > 0
+                ? sobrinho.outroCancerList[0].idadeDiagnostico
+                : 0,
+          });
+        }
+      });
+  
+      // Adicionar informações dos tios
+      data.tiosList.forEach((tio) => {
+        if (tio.teveCancer) {
+          relatorio.familiares.push({
+            grau: "tio",
+            tipoCancer:
+              tio.outroCancerList.length > 0
+                ? tio.outroCancerList[0].tipoCancer
+                : "desconhecido",
+            idadeDiagnostico:
+              tio.outroCancerList.length > 0
+                ? tio.outroCancerList[0].idadeDiagnostico
+                : 0,
+          });
+        }
+      });
+  
+      // Adicionar informações dos avós
+      data.avosList.forEach((avo) => {
+        if (avo.teveCancer) {
+          relatorio.familiares.push({
+            grau: "avô",
+            tipoCancer:
+              avo.outroCancerList.length > 0
+                ? avo.outroCancerList[0].tipoCancer
+                : "desconhecido",
+            idadeDiagnostico:
+              avo.outroCancerList.length > 0
+                ? avo.outroCancerList[0].idadeDiagnostico
+                : 0,
+          });
+        }
+      });
+  
+      // Adicionar informações dos primos
+      data.primosList.forEach((primo) => {
+        if (primo.teveCancer) {
+          relatorio.familiares.push({
+            grau: "primo",
+            tipoCancer:
+              primo.outroCancerList.length > 0
+                ? primo.outroCancerList[0].tipoCancer
+                : "desconhecido",
+            idadeDiagnostico:
+              primo.outroCancerList.length > 0
+                ? primo.outroCancerList[0].idadeDiagnostico
+                : 0,
+          });
+        }
+      });
+  
+      // Adicionar informações de outros familiares
+      data.outroFamiliarList.forEach((familiar) => {
+        if (familiar.teveCancer) {
+          relatorio.familiares.push({
+            grau: familiar.qualFamiliar,
+            tipoCancer:
+              familiar.outroCancerList.length > 0
+                ? familiar.outroCancerList[0].tipoCancer
+                : "desconhecido",
+            idadeDiagnostico:
+              familiar.outroCancerList.length > 0
+                ? familiar.outroCancerList[0].idadeDiagnostico
+                : 0,
+          });
+        }
+      });
+  
+      // Enviar os dados formatados para o endpoint desejado
+      const pdfResponse = await fetch("https://testserver-2p40.onrender.com/generatepdf", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(relatorio),
+      });
+  
+      if (!pdfResponse.ok) {
+        throw new Error(`Erro ao gerar PDF: ${pdfResponse.status}`);
+      }
+  
+      // Here we handle the PDF response directly
+      const blob = await pdfResponse.blob(); // Get the PDF blob
+      const url = window.URL.createObjectURL(blob); // Create a URL for the blob
+      const a = document.createElement("a"); // Create a link element
+      a.style.display = "none";
+      a.href = url;
+      a.download = `Relatorio_${relatorio.nome}.pdf`; // Set the download attribute
+      document.body.appendChild(a); // Append to the document
+      a.click(); // Simulate click to trigger download
+      window.URL.revokeObjectURL(url); // Clean up
+      console.log("PDF gerado com sucesso.");
+    } catch (error) {
+      console.error(`Erro ao baixar o relatório: ${error}`);
+    }
   };
+  
 
   if (isLoading) {
     return <p>Carregando...</p>; // Mensagem de carregamento
