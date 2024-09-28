@@ -1,0 +1,242 @@
+.register1-modal {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  width: 90%; /* Ajusta para 90% da largura da tela menor */
+  max-width: 760px; /* Largura máxima */
+  height: auto; /* Altura automática */
+  max-height: 90vh; /* Garante que o modal não exceda 90% da altura da tela */
+  overflow-y: auto; /* Adiciona rolagem vertical se necessário */
+  overflow-x: hidden; /* Oculta a rolagem horizontal */
+  display: flex;
+  flex-direction: column;
+}
+.error-message{
+  font-size: 12px;
+  font-style: italic;
+  color: red;
+}
+
+.register1-form-input.border-green {
+  border: 2px solid green;
+}
+
+.register1-form-input:focus.border-red {
+  border: 2px solid red; /* Borda vermelha ao focar */
+}
+
+.register1-form-input:focus.border-green  {
+  border: 2px solid green;
+}
+
+.register1-form-input.error {
+  border: 2px solid red;
+}
+
+.password-input-group {
+  position: relative;
+}
+
+.toggle-password-visibility {
+  position: absolute;
+  right: 10px; /* Ajuste conforme necessário */
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.toggle-password-visibility img{
+  width: 20px;
+
+}
+
+.fonte-p{
+  font-size: 12px;
+  font-style: italic;
+}
+
+.register1-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.register1-close-button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #333;
+}
+
+.stepper-wrapper {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  background-color: #f9f9f9;
+}
+
+.stepper-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+/* Remove the dotted line from the first item */
+.stepper-item:first-child::before {
+  content: none; /* Remove the dot before the first step */
+}
+
+/* Remove the dotted line from the last item */
+.stepper-item:last-child::after {
+  content: none; /* Remove the dot after the last step */
+}
+
+/* Dotted lines for other items */
+.stepper-item::before,
+.stepper-item::after {
+  position: absolute;
+  content: "";
+  border-bottom: 2px dotted #ccc; /* Dotted line */
+  width: 100%;
+  top: 20px;
+  z-index: 2;
+}
+
+/* Keep active class styling */
+.stepper-item.active {
+  font-weight: bold;
+  color: #007BFF;
+  transform: scale(1.05);
+}
+
+.step-counter {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #ccc;
+  margin-bottom: 6px;
+}
+
+
+.register1-form-input,
+.register1-checkbox-group {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+.register1-checkbox-group {
+  display: flex;
+  align-items: center;
+  margin: 10px 0; /* Espaçamento */
+}
+
+.register1-checkbox-group label {
+  margin-right: 10px;
+}
+
+.register1-form-button {
+  background-color: #007BFF;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.register1-form-button:hover {
+  background-color: #0056b3;
+}
+
+.register1-address-group {
+  display: flex;
+  justify-content: space-between;
+}
+
+.register1-address-field {
+  flex: 1; /* Os campos ocupam espaço igual */
+  margin-right: 10px; /* Espaço entre os campos */
+}
+
+.register1-address-field:last-child {
+  margin-right: 0; /* Remove margem do último campo */
+}
+
+.register1-info-button {
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.tooltip-text {
+  position: absolute;
+  top: -5px; /* Posição acima do ícone de informação */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 4px;
+  white-space: nowrap; /* Previne quebra de linha */
+  z-index: 10; /* Garante que a tooltip apareça acima de outros elementos */
+  visibility: hidden; /* Inicialmente oculta */
+  opacity: 0; /* Começa com opacidade 0 */
+  transition: visibility 0s, opacity 0.2s ease-in-out; 
+  max-width: 700px; /* Limita a largura máxima */
+  overflow-wrap: break-word; /* Permite quebra e empacotamento de palavras longas */
+}
+
+.register1-info-button:hover .tooltip-text {
+  visibility: visible; /* Exibe a tooltip ao passar o mouse */
+  opacity: 1; /* Fade in da tooltip */
+}
+
+
+
+.register1-form-input:focus {
+  border-color: #007BFF;
+  outline: none; /* Remove contorno padrão */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Sombra opcional */
+}
+
+.info-box {
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+  .register1-modal {
+    width: 95%; /* Aumenta a responsividade para telas pequenas */
+    padding: 15px; /* Menor padding para economizar espaço */
+  }
+}
+
+@media (max-width: 480px) {
+  .register1-modal {
+    width: 90%; /* Ocupa toda a largura da tela */
+    max-height: 85vh; /* Limita a altura a 85% da tela */
+    padding: 10px; /* Padding reduzido para pequenas telas */
+  }
+}
