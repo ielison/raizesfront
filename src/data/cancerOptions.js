@@ -79,7 +79,4 @@ export const cancerOptions = [
   { value: "utero", label: "útero" },
   { value: "vagina_vulva", label: "vagina ou vulva" },
   { value: "via_biliar", label: "via biliar" }
-].map(option => ({
-  ...option,
-  label: option.label.charAt(0).toUpperCase() + option.label.slice(1)
-}));
+];

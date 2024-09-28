@@ -25,7 +25,33 @@ export default function MeusPacientes() {
         }
 
         const data = await response.json(); // Converte a resposta em JSON
-        setPacientes(data); // Armazena os dados em pacientes
+
+        // Faz uma chamada adicional para verificar a consulta oncogenética de cada paciente
+        const pacientesComConsulta = await Promise.all(
+          data.map(async (paciente) => {
+            try {
+              const consultaResponse = await fetch(
+                `https://testserver-2p40.onrender.com/api/quiz/resultado/${paciente.idQuestionario}/${idUser}`
+              );
+
+              if (consultaResponse.ok) {
+                const consultaData = await consultaResponse.json();
+                paciente.consultaOncogenetica = consultaData
+                  ? "Precisa consulta oncogenética"
+                  : "Não precisa consulta oncogenética";
+              } else {
+                paciente.consultaOncogenetica = "Não precisa consulta oncogenética";
+              }
+            } catch (error) {
+              console.error(`Erro ao verificar consulta oncogenética: ${error}`);
+              paciente.consultaOncogenetica = "Não precisa consulta oncogenética";
+            }
+
+            return paciente;
+          })
+        );
+
+        setPacientes(pacientesComConsulta); // Armazena os pacientes com consulta oncogenética
       } catch (error) {
         setError(error.message); // Define a mensagem de erro
       } finally {
@@ -156,9 +182,7 @@ export default function MeusPacientes() {
 
             <div className="divider"></div>
             <div className="consulta-oncogenetica">
-              {paciente.consultaOncogenetica
-                ? "Precisa consulta oncogenética"
-                : "Não precisa consulta oncogenética"}
+              {paciente.consultaOncogenetica}
             </div>
           </div>
         ))}
