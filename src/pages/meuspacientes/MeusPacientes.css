@@ -117,7 +117,9 @@
 .pagination button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
+  color:#494949;
 }
+
 
 .pagination span {
   font-size: 16px;
