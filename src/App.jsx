@@ -20,9 +20,9 @@ import Etapa3Modal from "./components/Etapa3Modal/Etapa3Modal";
 import DadosFamiliaPaterna from "./components/DadosFamiliaPaterna/DadosFamiliaPaterna";
 import AvosPaternos from "./components/AvosPaternos/AvosPaternos";
 import PrimosPrimasPaternos from "./components/PrimosPrimasPaternas/PrimosPrimasPaternos";
-import FamiliaresDistantesPaterno from "./components/FamiliaresDistantesPaterno/FamiliaresDistantesPaterno";
-import QuestionarioFinalizado from "./components/QuestionarioFinalizado/QuestionarioFinalizado";
-import QuestionarioFinalizado2 from "./components/QuestionarioFinalizado2/QuestionarioFinalizado2";
+//import FamiliaresDistantesPaterno from "./components/FamiliaresDistantesPaterno/FamiliaresDistantesPaterno";
+//import QuestionarioFinalizado from "./components/QuestionarioFinalizado/QuestionarioFinalizado";
+//import QuestionarioFinalizado2 from "./components/QuestionarioFinalizado2/QuestionarioFinalizado2";
 import Register1 from "./components/Register1/Register1";
 import Register2 from "./components/Register2/Register2";
 // import RegisterEnd from "./components/RegisterEnd/RegisterEnd";
@@ -80,8 +80,8 @@ function App() {
       {currentModal === "register2" && (
         <Register2
           isOpen={true}
-          onClose={handleCloseAllModals} // Garante que todos os modais sejam fechados
-          //onBack={() => handleModalClose("register1")} // Se você ainda quiser voltar para o modal anterior
+          onClose={handleCloseAllModals}
+          onBack={() => handleModalClose("register1")}
           formData={modalData} // Recebe os dados do modal
         />
       )}
@@ -94,6 +94,13 @@ function App() {
           onStartEvaluation={() => handleModalClose("DadosPaciente")}
         />
       )}
+
+      {/* {currentModal === "PacienteModal" && (
+        <PacienteModal
+          //onClose={closeModal}
+          
+        />
+      )} */}
       {currentModal === "DadosPaciente" && (
         <DadosPaciente
           onClose={() => handleModalClose("Etapa1Modal")}
@@ -192,24 +199,24 @@ function App() {
           onAdvance={() => handleModalClose("FamiliaresDistantesPaterno")}
         />
       )}
-      {currentModal === "FamiliaresDistantesPaterno" && (
+      {/* {currentModal === "FamiliaresDistantesPaterno" && (
         <FamiliaresDistantesPaterno
           onClose={() => handleModalClose("PrimosPrimasPaternos")}
           onBack={() => handleModalClose("PrimosPrimasPaternos")}
           onAdvance={() => handleModalClose("QuestionarioFinalizado")}
         />
-      )}
-      {currentModal === "QuestionarioFinalizado" && (
+      )} */}
+      {/* {currentModal === "QuestionarioFinalizado" && (
         <QuestionarioFinalizado
           onClose={() => handleModalClose("FamiliaresDistantesPaterno")}
           onAdvance={() => handleModalClose("QuestionarioFinalizado2")}
         />
-      )}
-      {currentModal === "QuestionarioFinalizado2" && (
+      )} */}
+      {/* {currentModal === "QuestionarioFinalizado2" && (
         <QuestionarioFinalizado2
           onClose={() => handleModalClose("QuestionarioFinalizado")}
         />
-      )}
+      )} */}
     </UserProvider>
   );
 }
