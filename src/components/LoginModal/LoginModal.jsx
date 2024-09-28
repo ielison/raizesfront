@@ -3,12 +3,12 @@ import PropTypes from "prop-types";
 import { useAuth } from "../../context/AuthContext"; // Importando AuthContext
 import "./LoginModal.css";
 import { useState } from "react";
-import closedEyeIcon from "../../assets/closed-eye.svg"; 
-import openEyeIcon from "../../assets/open-eye.svg"; 
+import closedEyeIcon from "../../assets/closed-eye.svg";
+import openEyeIcon from "../../assets/open-eye.svg";
 
 export default function LoginModal({ isOpen, onClose, handleRegisterClick }) {
   const navigate = useNavigate();
-  const { login } = useAuth(); 
+  const { login } = useAuth();
   const [errorMessage, setErrorMessage] = useState("");
   const [passwordVisible, setPasswordVisible] = useState(false);
 
@@ -16,14 +16,16 @@ export default function LoginModal({ isOpen, onClose, handleRegisterClick }) {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
-  
+
     try {
       const response = await fetch(
-        `http://localhost:3000/api/login?email=${encodeURIComponent(email)}&senha=${encodeURIComponent(password)}`,
+        `https://testserver-2p40.onrender.com/api/login?email=${encodeURIComponent(
+          email
+        )}&senha=${encodeURIComponent(password)}`,
         { method: "GET" }
       );
-  
-      if (response.ok) { // Use response.ok em vez de response.status === 200
+
+      if (response.ok) {
         const data = await response.json();
         login(data.idUser, data.nome); // Passa o idUser e nome para o AuthContext
         navigate("/home");
@@ -39,13 +41,12 @@ export default function LoginModal({ isOpen, onClose, handleRegisterClick }) {
       alert("Erro ao realizar login. Tente novamente dentro de alguns instantes.");
     }
   };
-  
 
   if (!isOpen) return null;
 
   return (
-    <div className="login-modal-overlay" onClick={onClose}>
-      <div className="login-modal-content" onClick={(e) => e.stopPropagation()}>
+    <div className="login-modal-overlay">
+      <div className="login-modal-content">
         <button className="login-modal-close-button" onClick={onClose}>
           &times;
         </button>

@@ -1,13 +1,12 @@
 import { useModals } from "../../context/ModalContext";
 import Logo from "../../assets/logo.svg";
 import "./HomeTopbar.css";
+import Etapa1Modal from "../Etapa1Modal/Etapa1Modal";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useState } from "react";
-import PacienteModal from "../PacienteModal/PacienteModal";
 
 export default function HomeTopbar() {
-  const { idUser } = useAuth(); // Obtendo nome e idUser do AuthContext
   const { openModal, closeModal, currentModal } = useModals();
   const navigate = useNavigate();
   const location = useLocation();
@@ -20,7 +19,7 @@ export default function HomeTopbar() {
   };
 
   const handleStartClick = () => {
-    openModal("PacienteModal");
+    openModal("Etapa1Modal");
   };
 
   const handleCloseModal = () => {
@@ -108,8 +107,8 @@ export default function HomeTopbar() {
           </li>
         </ul>
       </nav>
-      {currentModal === "PacienteModal" && (
-        <PacienteModal onClose={handleCloseModal} idUser={idUser} /> 
+      {currentModal === "Etapa1Modal" && (
+        <Etapa1Modal onClose={handleCloseModal} />
       )}
     </header>
   );

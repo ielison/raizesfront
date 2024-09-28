@@ -11,6 +11,8 @@ const Register2 = ({ isOpen, onClose, formData }) => {
   const { setUser } = useUser();
   const { login } = useAuth();
 
+//ok
+  
   // Estados locais
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [subscribeNews, setSubscribeNews] = useState(false);
@@ -67,11 +69,37 @@ const Register2 = ({ isOpen, onClose, formData }) => {
         }
       );
   
+      console.log("Resposta da API ao registrar o usuário:", response);
+  
       // Verifica se o status da resposta é 204 (sem conteúdo)
       if (response.status === 204) {
-        setUser({ nome: formData.nome });
-        login(formData.email); // Usar o email ou outro identificador aqui
-        navigate("/home");
+        console.log("Usuário registrado com sucesso. Aguardando para fazer login...");
+  
+        // Delay antes do login
+        await new Promise(resolve => setTimeout(resolve, 2000)); // Aguarda 2 segundos
+  
+        // Realiza o login após a confirmação do registro
+        const loginResponse = await axios.get(
+          "https://testserver-2p40.onrender.com/api/login", {
+            params: { email: formData.email, senha: formData.senha }, // Envia os dados necessários
+            headers: {
+              "X-Requested-With": "XMLHttpRequest",
+            },
+          }
+        );
+  
+        console.log("Resposta da API ao fazer login:", loginResponse);
+  
+        // Verifica se o login foi bem-sucedido
+        if (loginResponse.status === 200) {
+          const { idUser, nome } = loginResponse.data;
+          console.log("Login bem-sucedido. ID do usuário:", idUser);
+          setUser({ nome }); // Atualiza o estado do usuário
+          login(idUser, nome); // Passa idUser e nome para useAuth
+          navigate("/home");
+        } else {
+          alert("Houve um erro ao fazer login. Por favor, tente novamente.");
+        }
       } else {
         alert("Houve um erro ao registrar o usuário. Por favor, tente novamente.");
       }
@@ -79,8 +107,7 @@ const Register2 = ({ isOpen, onClose, formData }) => {
       if (error.response) {
         console.error("Erro ao registrar usuário:", error.response.data);
         alert(
-          "Erro: " + error.response.data.message ||
-          "Não foi possível registrar o usuário. Tente novamente mais tarde."
+          "Erro: " + (error.response.data.message || "Não foi possível registrar o usuário. Tente novamente mais tarde.")
         );
       } else {
         console.error("Erro ao registrar usuário:", error.message || error);
@@ -90,9 +117,7 @@ const Register2 = ({ isOpen, onClose, formData }) => {
       setIsLoading(false); // Finaliza o carregamento
     }
   };
-
-
-
+  
   if (!isOpen) return null; // Se não estiver aberto, não renderiza nada
 
   return (

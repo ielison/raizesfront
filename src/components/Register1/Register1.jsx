@@ -170,7 +170,7 @@ export default function Register1({ isOpen, onClose }) {
   return (
     <>
       {!isRegister2Open && (
-        <div className="modal-overlay">
+        <div className="register1-overlay">
           <div className="register1-modal" onClick={(e) => e.stopPropagation()}>
             <div className="register1-header">
               <h2>Registrar</h2>
