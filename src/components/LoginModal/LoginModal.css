@@ -102,7 +102,7 @@
 }
 
 .login-modal-submit-button:hover {
-  background-color: var(--primary-700)
+  background-color: var(--secondary-500);
 }
 
 .login-modal-register-prompt {

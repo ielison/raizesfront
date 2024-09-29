@@ -75,10 +75,11 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
     });
 
     const updatedUserData = {
+      ...initialData,
       mae: {
         id: 0,
         teveCancer: motherHadCancer,
-        outroCancerList: motherCancerDetails.map(cancerDetail => ({
+        outroCancerList: motherCancerDetails.map((cancerDetail) => ({
           idadeDiagnostico: cancerDetail.age || 0,
           tipoCancer: cancerDetail.type?.value || "string",
         })),
@@ -96,13 +97,12 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
               {
                 id: index,
                 idadeDiagnostico: detail.age || 0,
-                tipoCancer: detail.type?.value || "string",
+                tipoCancer: detail.type ? detail.type[0]?.value : "", // Acessa o primeiro tipo
               },
             ],
           }))
         : [],
     };
-    
 
     console.log("User Data Updated:", updatedUserData);
     onFormChange(updatedUserData);
@@ -114,6 +114,7 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
     uncleAuntCancer,
     uncleAuntCancerDetails,
     onFormChange,
+    initialData,
   ]);
 
   const handleNoKnowledgeChange = () => {
@@ -361,10 +362,9 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
                     {uncleAuntCancerDetails.map((detail, index) => (
                       <div key={index} className="dfm-cancer-detail">
                         <Select
-                        isMulti
-                          placeholder="Selecione o tipo de câncer"
+                          isMulti
                           options={cancerOptions}
-                          value={detail.type}
+                          value={detail.type} // Certifique-se de que detail.type é um array
                           onChange={(selectedOption) => {
                             setUncleAuntCancerDetails((prev) =>
                               prev.map((d, i) =>
@@ -374,6 +374,7 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
                           }}
                           className="dfm-select"
                         />
+
                         <div className="dfm-idade">
                           <span>
                             Idade
@@ -386,7 +387,7 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
                                   setUncleAuntCancerDetails((prev) =>
                                     prev.map((d, i) =>
                                       i === index
-                                        ? { ...d, age: selectedOption }
+                                        ? { ...d, age: selectedOption.value }
                                         : d
                                     )
                                   );
@@ -461,10 +462,6 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
   );
 }
 
-DadosFamiliaMaterna2.propTypes = {
-  onFormChange: PropTypes.func.isRequired,
-  initialData: PropTypes.object,
-};
 
 DadosFamiliaMaterna2.propTypes = {
   onFormChange: PropTypes.func.isRequired,

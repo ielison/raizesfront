@@ -64,12 +64,12 @@ p {
   flex-direction: column;
   justify-content: space-between;
   margin-top: 30px;
-  gap:16px;
+  gap: 16px;
 }
 
 .btn-open-report,
 .btn-download-report {
-  background-color: #007bff;
+  background-color: var(--primary-500);
   color: white;
   border: none;
   padding: 10px 20px;

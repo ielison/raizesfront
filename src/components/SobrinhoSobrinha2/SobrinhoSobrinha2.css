@@ -1,15 +1,14 @@
-.sobrinhos-sobrinhas-modal-content {
+.ss-modal-content {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   background: #fff;
   border-radius: 8px;
-  width: 760px;
-  /* Largura fixa */
-  height: 650px;
-  /* Altura fixa */
-  overflow: hidden;
-  /* Esconde o conteúdo que ultrapassar */
+  width: 95%;
+  height: 400px;
+  overflow-y: hidden;
 }
+
+
 
 .parentesco-ss select {
   height: 32px;
@@ -26,7 +25,7 @@
   flex-direction: row;
 }
 
-.sobrinhos-sobrinhas-form-container {
+.ss-form-container {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -65,6 +64,7 @@ input[type="number"] {
 input[type="checkbox"] {
   margin-right: 10px;
 }
+
 
 
 .ss-btn-back,

@@ -244,12 +244,10 @@ export default function PacienteModal({ onClose }) {
 
     // Função para mesclar e filtrar tios
     const mergedTios = mergeTios(
-      tiosListMaterno.length
-        ? tiosListMaterno
-        : data.tiosList.filter((tio) => tio.ladoParterno === "materno"),
-      tiosListPaterno.length
-        ? tiosListPaterno
-        : data.tiosList.filter((tio) => tio.ladoParterno === "paterno")
+      updatedFields.tiosListMaterno ||
+        data.tiosList.filter((tio) => tio.ladoParterno === "materno"),
+      updatedFields.tiosListPaterno ||
+        data.tiosList.filter((tio) => tio.ladoParterno === "paterno")
     );
 
     setData((prevData) => ({
@@ -520,7 +518,9 @@ export default function PacienteModal({ onClose }) {
                             <li
                               key={subItem.id}
                               className={
-                                subItem.id === currentSubItem ? "active" : "itemsub"
+                                subItem.id === currentSubItem
+                                  ? "active"
+                                  : "itemsub"
                               }
                               onClick={() =>
                                 handleSubItemClick(step.id, subItem.id)

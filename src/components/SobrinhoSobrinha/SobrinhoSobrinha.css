@@ -67,7 +67,19 @@ input[type="number"] {
 }
 
 input[type="checkbox"] {
-  margin-right: 10px;
+  background-color: #ECECEC;
+  border: 2px solid #8c8c8c;
+  padding: 6px;
+  border-radius: 4px;
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+}
+.checkbox-group input[type="checkbox"]:checked{
+  background-color: var(--primary-500);
+  border-color: #274195;
 }
 
 

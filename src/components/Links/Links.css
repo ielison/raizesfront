@@ -73,10 +73,20 @@ body {
   color: var(--primary-500);
 }
 
+.linksuteis__tab:hover {
+  background-color: var(--secondary-500);
+  color: white;
+  border-color: var(--secondary-500);
+}
+
 .linksuteis__tab.active {
   background-color: var(--primary-500);
   color: white;
   /* Active tab background color */
+}
+
+.linksuteis__tab.active:hover {
+  border-color: var(--primary-500);
 }
 
 /* Link Grid Styles */
@@ -101,12 +111,13 @@ body {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   padding: 10px;
   transition: transform 0.3s;
-  display: flex; 
-  flex-direction: column; 
-  justify-content: center; 
-  height: 200px; 
-  word-break: break-word; 
-  width: 300px; /* Define um min-width opcional */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 200px;
+  word-break: break-word;
+  width: 300px;
+  /* Define um min-width opcional */
 }
 
 .linksuteis__link-item:hover {
@@ -149,21 +160,39 @@ body {
 }
 
 .linksuteis__pagination button {
-  margin: 0 5px;
-  padding: 5px 10px;
+  background-color: var(--primary-500);
+  color: white;
   border: none;
   border-radius: 4px;
-  background-color: #007bff;
-  /* Button background color */
-  color: white;
+  padding: 14px 24px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  margin: 0 10px;
+}
+
+.linksuteis__pagination button:hover {
+  background-color: var(--secondary-500);
 }
 
 .linksuteis__pagination button:disabled {
   background-color: #ccc;
-  /* Disabled button color */
   cursor: not-allowed;
+  color: #494949;
+}
+
+.linksuteis__pagination span {
+  font-size: 16px;
+  color: #0056b3;
+  background-color: #fff;
+  padding: 12px 30px;
+  border-radius: 4px;
+}
+
+.sem-servico {
+  color: #ffffff;
+  font-size: 24px;
+  display: flex;
+  justify-content: center;
+  padding: 80px;
 }
 
 .label-estado {

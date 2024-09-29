@@ -182,7 +182,7 @@ export default function Register1({ isOpen, onClose }) {
             <p className="fonte-p">
               Os campos com asterisco * ao lado são obrigatórios.
             </p>
-            <div className="stepper-wrapper">
+            <div className="stepper-wrapper1">
               <div
                 className={`stepper-item ${
                   isRegister2Open ? "completed" : "active"

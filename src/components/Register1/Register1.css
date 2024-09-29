@@ -11,23 +11,36 @@
   z-index: 1000;
 }
 
+.register1-button {
+  margin: 32px 5px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
 
 .register1-modal {
   background-color: white;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  width: 90%; /* Ajusta para 90% da largura da tela menor */
-  max-width: 760px; /* Largura máxima */
-  height: auto; /* Altura automática */
-  max-height: 90vh; /* Garante que o modal não exceda 90% da altura da tela */
-  overflow-y: auto; /* Adiciona rolagem vertical se necessário */
-  overflow-x: hidden; /* Oculta a rolagem horizontal */
+  width: 90%;
+  /* Ajusta para 90% da largura da tela menor */
+  max-width: 760px;
+  /* Largura máxima */
+  height: auto;
+  /* Altura automática */
+  max-height: 90vh;
+  /* Garante que o modal não exceda 90% da altura da tela */
+  overflow-y: auto;
+  /* Adiciona rolagem vertical se necessário */
+  overflow-x: hidden;
+  /* Oculta a rolagem horizontal */
   display: flex;
   flex-direction: column;
 }
 
-.error-message{
+.error-message {
   font-size: 12px;
   font-style: italic;
   color: red;
@@ -38,10 +51,11 @@
 }
 
 .register1-form-input:focus.border-red {
-  border: 2px solid red; /* Borda vermelha ao focar */
+  border: 2px solid red;
+  /* Borda vermelha ao focar */
 }
 
-.register1-form-input:focus.border-green  {
+.register1-form-input:focus.border-green {
   border: 2px solid green;
 }
 
@@ -55,7 +69,8 @@
 
 .toggle-password-visibility {
   position: absolute;
-  right: 10px; /* Ajuste conforme necessário */
+  right: 10px;
+  /* Ajuste conforme necessário */
   top: 50%;
   transform: translateY(-50%);
   background: none;
@@ -63,12 +78,12 @@
   cursor: pointer;
 }
 
-.toggle-password-visibility img{
+.toggle-password-visibility img {
   width: 20px;
 
 }
 
-.fonte-p{
+.fonte-p {
   font-size: 12px;
   font-style: italic;
 }
@@ -87,7 +102,7 @@
   color: #333;
 }
 
-.stepper-wrapper {
+.stepper-wrapper1 {
   margin-top: auto;
   display: flex;
   justify-content: space-between;
@@ -108,12 +123,14 @@
 
 /* Remove the dotted line from the first item */
 .stepper-item:first-child::before {
-  content: none; /* Remove the dot before the first step */
+  content: none;
+  /* Remove the dot before the first step */
 }
 
 /* Remove the dotted line from the last item */
 .stepper-item:last-child::after {
-  content: none; /* Remove the dot after the last step */
+  content: none;
+  /* Remove the dot after the last step */
 }
 
 /* Dotted lines for other items */
@@ -121,7 +138,8 @@
 .stepper-item::after {
   position: absolute;
   content: "";
-  border-bottom: 2px dotted #ccc; /* Dotted line */
+  border-bottom: 2px dotted #ccc;
+  /* Dotted line */
   width: 100%;
   top: 20px;
   z-index: 2;
@@ -161,7 +179,8 @@
 .register1-checkbox-group {
   display: flex;
   align-items: center;
-  margin: 10px 0; /* Espaçamento */
+  margin: 10px 0;
+  /* Espaçamento */
 }
 
 .register1-checkbox-group label {
@@ -189,12 +208,15 @@
 }
 
 .register1-address-field {
-  flex: 1; /* Os campos ocupam espaço igual */
-  margin-right: 10px; /* Espaço entre os campos */
+  flex: 1;
+  /* Os campos ocupam espaço igual */
+  margin-right: 10px;
+  /* Espaço entre os campos */
 }
 
 .register1-address-field:last-child {
-  margin-right: 0; /* Remove margem do último campo */
+  margin-right: 0;
+  /* Remove margem do último campo */
 }
 
 .register1-info-button {
@@ -204,33 +226,44 @@
 
 .tooltip-text {
   position: absolute;
-  top: -5px; /* Posição acima do ícone de informação */
+  top: -5px;
+  /* Posição acima do ícone de informação */
   left: 50%;
   transform: translateX(-50%);
   background-color: #333;
   color: #fff;
   padding: 5px 10px;
   border-radius: 4px;
-  white-space: nowrap; /* Previne quebra de linha */
-  z-index: 10; /* Garante que a tooltip apareça acima de outros elementos */
-  visibility: hidden; /* Inicialmente oculta */
-  opacity: 0; /* Começa com opacidade 0 */
-  transition: visibility 0s, opacity 0.2s ease-in-out; 
-  max-width: 700px; /* Limita a largura máxima */
-  overflow-wrap: break-word; /* Permite quebra e empacotamento de palavras longas */
+  white-space: nowrap;
+  /* Previne quebra de linha */
+  z-index: 10;
+  /* Garante que a tooltip apareça acima de outros elementos */
+  visibility: hidden;
+  /* Inicialmente oculta */
+  opacity: 0;
+  /* Começa com opacidade 0 */
+  transition: visibility 0s, opacity 0.2s ease-in-out;
+  max-width: 700px;
+  /* Limita a largura máxima */
+  overflow-wrap: break-word;
+  /* Permite quebra e empacotamento de palavras longas */
 }
 
 .register1-info-button:hover .tooltip-text {
-  visibility: visible; /* Exibe a tooltip ao passar o mouse */
-  opacity: 1; /* Fade in da tooltip */
+  visibility: visible;
+  /* Exibe a tooltip ao passar o mouse */
+  opacity: 1;
+  /* Fade in da tooltip */
 }
 
 
 
 .register1-form-input:focus {
   border-color: #007BFF;
-  outline: none; /* Remove contorno padrão */
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Sombra opcional */
+  outline: none;
+  /* Remove contorno padrão */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  /* Sombra opcional */
 }
 
 .info-box {
@@ -243,15 +276,20 @@
 
 @media (max-width: 768px) {
   .register1-modal {
-    width: 95%; /* Aumenta a responsividade para telas pequenas */
-    padding: 15px; /* Menor padding para economizar espaço */
+    width: 95%;
+    /* Aumenta a responsividade para telas pequenas */
+    padding: 15px;
+    /* Menor padding para economizar espaço */
   }
 }
 
 @media (max-width: 480px) {
   .register1-modal {
-    width: 90%; /* Ocupa toda a largura da tela */
-    max-height: 85vh; /* Limita a altura a 85% da tela */
-    padding: 10px; /* Padding reduzido para pequenas telas */
+    width: 90%;
+    /* Ocupa toda a largura da tela */
+    max-height: 85vh;
+    /* Limita a altura a 85% da tela */
+    padding: 10px;
+    /* Padding reduzido para pequenas telas */
   }
 }

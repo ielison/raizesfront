@@ -8,7 +8,8 @@
 }
 
 .sidebar ul {
-  list-style-type: none; /* Remove os pontos da lista */
+  list-style-type: none;
+  /* Remove os pontos da lista */
   padding-left: 0;
 }
 
@@ -23,27 +24,35 @@
   width: 100%;
   color: black;
   display: flex;
-  justify-content: space-between; /* Adiciona espaço entre o texto e a seta */
+  justify-content: space-between;
+  /* Adiciona espaço entre o texto e a seta */
   align-items: center;
 }
 
 .arrow {
-  font-size: 0.9rem; /* Tamanho da seta */
-  margin-left: 0.5rem; /* Espaçamento entre o título e a seta */
+  font-size: 0.9rem;
+  /* Tamanho da seta */
+  margin-left: 0.5rem;
+  /* Espaçamento entre o título e a seta */
 }
 
 .sidebar-items {
-  list-style-type: none; /* Remove os pontos da lista */
-  padding-left: 1rem; /* Espaçamento para os itens */
+  list-style-type: none;
+  /* Remove os pontos da lista */
+  padding-left: 1rem;
+  /* Espaçamento para os itens */
   margin-top: 0.5rem;
-  max-height: 0; /* Inicia com altura 0 */
+  max-height: 0;
+  /* Inicia com altura 0 */
   overflow: hidden;
-  transition: max-height 0.3s ease-out; /* Transição suave */
+  transition: max-height 0.3s ease-out;
+  /* Transição suave */
   color: #0056b3;
 }
 
 .sidebar-items.expanded {
-  max-height: 500px; /* Altura máxima para a expansão, ajuste conforme necessário */
+  max-height: 500px;
+  /* Altura máxima para a expansão, ajuste conforme necessário */
 }
 
 .sidebar-item {
@@ -56,11 +65,15 @@
 }
 
 .sidebar-item.active {
-  background-color: #007bff; /* Cor de fundo para o item ativo */
-  color: black; /* Cor do texto para o item ativo */
-  font-weight: bold; /* Estilo do texto para o item ativo */
+  background-color: var(--primary-500);
+  /* Cor de fundo para o item ativo */
+  color: black;
+  /* Cor do texto para o item ativo */
+  font-weight: bold;
+  /* Estilo do texto para o item ativo */
 }
 
 .sidebar-item.active:hover {
-  background-color: #0056b3; /* Cor de fundo ao passar o mouse sobre o item ativo */
+  background-color: #0056b3;
+  /* Cor de fundo ao passar o mouse sobre o item ativo */
 }

@@ -9,7 +9,7 @@
 .dfm-form-container {
   display: flex;
   flex-direction: column;
-  width: 85%;
+  width: 90%;
   padding: 20px;
   overflow-y: auto;
 }
@@ -101,8 +101,9 @@
 
 .dfm-idade {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: flex-end;
+  gap: 10px;
 }
 
 .dfm-idade span {

@@ -3,13 +3,10 @@
   flex-direction: column;
   background: #fff;
   border-radius: 8px;
-  width: 70%;
-  /* Largura fixa */
-  height: 650px;
-  /* Altura fixa */
+  width: 95%;
+  height: 400px;
   overflow-y: auto;
-  /* Permitir rolagem vertical */
-
+  padding: 20px
 }
 
 .ii-idade-div button[type="button"] {

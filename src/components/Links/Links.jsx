@@ -193,7 +193,7 @@ function Links() {
               </div>
             ))
           ) : (
-            <p>Nenhum serviço encontrado.</p>
+            <p className="sem-servico">Nenhum serviço encontrado.</p>
           )}
 
           {totalPages > 1 && (

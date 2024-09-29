@@ -1,4 +1,4 @@
-.avosm-modal-overlay {
+/* .avosm-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -16,11 +16,8 @@
   background: #fff;
   border-radius: 8px;
   width: 760px;
-  /* Largura fixa */
   height: 650px;
-  /* Altura fixa */
   overflow: hidden;
-  /* Esconde o conteúdo que ultrapassar */
 }
 
 
@@ -113,4 +110,4 @@
 
 .avosm-checkbox-group label {
   margin-right: 15px;
-}
+} */
