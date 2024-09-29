@@ -149,7 +149,7 @@ export default function DadosPaciente2({ onFormChange }) {
       </div>
 
       <label>
-        O(A) Sr(a) já teve câncer?
+        O(A) Sr(a) já teve câncer ou neoplasia?
         <div className="radio-group">
           <label>
             <input
