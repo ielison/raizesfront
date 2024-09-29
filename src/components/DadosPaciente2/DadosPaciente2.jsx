@@ -184,7 +184,7 @@ export default function DadosPaciente2({ onFormChange }) {
         <>
           <div className="dp-row">
             <label style={{ flex: 1, marginRight: "10px" }}>
-              Qual tipo de câncer o(a) Sr(a) teve?
+              Qual tipo de câncer ou neoplasia o(a) Sr(a) teve?
               <Select
                 isMulti
                 options={cancerOptions}
