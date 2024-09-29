@@ -398,7 +398,7 @@ export default function PacienteModal({ onClose }) {
       setIsLoading(true);
       setExpandedStep(null);
       // Send data to API
-      fetch("http://localhost:3000/api/quiz", {
+      fetch("https://testserver-2p40.onrender.com/api/quiz", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
