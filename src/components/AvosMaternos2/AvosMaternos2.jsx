@@ -1,17 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
 import "./AvosMaternos2.css";
-import InfoIcon from "../../assets/information-2-fill.svg"; // Importe o SVG aqui
+import InfoIcon from "../../assets/information-2-fill.svg";
+import PropTypes from "prop-types";
 
-export default function AvosMaternos2() {
+export default function AvosMaternos2({ onFormChange }) {
   const [tooltipIndex, setTooltipIndex] = useState(null);
   const [noKnowledge, setNoKnowledge] = useState(false);
   const [grandmotherHadCancer, setGrandmotherHadCancer] = useState(false);
   const [grandfatherHadCancer, setGrandfatherHadCancer] = useState(false);
   const [grandmotherCancerDetails, setGrandmotherCancerDetails] = useState([]);
   const [grandfatherCancerDetails, setGrandfatherCancerDetails] = useState([]);
+  const [avosList, setAvosList] = useState([]);
 
   const handleCancerTypeChangeGrandmother = (selectedOptions) => {
     const updatedDetails = selectedOptions.map((option) => {
@@ -59,6 +61,41 @@ export default function AvosMaternos2() {
       return newDetails;
     });
   };
+
+  useEffect(() => {
+    const updatedAvosList = [];
+
+    if (grandmotherHadCancer) {
+      updatedAvosList.push({
+        id: 0,
+        teveCancer: true,
+        sexo: "Feminino",
+        ladoPaterno: "Materno",
+        outroCancerList: grandmotherCancerDetails.map((detail) => ({
+          id: 0,
+          idadeDiagnostico: detail.age ? parseInt(detail.age.label || detail.age, 10) : 0,
+          tipoCancer: detail.type.label,
+        })),
+      });
+    }
+
+    if (grandfatherHadCancer) {
+      updatedAvosList.push({
+        id: 0,
+        teveCancer: true,
+        sexo: "Masculino",
+        ladoPaterno: "Materno",
+        outroCancerList: grandfatherCancerDetails.map((detail) => ({
+          id: 0,
+          idadeDiagnostico: detail.age ? parseInt(detail.age.label || detail.age, 10) : 0,
+          tipoCancer: detail.type.label,
+        })),
+      });
+    }
+
+    setAvosList(updatedAvosList);
+    onFormChange({ avosList: updatedAvosList });  // Chama onFormChange sempre que o avosList é atualizado
+  }, [grandmotherHadCancer, grandfatherHadCancer, grandmotherCancerDetails, grandfatherCancerDetails, onFormChange]);
 
   return (
     <div className="avosm-form-container">
@@ -125,7 +162,6 @@ export default function AvosMaternos2() {
                   />
                 </label>
 
-                {/* Renderizar campos de idade para cada tipo de câncer selecionado */}
                 {grandmotherCancerDetails.map((detail, index) => (
                   <div key={index}>
                     <label className="avosm-label">
@@ -204,11 +240,10 @@ export default function AvosMaternos2() {
                   />
                 </label>
 
-                {/* Renderizar campos de idade para cada tipo de câncer selecionado */}
                 {grandfatherCancerDetails.map((detail, index) => (
                   <div key={index}>
                     <label className="avosm-label">
-                    Idade para o diagnóstico de {detail.type.label}:
+                      Idade para o diagnóstico de {detail.type.label}:
                       {detail.showAgeDropdown ? (
                         <Select
                           placeholder="Selecione a idade"
@@ -272,3 +307,7 @@ export default function AvosMaternos2() {
     </div>
   );
 }
+
+AvosMaternos2.propTypes = {
+  onFormChange: PropTypes.func.isRequired,
+};

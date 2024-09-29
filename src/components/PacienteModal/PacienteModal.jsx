@@ -400,7 +400,7 @@ export default function PacienteModal({ onClose }) {
       setIsLoading(true);
       setExpandedStep(null);
       // Send data to API
-      fetch("https://testserver-2p40.onrender.com/api/quiz", {
+      fetch("http://localhost:3000/api/quiz", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -408,10 +408,12 @@ export default function PacienteModal({ onClose }) {
         body: JSON.stringify(updatedData), // Envia a cópia com a data atualizada
       })
         .then((response) => {
+          console.log("Response status:", response.status);
+          console.log("Response body:", response);
           if (response.ok) {
             return response.text(); // Se a resposta for texto simples
           } else {
-            throw new Error("Erro ao enviar os dados");
+            throw new Error("Erro ao enviar os dados: " + response.statusText);
           }
         })
         .then((message) => {
@@ -421,6 +423,7 @@ export default function PacienteModal({ onClose }) {
         })
         .catch((error) => {
           console.error("Erro:", error);
+          console.error("Erro ao enviar os dados:", error.message);
           setIsLoading(false); // Para a animação em caso de erro
         })
         .finally(() => {

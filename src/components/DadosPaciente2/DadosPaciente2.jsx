@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import "./DadosPaciente2.css";
 import InputMask from "react-input-mask";
 import Select from "react-select";
-import DeleteIcon from "../../assets/trash.svg"; // Importe o ícone de deletar aqui
+import DeleteIcon from "../../assets/trash.svg"; 
 import { cancerOptions } from "../../data/cancerOptions";
 
 export default function DadosPaciente2({ onFormChange }) {
@@ -43,12 +43,23 @@ export default function DadosPaciente2({ onFormChange }) {
   useEffect(() => {
     sessionStorage.setItem("userData", JSON.stringify(userData));
     sessionStorage.setItem("diagnoses", JSON.stringify(diagnoses));
-    sessionStorage.setItem("hasCancer", JSON.stringify(hasCancer)); // Salvando hasCancer
-    sessionStorage.setItem(
-      "hasOtherDiagnosis",
-      JSON.stringify(hasOtherDiagnosis)
-    ); // Salvando hasOtherDiagnosis
-  }, [userData, diagnoses, hasCancer, hasOtherDiagnosis]);
+    sessionStorage.setItem("hasCancer", JSON.stringify(hasCancer));
+    sessionStorage.setItem("hasOtherDiagnosis", JSON.stringify(hasOtherDiagnosis));
+    
+    // Atualiza o formulário sempre que algo muda
+    onFormChange({
+      usuariPrincipal: {
+        ...userData,
+        qualCancer: userData.qualCancer || "",
+        outroCancer: hasOtherDiagnosis,
+        outroCancerList: diagnoses.map((d) => ({
+          idCancer: 0,
+          tipoCancer: d.type.map((opt) => opt.label).join(", ") || "",
+          idadeDiagnostico: d.age ? Number(d.age) : 0,
+        })),
+      },
+    });
+  }, [userData, diagnoses, hasCancer, hasOtherDiagnosis, onFormChange]);
 
   const handleAddDiagnosis = () => {
     setDiagnoses([...diagnoses, { type: [], age: "" }]);
@@ -57,64 +68,30 @@ export default function DadosPaciente2({ onFormChange }) {
   const handleRemoveDiagnosis = (index) => {
     const updatedDiagnoses = diagnoses.filter((_, i) => i !== index);
     setDiagnoses(updatedDiagnoses);
-    onFormChange({
-      usuariPrincipal: {
-        ...userData,
-        outroCancerList: updatedDiagnoses.map((d) => ({
-          idCancer: 0,
-          tipoCancer: d.type.map((opt) => opt.label).join(", ") || "",
-          idadeDiagnostico: d.age ? Number(d.age) : 0,
-        })),
-      },
-    });
   };
 
   const handleOtherDiagnosisChange = (e) => {
     const newHasOtherDiagnosis = e.target.value === "sim";
     setHasOtherDiagnosis(newHasOtherDiagnosis);
-    onFormChange({ outroCancer: newHasOtherDiagnosis });
 
     if (!newHasOtherDiagnosis) {
       setDiagnoses([{ type: [], age: "" }]);
-      onFormChange({ outroCancerList: [] });
     }
   };
 
   const handleFieldChange = (field, value) => {
     const processedValue =
       field === "telefone" ? value.replace(/\D/g, "") : value;
-    const updatedUserData = {
-      ...userData,
+    setUserData((prev) => ({
+      ...prev,
       [field]: processedValue,
-      outroCancer: hasOtherDiagnosis,
-    };
-    setUserData(updatedUserData);
-
-    onFormChange({
-      usuariPrincipal: {
-        ...updatedUserData,
-        qualCancer: updatedUserData.qualCancer || "",
-        outroCancerList: diagnoses.map((d) => ({
-          idCancer: 0,
-          tipoCancer: d.type.map((opt) => opt.label).join(", ") || "",
-          idadeDiagnostico: d.age ? Number(d.age) : 0,
-        })),
-      },
-    });
+    }));
   };
 
   const handleDiagnosisChange = (index, field, value) => {
     const updatedDiagnoses = [...diagnoses];
     updatedDiagnoses[index][field] = value;
-
-    // Update userData with the current diagnoses
     setDiagnoses(updatedDiagnoses);
-    handleFieldChange(
-      "qualCancer",
-      updatedDiagnoses
-        .map((d) => d.type.map((opt) => opt.label).join(", "))
-        .join(", ")
-    );
   };
 
   return (
@@ -129,7 +106,6 @@ export default function DadosPaciente2({ onFormChange }) {
         />
       </label>
 
-      {/* Campo de Telefone */}
       <div className="dp-row">
         <label className="telefone-paciente">
           <span>Telefone</span>
@@ -214,10 +190,10 @@ export default function DadosPaciente2({ onFormChange }) {
                 options={cancerOptions}
                 placeholder="Selecione..."
                 onChange={(selectedOptions) => {
-                  handleFieldChange(
-                    "qualCancer",
-                    selectedOptions.map((opt) => opt.label).join(", ")
-                  );
+                  const cancerTypes = selectedOptions
+                    .map((opt) => opt.label)
+                    .join(", ");
+                  handleFieldChange("qualCancer", cancerTypes);
                 }}
               />
             </label>
@@ -275,9 +251,9 @@ export default function DadosPaciente2({ onFormChange }) {
                         options={cancerOptions}
                         placeholder="Selecione..."
                         value={diagnosis.type}
-                        onChange={(selectedOptions) =>
-                          handleDiagnosisChange(index, "type", selectedOptions)
-                        }
+                        onChange={(selectedOptions) => {
+                          handleDiagnosisChange(index, "type", selectedOptions);
+                        }}
                       />
                     </label>
                     <label style={{ flex: 1 }}>
@@ -286,13 +262,10 @@ export default function DadosPaciente2({ onFormChange }) {
                         type="number"
                         min="0"
                         value={diagnosis.age}
-                        onChange={(e) =>
-                          handleDiagnosisChange(
-                            index,
-                            "age",
-                            Math.max(0, e.target.value)
-                          )
-                        }
+                        onChange={(e) => {
+                          const ageValue = Math.max(0, e.target.value);
+                          handleDiagnosisChange(index, "age", ageValue);
+                        }}
                       />
                     </label>
                   </div>

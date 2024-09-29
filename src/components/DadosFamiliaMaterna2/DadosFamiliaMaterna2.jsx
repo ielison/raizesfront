@@ -78,13 +78,10 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
       mae: {
         id: 0,
         teveCancer: motherHadCancer,
-        outroCancerList: [
-          {
-            id: 0,
-            idadeDiagnostico: motherCancerDetails.age,
-            tipoCancer: motherCancerDetails.type?.value || "string",
-          },
-        ],
+        outroCancerList: motherCancerDetails.map(cancerDetail => ({
+          idadeDiagnostico: cancerDetail.age || 0,
+          tipoCancer: cancerDetail.type?.value || "string",
+        })),
       },
       tiosListMaterno: hasMaternalUnclesAunts
         ? uncleAuntCancerDetails.map((detail, index) => ({
@@ -105,6 +102,7 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
           }))
         : [],
     };
+    
 
     console.log("User Data Updated:", updatedUserData);
     onFormChange(updatedUserData);

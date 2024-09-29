@@ -3,19 +3,20 @@ import PropTypes from "prop-types";
 import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
+import InfoIcon from "../../assets/information-2-fill.svg";
 import "./DadosFamiliaPaterna2.css";
 
 export default function DadosFamiliaPaterna2({ onFormChange, initialData }) {
+  const [tooltipIndex, setTooltipIndex] = useState(null);
   const [noKnowledge, setNoKnowledge] = useState(
     initialData?.noKnowledge || false
   );
   const [fatherHadCancer, setFatherHadCancer] = useState(
     initialData?.pai?.teveCancer || false
   );
-  const [fatherCancerDetails, setFatherCancerDetails] = useState({
-    type: initialData?.pai?.outroCancerList[0]?.tipoCancer || null,
-    age: initialData?.pai?.outroCancerList[0]?.idadeDiagnostico || "",
-  });
+  const [fatherCancerDetails, setFatherCancerDetails] = useState(
+    initialData?.pai?.outroCancerList || []
+  );
   const [hasPaternalUnclesAunts, setHasPaternalUnclesAunts] = useState(
     initialData?.tiosListPaterno?.length > 0 || false
   );
@@ -39,6 +40,30 @@ export default function DadosFamiliaPaterna2({ onFormChange, initialData }) {
   );
   const [showAgeDropdowns, setShowAgeDropdowns] = useState([false]);
 
+  const handleCancerTypeChange = (selectedOption) => {
+    // Adiciona tipos de câncer ao estado
+    const newCancerDetails = selectedOption.map((option) => ({
+      type: option,
+      age: "", // Inicializa a idade como vazia
+      showAgeDropdown: true, // Inicializa a idade como vazia
+    }));
+
+    setFatherCancerDetails(newCancerDetails);
+  };
+
+  const handleAgeChange = (index, value) => {
+    const updatedCancerDetails = [...fatherCancerDetails];
+    updatedCancerDetails[index].age = value;
+    setFatherCancerDetails(updatedCancerDetails);
+  };
+
+  const toggleAgeInput = (index) => {
+    const updatedCancerDetails = [...fatherCancerDetails];
+    updatedCancerDetails[index].showAgeDropdown =
+      !updatedCancerDetails[index].showAgeDropdown;
+    setFatherCancerDetails(updatedCancerDetails);
+  };
+
   useEffect(() => {
     console.log("Valores antes da atualização:", {
       fatherHadCancer,
@@ -53,13 +78,10 @@ export default function DadosFamiliaPaterna2({ onFormChange, initialData }) {
       pai: {
         id: 0,
         teveCancer: fatherHadCancer,
-        outroCancerList: [
-          {
-            id: 0,
-            idadeDiagnostico: fatherCancerDetails.age,
-            tipoCancer: fatherCancerDetails.type?.value || "string",
-          },
-        ],
+        outroCancerList: fatherCancerDetails.map((cancerDetail) => ({
+          idadeDiagnostico: cancerDetail.age || 0,
+          tipoCancer: cancerDetail.type?.value || "string",
+        })),
       },
       tiosListPaterno: hasPaternalUnclesAunts
         ? uncleAuntCancerDetails.map((detail, index) => ({
@@ -134,7 +156,7 @@ export default function DadosFamiliaPaterna2({ onFormChange, initialData }) {
             onChange={handleNoKnowledgeChange}
             className="dfm-checkbox"
           />
-          Não tenho conhecimento da saúde e família da minha pai biológico.
+          Não tenho conhecimento da saúde e família do meu pai biológico.
         </label>
 
         {!noKnowledge && (
@@ -168,64 +190,81 @@ export default function DadosFamiliaPaterna2({ onFormChange, initialData }) {
             {fatherHadCancer && (
               <>
                 <label className="dfm-label">
-                  Qual foi o tipo de câncer que ele teve?
+                  Qual foi o tipo de câncer ou neoplasia que ela teve?
                   <Select
                     isMulti
                     placeholder="Selecione o tipo de câncer"
                     options={cancerOptions}
-                    value={fatherCancerDetails.type}
-                    onChange={(selectedOption) => {
-                      setFatherCancerDetails((prev) => ({
-                        ...prev,
-                        type: selectedOption,
-                      }));
-                    }}
+                    onChange={handleCancerTypeChange}
                     className="dfm-select"
                   />
                 </label>
 
-                <label className="dfm-label">
-                  <div className="dfm-idade">
-                    <span>
-                      Idade
-                      {showAgeDropdowns[0] ? (
-                        <Select
-                          placeholder="Selecione a idade"
-                          options={ageOptions}
-                          value={fatherCancerDetails.age}
-                          onChange={(selectedOption) => {
-                            setFatherCancerDetails((prev) => ({
-                              ...prev,
-                              age: selectedOption,
-                            }));
-                          }}
-                          className="dfm-select"
-                        />
-                      ) : (
-                        <input
-                          type="number"
-                          value={fatherCancerDetails.age}
-                          onChange={(e) => {
-                            if (validateAge(e.target.value)) {
-                              setFatherCancerDetails((prev) => ({
-                                ...prev,
-                                age: e.target.value,
-                              }));
+                {fatherCancerDetails.map((cancerDetail, index) => (
+                  <label key={index} className="dfm-label">
+                    <div className="dfm-idade">
+                      <span>
+                        Idade do diagnóstico para {cancerDetail.type.label}:
+                        {cancerDetail.showAgeDropdown ? (
+                          <Select
+                            placeholder="Selecione a idade"
+                            options={[
+                              ...ageOptions,
+                              { value: "nao_sei", label: "Não sei" }, // Adiciona a opção "Não sei"
+                            ]}
+                            value={
+                              cancerDetail.age
+                                ? {
+                                    value: cancerDetail.age,
+                                    label: cancerDetail.age,
+                                  }
+                                : null
                             }
-                          }}
-                          className="dfm-input"
-                        />
+                            onChange={(selectedOption) => {
+                              handleAgeChange(index, selectedOption.label);
+                            }}
+                            className="dfm-select"
+                          />
+                        ) : (
+                          <input
+                            type="number"
+                            value={cancerDetail.age}
+                            onChange={(e) =>
+                              handleAgeChange(index, e.target.value)
+                            }
+                            className="dfm-input"
+                          />
+                        )}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => toggleAgeInput(index)}
+                        className="dfm-toggle-button"
+                      >
+                        {cancerDetail.showAgeDropdown
+                          ? "Digitar idade"
+                          : "Não sei"}
+                      </button>
+                      <img
+                        src={InfoIcon}
+                        alt="Info"
+                        className="info-icon-idade"
+                        onClick={() =>
+                          setTooltipIndex(index === tooltipIndex ? null : index)
+                        } // Alterna o tooltip ao clicar
+                      />
+                      {tooltipIndex === index && (
+                        <div className="tooltip-idade">
+                          Caso seu paciente não saiba a idade exata do
+                          diagnóstico de câncer em um familiar, questione se foi
+                          antes ou depois dos 50 anos. Essa estimativa é mais
+                          fácil de lembrar e ainda oferece um corte de idade
+                          útil para a avaliação de risco.
+                        </div>
                       )}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => handleAgeToggle(0)}
-                      className="dfm-toggle-button"
-                    >
-                      {showAgeDropdowns[0] ? "Digitar idade" : "Não sei"}
-                    </button>
-                  </div>
-                </label>
+                    </div>
+                  </label>
+                ))}
               </>
             )}
 
@@ -321,6 +360,7 @@ export default function DadosFamiliaPaterna2({ onFormChange, initialData }) {
                     {uncleAuntCancerDetails.map((detail, index) => (
                       <div key={index} className="dfm-cancer-detail">
                         <Select
+                          isMulti
                           placeholder="Selecione o tipo de câncer"
                           options={cancerOptions}
                           value={detail.type}
@@ -380,6 +420,25 @@ export default function DadosFamiliaPaterna2({ onFormChange, initialData }) {
                               ? "Digitar idade"
                               : "Não sei"}
                           </button>
+                          <img
+                            src={InfoIcon}
+                            alt="Info"
+                            className="info-icon-idade"
+                            onClick={() =>
+                              setTooltipIndex(
+                                index === tooltipIndex ? null : index
+                              )
+                            } // Alterna o tooltip ao clicar
+                          />
+                          {tooltipIndex === index && (
+                            <div className="tooltip-idade">
+                              Caso seu paciente não saiba a idade exata do
+                              diagnóstico de câncer em um familiar, questione se
+                              foi antes ou depois dos 50 anos. Essa estimativa é
+                              mais fácil de lembrar e ainda oferece um corte de
+                              idade útil para a avaliação de risco.
+                            </div>
+                          )}
                         </div>
                       </div>
                     ))}
