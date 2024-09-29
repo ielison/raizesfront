@@ -1,0 +1,111 @@
+/* PrimosPrimasMaternos.css */
+
+.ppp-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ppp-modal-content {
+  display: flex;
+  flex-direction: row;
+  background: #fff;
+  border-radius: 8px;
+  width: 760px;
+  /* Largura fixa */
+  height: 650px;
+  /* Altura fixa */
+  overflow: hidden;
+  /* Esconde o conteúdo que ultrapassar */
+}
+
+
+.ppp-form-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.ppp-close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background: transparent;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.ppp-title {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.ppp-label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.ppp-input[type="number"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.ppp-checkbox {
+  margin-right: 10px;
+}
+
+.ppp-btn-add {
+  background: #28a745;
+}
+
+.ppp-btn-back {
+  background: #6c757d;
+}
+
+.ppp-btn-next {
+  background: #007bff;
+}
+
+.ppp-toggle-button {
+  background: #f8f9fa;
+  color: #007bff;
+  border: 1px solid #007bff;
+  padding: 5px 10px;
+  margin-top: 5px;
+}
+
+.ppp-toggle-button:hover {
+  background: #007bff;
+  color: #fff;
+}
+
+.ppp-form-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.ppp-checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.ppp-checkbox-group label {
+  margin-right: 15px;
+}
+
+.ppp-grupo {
+  display: flex;
+  flex-direction: column;
+}
