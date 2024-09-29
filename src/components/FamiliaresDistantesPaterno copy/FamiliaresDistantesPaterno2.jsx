@@ -3,6 +3,7 @@ import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
 import "./FamiliaresDistantesPaterno2.css";
+import DeleteIcon from "../../assets/trash.svg";
 import PropTypes from "prop-types";
 
 const relationshipOptions = [
@@ -126,7 +127,7 @@ export default function FamiliaresDistantesPaterno2({ onFormChange }) {
   return (
     <div className="fdp-content">
       <label>
-        Algum outro familiar do seu lado paterno já teve câncer?
+        Algum outro familiar do seu lado paterno já teve câncer ou neoplasia?
         <div className="radio-group--fdp">
           <label>
             <input
@@ -238,10 +239,11 @@ export default function FamiliaresDistantesPaterno2({ onFormChange }) {
               ))}
               {/* Botão de delete para remover o detalhe */}
               <button
-                className="nn-btn-delete"
+                className="ff-btn-delete"
+                type="button"
                 onClick={() => handleDelete(index)}
               >
-                Deletar
+                <img src={DeleteIcon} alt="Deletar" />
               </button>
             </div>
           ))}
@@ -254,7 +256,6 @@ export default function FamiliaresDistantesPaterno2({ onFormChange }) {
     </div>
   );
 }
-
 
 FamiliaresDistantesPaterno2.propTypes = {
   onFormChange: PropTypes.func.isRequired,

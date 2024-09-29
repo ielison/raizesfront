@@ -200,6 +200,28 @@ export default function PacienteModal({ onClose }) {
   });
 
   useEffect(() => {
+    const savedData = localStorage.getItem("formData");
+    if (savedData) {
+      setData(JSON.parse(savedData));
+    }
+
+    // Obtendo os tios do sessionStorage
+    const tiosListMaterno =
+      JSON.parse(sessionStorage.getItem("tiosListMaterno")) || [];
+    const tiosListPaterno =
+      JSON.parse(sessionStorage.getItem("tiosListPaterno")) || [];
+
+    // Mesclando os tios maternos e paternos
+    const mergedTios = mergeTios(tiosListMaterno, tiosListPaterno);
+
+    // Atualizando o estado com os tios mesclados
+    setData((prevData) => ({
+      ...prevData,
+      tiosList: mergedTios,
+    }));
+  }, []);
+
+  useEffect(() => {
     localStorage.setItem("formData", JSON.stringify(data));
   }, [data]);
 
@@ -207,6 +229,7 @@ export default function PacienteModal({ onClose }) {
     localStorage.setItem("formData", JSON.stringify(data));
     onClose();
   };
+
   const mergeTios = (tiosMaterno, tiosPaterno) => {
     const merged = new Set();
 
@@ -218,7 +241,14 @@ export default function PacienteModal({ onClose }) {
       merged.add(JSON.stringify(tio));
     });
 
-    return Array.from(merged).map((tio) => JSON.parse(tio));
+    const mergedTios = Array.from(merged).map((tio) => JSON.parse(tio));
+
+    // Se ambos forem vazios, apenas filtra para deixar os tios que já estão preenchidos
+    if (mergedTios.length === 0) {
+      return mergedTios.filter((tio) => tio.temTios || tio.qtdTios > 0);
+    }
+
+    return mergedTios;
   };
 
   const handleFormChange = (updatedFields) => {
@@ -243,15 +273,11 @@ export default function PacienteModal({ onClose }) {
     console.log("Tios Paterno:", tiosListPaterno);
 
     // Função para mesclar e filtrar tios
-    const mergedTios = mergeTios(
-      updatedFields.tiosListMaterno ||
-        data.tiosList.filter((tio) => tio.ladoParterno === "materno"),
-      updatedFields.tiosListPaterno ||
-        data.tiosList.filter((tio) => tio.ladoParterno === "paterno")
-    );
+    const mergedTios = mergeTios(tiosListMaterno, tiosListPaterno);
 
     setData((prevData) => ({
       ...prevData,
+      ...updatedFields,
       usuariPrincipal: { ...prevData.usuariPrincipal, ...usuariPrincipal },
       mae: { ...prevData.mae, ...mae },
       pai: { ...prevData.pai, ...pai },
@@ -272,13 +298,6 @@ export default function PacienteModal({ onClose }) {
       //localStorage.removeItem('formData'); // Clear on unmount
     };
   }, [data]);
-
-  useEffect(() => {
-    const savedData = localStorage.getItem("formData");
-    if (savedData) {
-      setData(JSON.parse(savedData));
-    }
-  }, []);
 
   const steps = useMemo(
     () => [

@@ -81,7 +81,7 @@ export default function DadosFamiliaPaterna({ onClose, onBack, onAdvance }) {
           {!noKnowledge && (
             <>
               <label className="dfp-label">
-                O pai do Sr(a) já teve câncer?
+                O pai do Sr(a) já teve câncer ou neoplasia?
                 <div className="dfp-checkbox-group">
                   <label>
                     <input
@@ -299,7 +299,9 @@ export default function DadosFamiliaPaterna({ onClose, onBack, onAdvance }) {
                                     options={ageOptions}
                                     value={detail.age}
                                     onChange={(selectedOption) => {
-                                      const newDetails = [...uncleAuntCancerDetails];
+                                      const newDetails = [
+                                        ...uncleAuntCancerDetails,
+                                      ];
                                       newDetails[index].age = selectedOption;
                                       setUncleAuntCancerDetails(newDetails);
                                     }}
@@ -310,7 +312,9 @@ export default function DadosFamiliaPaterna({ onClose, onBack, onAdvance }) {
                                     type="number"
                                     value={detail.age}
                                     onChange={(e) => {
-                                      const newDetails = [...uncleAuntCancerDetails];
+                                      const newDetails = [
+                                        ...uncleAuntCancerDetails,
+                                      ];
                                       newDetails[index].age = e.target.value;
                                       setUncleAuntCancerDetails(newDetails);
                                     }}

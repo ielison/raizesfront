@@ -2,6 +2,7 @@ import { useState } from "react";
 import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
+import DeleteIcon from "../../assets/trash.svg";
 import "./FamiliaresDistantesMaterno2.css";
 
 const relationshipOptions = [
@@ -109,7 +110,7 @@ export default function FamiliaresDistantesMaterno2() {
   return (
     <div className="fdm-content">
       <label>
-        Algum outro familiar do seu lado materno já teve câncer?
+        Algum outro familiar do seu lado materno já teve câncer ou neoplasia?
         <div className="radio-group--fdm">
           <label>
             <input
@@ -221,10 +222,11 @@ export default function FamiliaresDistantesMaterno2() {
               ))}
               {/* Botão de delete para remover o detalhe */}
               <button
-                className="nn-btn-delete"
+                className="ff-btn-delete"
+                type="button"
                 onClick={() => handleDelete(index)}
               >
-                Deletar
+                <img src={DeleteIcon} alt="Deletar" />
               </button>
             </div>
           ))}

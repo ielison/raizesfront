@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
 import "./SobrinhoSobrinha2.css";
+import DeleteIcon from "../../assets/trash.svg";
 import InfoIcon from "../../assets/information-2-fill.svg";
 
 export default function SobrinhosSobrinhas2({ onFormChange }) {
@@ -148,9 +149,9 @@ export default function SobrinhosSobrinhas2({ onFormChange }) {
                       <label>
                         Parentesco
                         <Select
-                          options={relationships.map(rel => ({
+                          options={relationships.map((rel) => ({
                             value: rel,
-                            label: relationshipLabels[rel]
+                            label: relationshipLabels[rel],
                           }))}
                           onChange={(selectedOption) => {
                             const newSiblings = [...siblings];
@@ -235,7 +236,7 @@ export default function SobrinhosSobrinhas2({ onFormChange }) {
                         onClick={() => handleDeleteSibling(index)}
                         className="ss-btn-delete"
                       >
-                        Deletar
+                        <img src={DeleteIcon} alt="Deletar" />
                       </button>
                     </div>
                   ))}

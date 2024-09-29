@@ -120,7 +120,8 @@ export default function FamiliaresDistantesMaterno({
           <h2 className="fdm-title">Etapa 2 - Familiares Distantes</h2>
 
           <label>
-            Algum outro familiar do seu lado materno já teve câncer?
+            Algum outro familiar do seu lado materno já teve câncer ou
+            neoplasia?
             <div className="radio-group">
               <label>
                 <input
@@ -171,18 +172,19 @@ export default function FamiliaresDistantesMaterno({
                     {/* Show custom input if "Outro" is selected */}
                     {distante.relationship === "outro" && (
                       <div>
-                      <span>Qual o parentesco?</span>
-                      <input
-                        type="text"
-                        placeholder="Digite o parentesco"
-                        value={distante.customRelationship}
-                        onChange={(e) =>
-                          handleCustomRelationshipChange(index, e.target.value)
-                        }
-                      />
+                        <span>Qual o parentesco?</span>
+                        <input
+                          type="text"
+                          placeholder="Digite o parentesco"
+                          value={distante.customRelationship}
+                          onChange={(e) =>
+                            handleCustomRelationshipChange(
+                              index,
+                              e.target.value
+                            )
+                          }
+                        />
                       </div>
-                      
-                      
                     )}
                   </label>
                   <label>

@@ -49,7 +49,8 @@ export default function PrimosPrimasMaternos({ onClose, onBack, onAdvance }) {
           </div>
           <div className="ppm-grupo">
             <label>
-              Algum primo ou prima do seu lado materno já teve câncer?
+              Algum primo ou prima do seu lado materno já teve câncer ou
+              neoplasia?
               <div className="ppm-checkbox-group">
                 <label>
                   <input

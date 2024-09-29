@@ -143,6 +143,12 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
     setShowAgeDropdowns([...showAgeDropdowns, false]);
   };
 
+  useEffect(() => {
+    if (hasMaternalUnclesAunts) {
+      sessionStorage.setItem('tiosListMaterno', JSON.stringify(uncleAuntCancerDetails));
+    }
+  }, [uncleAuntCancerDetails, hasMaternalUnclesAunts]);
+
   const validateAge = (value) => {
     // Ensure age is a non-negative number or an empty string
     return value >= 0 || value === "";
@@ -164,7 +170,7 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
         {!noKnowledge && (
           <>
             <label className="dfm-label">
-              A mãe do Sr(a) já teve câncer?
+              A mãe do Sr(a) já teve câncer ou neoplasia?
               <div className="dfm-checkbox-group">
                 <label>
                   <input
@@ -332,7 +338,7 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
                 </label>
 
                 <label className="dfm-label">
-                  Algum deles teve câncer?
+                  Algum deles teve câncer ou neoplasia?
                   <div className="dfm-checkbox-group">
                     <label>
                       <input

@@ -3,6 +3,7 @@ import Select from "react-select";
 import PropTypes from "prop-types";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
+import DeleteIcon from "../../assets/trash.svg";
 import "./IrmaosIrmas2.css";
 import InfoIcon from "../../assets/information-2-fill.svg"; // Importe o SVG aqui
 
@@ -89,7 +90,7 @@ export default function IrmaosIrmas2({ onFormChange }) {
     <div className="ii-modal-content" onClick={(e) => e.stopPropagation()}>
       <div className="ii-form-container">
         <label className="ii-possui-irmao">
-          <span>O(A) Sr(a) possui irmãos ou  meios-irmãos?</span>
+          <span>O(A) Sr(a) possui irmãos ou meios-irmãos?</span>
           <div className="ii-radio-group">
             {Object.entries(relationshipLabels).map(([key, label]) => (
               <label key={key}>
@@ -177,7 +178,7 @@ export default function IrmaosIrmas2({ onFormChange }) {
                             newSiblings[index].type = selectedOptions;
                             setSiblings(newSiblings);
                           }}
-                          onClick={(e) => e.stopPropagation()} 
+                          onClick={(e) => e.stopPropagation()}
                         />
                       </label>
                       <label className="ii-idade">
@@ -238,11 +239,11 @@ export default function IrmaosIrmas2({ onFormChange }) {
                       </label>
                       {/* Botão para remover irmão */}
                       <button
+                        className="ff-btn-delete"
                         type="button"
                         onClick={() => handleRemoveSibling(index)}
-                        className="ii-btn-remove"
                       >
-                        Deletar
+                        <img src={DeleteIcon} alt="Deletar" />
                       </button>
                     </div>
                   ))}

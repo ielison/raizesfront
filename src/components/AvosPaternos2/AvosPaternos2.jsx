@@ -20,7 +20,9 @@ export default function AvosPaternos2({ onFormChange }) {
       const existingDetail = grandmotherCancerDetails.find(
         (detail) => detail.type.value === option.value
       );
-      return existingDetail || { type: option, age: "", showAgeDropdown: false };
+      return (
+        existingDetail || { type: option, age: "", showAgeDropdown: false }
+      );
     });
     setGrandmotherCancerDetails(updatedDetails);
   };
@@ -30,7 +32,9 @@ export default function AvosPaternos2({ onFormChange }) {
       const existingDetail = grandfatherCancerDetails.find(
         (detail) => detail.type.value === option.value
       );
-      return existingDetail || { type: option, age: "", showAgeDropdown: false };
+      return (
+        existingDetail || { type: option, age: "", showAgeDropdown: false }
+      );
     });
     setGrandfatherCancerDetails(updatedDetails);
   };
@@ -73,7 +77,9 @@ export default function AvosPaternos2({ onFormChange }) {
         ladoPaterno: "Paterno",
         outroCancerList: grandmotherCancerDetails.map((detail) => ({
           id: 0,
-          idadeDiagnostico: detail.age ? parseInt(detail.age.label || detail.age, 10) : 0,
+          idadeDiagnostico: detail.age
+            ? parseInt(detail.age.label || detail.age, 10)
+            : 0,
           tipoCancer: detail.type.label,
         })),
       });
@@ -87,21 +93,29 @@ export default function AvosPaternos2({ onFormChange }) {
         ladoPaterno: "Paterno",
         outroCancerList: grandfatherCancerDetails.map((detail) => ({
           id: 0,
-          idadeDiagnostico: detail.age ? parseInt(detail.age.label || detail.age, 10) : 0,
+          idadeDiagnostico: detail.age
+            ? parseInt(detail.age.label || detail.age, 10)
+            : 0,
           tipoCancer: detail.type.label,
         })),
       });
     }
 
     setAvosList(updatedAvosList);
-    onFormChange({ avosList: updatedAvosList });  // Chama onFormChange sempre que o avosList é atualizado
-  }, [grandmotherHadCancer, grandfatherHadCancer, grandmotherCancerDetails, grandfatherCancerDetails, onFormChange]);
+    onFormChange({ avosList: updatedAvosList }); // Chama onFormChange sempre que o avosList é atualizado
+  }, [
+    grandmotherHadCancer,
+    grandfatherHadCancer,
+    grandmotherCancerDetails,
+    grandfatherCancerDetails,
+    onFormChange,
+  ]);
 
   return (
     <div className="avosm-form-container">
       <div className="avosm-grupo">
         <label className="avosm-label">
-          Os seus avós maternos já tiveram câncer?
+          Os seus avós paternos já tiveram câncer ou neoplasia?
           <div className="avosm-checkbox-group">
             <label>
               <input
@@ -149,7 +163,7 @@ export default function AvosPaternos2({ onFormChange }) {
             {grandmotherHadCancer && (
               <>
                 <label className="avosm-label">
-                  Tipo de câncer da minha avó:
+                  Tipo de câncer ou neoplasia da minha avó:
                   <Select
                     isMulti
                     placeholder="Selecione o tipo de câncer"
@@ -227,7 +241,7 @@ export default function AvosPaternos2({ onFormChange }) {
             {grandfatherHadCancer && (
               <>
                 <label className="avosm-label">
-                  Tipo de câncer do meu avô:
+                  Tipo de câncer ou neoplasia do meu avô:
                   <Select
                     isMulti
                     placeholder="Selecione o tipo de câncer"

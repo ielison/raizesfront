@@ -148,6 +148,15 @@ export default function DadosFamiliaPaterna2({ onFormChange, initialData }) {
     return value >= 0 || value === "";
   };
 
+  useEffect(() => {
+    if (hasPaternalUnclesAunts) {
+      sessionStorage.setItem(
+        "tiosListPaterno",
+        JSON.stringify(uncleAuntCancerDetails)
+      );
+    }
+  }, [uncleAuntCancerDetails, hasPaternalUnclesAunts]);
+
   return (
     <div className="dfm-modal-content" onClick={(e) => e.stopPropagation()}>
       <div className="dfm-form-container">
@@ -164,7 +173,7 @@ export default function DadosFamiliaPaterna2({ onFormChange, initialData }) {
         {!noKnowledge && (
           <>
             <label className="dfm-label">
-              O pai do Sr(a) já teve câncer?
+              O pai do Sr(a) já teve câncer ou neoplasia?
               <div className="dfm-checkbox-group">
                 <label>
                   <input
@@ -192,7 +201,7 @@ export default function DadosFamiliaPaterna2({ onFormChange, initialData }) {
             {fatherHadCancer && (
               <>
                 <label className="dfm-label">
-                  Qual foi o tipo de câncer ou neoplasia que ela teve?
+                  Qual foi o tipo de câncer ou neoplasia que ele teve?
                   <Select
                     isMulti
                     placeholder="Selecione o tipo de câncer"
@@ -332,7 +341,7 @@ export default function DadosFamiliaPaterna2({ onFormChange, initialData }) {
                 </label>
 
                 <label className="dfm-label">
-                  Algum deles teve câncer?
+                  Algum deles teve câncer ou neoplasia?
                   <div className="dfm-checkbox-group">
                     <label>
                       <input

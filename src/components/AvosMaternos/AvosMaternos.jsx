@@ -112,7 +112,7 @@ export default function AvosMaternos({ onClose, onBack, onAdvance }) {
           </div>
           <div className="avosm-grupo">
             <label className="avosm-label">
-              Os seus avós maternos já tiveram câncer?
+              Os seus avós maternos já tiveram câncer ou neoplasia?
               <div className="avosm-checkbox-group">
                 <label>
                   <input
@@ -166,7 +166,7 @@ export default function AvosMaternos({ onClose, onBack, onAdvance }) {
                 {grandmotherHadCancer && (
                   <>
                     <label className="avosm-label">
-                      Tipo de câncer da minha avó:
+                      Tipo de câncer ou neoplasia da minha avó:
                       <Select
                         placeholder="Selecione o tipo de câncer"
                         options={cancerOptions}

@@ -3,6 +3,7 @@ import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
 import "./PrimosPrimasMaternos2.css";
+import DeleteIcon from "../../assets/trash.svg";
 import InfoIcon from "../../assets/information-2-fill.svg"; // Importe o SVG aqui
 
 export default function PrimosPrimasMaternos2() {
@@ -44,14 +45,16 @@ export default function PrimosPrimasMaternos2() {
 
   // Função para remover um primo ou prima
   const handleRemovePrimo = (index) => {
-    setPrimosDetails((prevDetails) => prevDetails.filter((_, i) => i !== index));
+    setPrimosDetails((prevDetails) =>
+      prevDetails.filter((_, i) => i !== index)
+    );
   };
 
   return (
     <div className="ppm-form-container">
       <div className="ppm-grupo">
         <label>
-          Algum primo ou prima do seu lado materno já teve câncer?
+          Algum primo ou prima do seu lado materno já teve câncer ou neoplasia?
           <div className="ppm-checkbox-group">
             <label>
               <input
@@ -106,79 +109,96 @@ export default function PrimosPrimasMaternos2() {
                   </select>
                 </label>
                 <label>
-                  Tipo de câncer:
+                  Tipo de câncer ou neoplasia:
                   <Select
                     isMulti
                     placeholder="Selecione os tipos de câncer desse familiar"
                     options={cancerOptions}
                     value={primo.type}
-                    onChange={(selectedOption) => handleAddTypeCancer(index, selectedOption)}
+                    onChange={(selectedOption) =>
+                      handleAddTypeCancer(index, selectedOption)
+                    }
                   />
                 </label>
-                {primo.type && primo.ages.map((ageDetail, ageIndex) => (
-                  <label key={ageIndex}>
-                    Idade do diagnóstico de {ageDetail.cancerName}:
-                    {ageDetail.showAgeDropdown ? (
-                      <Select
-                        placeholder="Selecione.."
-                        options={ageOptions}
-                        value={ageDetail.age}
-                        onChange={(selectedOption) => {
+                {primo.type &&
+                  primo.ages.map((ageDetail, ageIndex) => (
+                    <label key={ageIndex}>
+                      Idade do diagnóstico de {ageDetail.cancerName}:
+                      {ageDetail.showAgeDropdown ? (
+                        <Select
+                          placeholder="Selecione.."
+                          options={ageOptions}
+                          value={ageDetail.age}
+                          onChange={(selectedOption) => {
+                            const newDetails = [...primosDetails];
+                            newDetails[index].ages[ageIndex].age =
+                              selectedOption;
+                            setPrimosDetails(newDetails);
+                          }}
+                        />
+                      ) : (
+                        <input
+                          type="number"
+                          value={ageDetail.age}
+                          onChange={(e) => {
+                            const newDetails = [...primosDetails];
+                            newDetails[index].ages[ageIndex].age =
+                              e.target.value;
+                            setPrimosDetails(newDetails);
+                          }}
+                        />
+                      )}
+                      <button
+                        type="button"
+                        className="ppm-toggle-button"
+                        onClick={() => {
                           const newDetails = [...primosDetails];
-                          newDetails[index].ages[ageIndex].age = selectedOption;
+                          newDetails[index].ages[ageIndex].showAgeDropdown =
+                            !newDetails[index].ages[ageIndex].showAgeDropdown;
                           setPrimosDetails(newDetails);
                         }}
+                      >
+                        {ageDetail.showAgeDropdown
+                          ? "Digitar idade"
+                          : "Não sei"}
+                      </button>
+                      <img
+                        src={InfoIcon}
+                        alt="Info"
+                        className="info-icon-idade"
+                        onClick={() =>
+                          setTooltipIndex(
+                            ageIndex === tooltipIndex ? null : ageIndex
+                          )
+                        }
                       />
-                    ) : (
-                      <input
-                        type="number"
-                        value={ageDetail.age}
-                        onChange={(e) => {
-                          const newDetails = [...primosDetails];
-                          newDetails[index].ages[ageIndex].age = e.target.value;
-                          setPrimosDetails(newDetails);
-                        }}
-                      />
-                    )}
-                    <button
-                      type="button"
-                      className="ppm-toggle-button"
-                      onClick={() => {
-                        const newDetails = [...primosDetails];
-                        newDetails[index].ages[ageIndex].showAgeDropdown =
-                          !newDetails[index].ages[ageIndex].showAgeDropdown;
-                        setPrimosDetails(newDetails);
-                      }}
-                    >
-                      {ageDetail.showAgeDropdown ? "Digitar idade" : "Não sei"}
-                    </button>
-                    <img
-                      src={InfoIcon}
-                      alt="Info"
-                      className="info-icon-idade"
-                      onClick={() =>
-                        setTooltipIndex(ageIndex === tooltipIndex ? null : ageIndex)
-                      }
-                    />
-                    {tooltipIndex === ageIndex && (
-                      <div className="tooltip-idade--pp">
-                        Caso seu paciente não saiba a idade exata do diagnóstico
-                        de câncer em um familiar, questione se foi antes ou depois
-                        dos 50 anos. Essa estimativa é mais fácil de lembrar e
-                        ainda oferece um corte de idade útil para a avaliação de
-                        risco.
-                      </div>
-                    )}
-                  </label>
-                ))}
+                      {tooltipIndex === ageIndex && (
+                        <div className="tooltip-idade--pp">
+                          Caso seu paciente não saiba a idade exata do
+                          diagnóstico de câncer em um familiar, questione se foi
+                          antes ou depois dos 50 anos. Essa estimativa é mais
+                          fácil de lembrar e ainda oferece um corte de idade
+                          útil para a avaliação de risco.
+                        </div>
+                      )}
+                    </label>
+                  ))}
                 {/* Botão para remover primo */}
-                <button type="button" onClick={() => handleRemovePrimo(index)} className="ppm-delete-button">
-                  Deletar
+                <button
+                  type="button"
+                  onClick={() => handleRemovePrimo(index)}
+                  className="ppm-delete-button"
+                >
+                  <img src={DeleteIcon} alt="Deletar" />
                 </button>
               </div>
             ))}
             {/* Botão para adicionar novos primos */}
-            <button type="button" className="nn-btn-add" onClick={handleAddPrimo}>
+            <button
+              type="button"
+              className="nn-btn-add"
+              onClick={handleAddPrimo}
+            >
               Informar +
             </button>
           </>

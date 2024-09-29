@@ -5,6 +5,7 @@ import { ageOptions } from "../../data/ageOptions";
 import "./PrimosPrimasPaternos2.css"; // Altere para o CSS apropriado
 import InfoIcon from "../../assets/information-2-fill.svg"; // Importe o SVG aqui
 import PropTypes from "prop-types";
+import DeleteIcon from "../../assets/trash.svg";
 
 export default function PrimosPrimasPaternos2({ onFormChange }) {
   const [tooltipIndex, setTooltipIndex] = useState(null);
@@ -38,7 +39,6 @@ export default function PrimosPrimasPaternos2({ onFormChange }) {
       })),
     });
   }, [primosDetails, primosHadCancer, onFormChange]);
-  
 
   const handleCancerChange = (value) => {
     setPrimosHadCancer(value);
@@ -80,7 +80,7 @@ export default function PrimosPrimasPaternos2({ onFormChange }) {
     <div className="ppp-form-container">
       <div className="ppp-grupo">
         <label>
-          Algum primo ou prima do seu lado paterno já teve câncer?
+          Algum primo ou prima do seu lado paterno já teve câncer ou neoplasia?
           <div className="ppp-checkbox-group">
             <label>
               <input
@@ -135,7 +135,7 @@ export default function PrimosPrimasPaternos2({ onFormChange }) {
                   </select>
                 </label>
                 <label>
-                  Tipo de câncer:
+                  Tipo de câncer ou neoplasia:
                   <Select
                     isMulti
                     placeholder="Selecione os tipos de câncer desse familiar"
@@ -216,11 +216,11 @@ export default function PrimosPrimasPaternos2({ onFormChange }) {
 
                 {/* Botão para remover primo */}
                 <button
+                  className="ff-btn-delete"
                   type="button"
                   onClick={() => handleRemovePrimo(index)}
-                  className="ppp-delete-button"
                 >
-                  Deletar
+                  <img src={DeleteIcon} alt="Deletar" />
                 </button>
               </div>
             ))}
