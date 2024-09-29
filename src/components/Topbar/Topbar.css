@@ -81,7 +81,7 @@
   padding: 8px 20px;
   color: var(--primary-500);
   background-color: var(--white);
-  border-style: solid;
+  border-style: solid 2px;
   border-color: var(--primary-500);
   font: var(--font);
   text-align: center;
@@ -193,5 +193,6 @@
   .topbar__register {
     width: auto;
     padding: 8px 20px;
+    border: solid 2px var(--primary-500);
   }
 }

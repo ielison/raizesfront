@@ -21,6 +21,16 @@
   overflow: hidden; /* Impede que o conteúdo exceda o container */
 }
 
+.step-label{
+  background-color: var(--primary-500);
+  width: 120px;
+
+}
+
+.step-label:hover{
+  background-color: var(--primary-700);
+}
+
 .pacienteModal__close {
   position: absolute;
   top: 10px;
@@ -56,11 +66,14 @@
   cursor: pointer;
   padding: 10px;
   margin: 5px 0;
-  background-color: #e0e0e0;
+}
+
+.itemsub:hover{
+  background-color: #dadada;
 }
 
 .pacienteModal__nav li.active {
-  background-color: #d0d0d0;
+  background-color: #dadada;
 }
 
 .pacienteModal__form {

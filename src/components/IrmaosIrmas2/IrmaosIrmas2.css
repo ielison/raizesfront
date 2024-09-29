@@ -13,13 +13,13 @@
 }
 
 .ii-idade-div button[type="button"] {
-    background: #f8f9fa;
-    color: var(--primary-500);
-    border: 1px solid var(--primary-500);
-    padding: 5px 10px;
-    margin-top: 5px;
-    width: 124px;
-    height: 32px;
+  background: #f8f9fa;
+  color: var(--primary-500);
+  border: 1px solid var(--primary-500);
+  padding: 5px 10px;
+  margin-top: 5px;
+  width: 124px;
+  height: 32px;
 }
 
 
@@ -32,15 +32,18 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   z-index: 10;
   width: 500px;
-  transform: translateY(-100%); /* Move o tooltip para cima */
-  margin-bottom: 85px; /* Espaço entre o tooltip e o ícone */
+  transform: translateY(-100%);
+  /* Move o tooltip para cima */
+  margin-bottom: 85px;
+  /* Espaço entre o tooltip e o ícone */
   color: #3f3f3f;
 }
 
 .info-icon-idade {
   width: 24px;
   cursor: pointer;
-  margin-left: 5px; /* Espacamento entre o botão e o ícone */
+  margin-left: 5px;
+  /* Espacamento entre o botão e o ícone */
 }
 
 .ii-btn-add {
@@ -99,8 +102,8 @@
 }
 
 .ii-radio-group input[type="radio"]:checked {
-  background-color: #0e76a8;
-  border-color: #0e76a8;
+  background-color: #274195;
+  border-color: #274195;
 }
 
 .ii-radio-group input[type="radio"]:checked::after {

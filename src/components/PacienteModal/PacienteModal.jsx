@@ -400,7 +400,7 @@ export default function PacienteModal({ onClose }) {
       setIsLoading(true);
       setExpandedStep(null);
       // Send data to API
-      fetch("https://testserver-2p40.onrender.com/api/quiz", {
+      fetch("http://localhost:3000/api/quiz", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -520,7 +520,7 @@ export default function PacienteModal({ onClose }) {
                             <li
                               key={subItem.id}
                               className={
-                                subItem.id === currentSubItem ? "active" : ""
+                                subItem.id === currentSubItem ? "active" : "itemsub"
                               }
                               onClick={() =>
                                 handleSubItemClick(step.id, subItem.id)

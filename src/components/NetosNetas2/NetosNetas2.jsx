@@ -116,8 +116,8 @@ export default function NetosNetas2({ onFormChange }) {
                     Parentesco
                     <Select
                       options={[
-                        { value: "neto", label: "Neto" },
-                        { value: "neta", label: "Neta" },
+                        { value: "masculino", label: "Neto" },
+                        { value: "feminino", label: "Neta" },
                       ]}
                       onChange={(selectedOption) => {
                         const newGrandchildren = [...grandchildren];
