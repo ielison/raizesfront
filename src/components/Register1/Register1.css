@@ -148,7 +148,7 @@
 /* Keep active class styling */
 .stepper-item.active {
   font-weight: bold;
-  color: #007BFF;
+  color: var(--primary-500);
   transform: scale(1.05);
 }
 
@@ -188,7 +188,7 @@
 }
 
 .register1-form-button {
-  background-color: #007BFF;
+  background-color: var(--primary-500);
   color: white;
   padding: 10px;
   border: none;
@@ -199,7 +199,7 @@
 }
 
 .register1-form-button:hover {
-  background-color: #0056b3;
+  background-color: var(--secondary-500);
 }
 
 .register1-address-group {
