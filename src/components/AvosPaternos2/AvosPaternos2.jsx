@@ -1,19 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
 import "./AvosPaternos2.css";
-import InfoIcon from "../../assets/information-2-fill.svg";
-import PropTypes from "prop-types";
+import InfoIcon from "../../assets/information-2-fill.svg"; // Importe o SVG aqui
 
-export default function AvosPaternos2({ onFormChange }) {
+export default function AvosPaternos2() {
   const [tooltipIndex, setTooltipIndex] = useState(null);
   const [noKnowledge, setNoKnowledge] = useState(false);
   const [grandmotherHadCancer, setGrandmotherHadCancer] = useState(false);
   const [grandfatherHadCancer, setGrandfatherHadCancer] = useState(false);
   const [grandmotherCancerDetails, setGrandmotherCancerDetails] = useState([]);
   const [grandfatherCancerDetails, setGrandfatherCancerDetails] = useState([]);
-  const [avosList, setAvosList] = useState([]);
 
   const handleCancerTypeChangeGrandmother = (selectedOptions) => {
     const updatedDetails = selectedOptions.map((option) => {
@@ -62,52 +60,18 @@ export default function AvosPaternos2({ onFormChange }) {
     });
   };
 
-  useEffect(() => {
-    const updatedAvosList = [];
-
-    if (grandmotherHadCancer) {
-      updatedAvosList.push({
-        id: 0,
-        sexo: "Feminino",
-        ladoPaterno: "Paterno",
-        outroCancerList: grandmotherCancerDetails.map((detail) => ({
-          id: 0,
-          idadeDiagnostico: detail.age ? parseInt(detail.age.label || detail.age, 10) : 0,
-          tipoCancer: detail.type.label,
-        })),
-      });
-    }
-
-    if (grandfatherHadCancer) {
-      updatedAvosList.push({
-        id: 0,
-        teveCancer: true,
-        sexo: "Masculino",
-        ladoPaterno: "Materno",
-        outroCancerList: grandfatherCancerDetails.map((detail) => ({
-          id: 0,
-          idadeDiagnostico: detail.age ? parseInt(detail.age.label || detail.age, 10) : 0,
-          tipoCancer: detail.type.label,
-        })),
-      });
-    }
-
-    setAvosList(updatedAvosList);
-    onFormChange({ avosList: updatedAvosList });  // Chama onFormChange sempre que o avosList é atualizado
-  }, [grandmotherHadCancer, grandfatherHadCancer, grandmotherCancerDetails, grandfatherCancerDetails, onFormChange]);
-
   return (
-    <div className="avosm-form-container">
-      <div className="avosm-grupo">
-        <label className="avosm-label">
+    <div className="avosp-form-container">
+      <div className="avosp-grupo">
+        <label className="avosp-label">
           Os seus avós paternos já tiveram câncer?
-          <div className="avosm-checkbox-group">
+          <div className="avosp-checkbox-group">
             <label>
               <input
                 type="checkbox"
                 checked={grandmotherHadCancer}
                 onChange={() => setGrandmotherHadCancer(!grandmotherHadCancer)}
-                className="avosm-checkbox"
+                className="avosp-checkbox"
               />
               Minha avó teve câncer
             </label>
@@ -116,7 +80,7 @@ export default function AvosPaternos2({ onFormChange }) {
                 type="checkbox"
                 checked={grandfatherHadCancer}
                 onChange={() => setGrandfatherHadCancer(!grandfatherHadCancer)}
-                className="avosm-checkbox"
+                className="avosp-checkbox"
               />
               Meu avô teve câncer
             </label>
@@ -127,7 +91,7 @@ export default function AvosPaternos2({ onFormChange }) {
                   !grandmotherHadCancer && !grandfatherHadCancer && !noKnowledge
                 }
                 onChange={handleNoGrandparentsCancerChange}
-                className="avosm-checkbox"
+                className="avosp-checkbox"
               />
               Nenhum dos meus avós paternos foram acometidos
             </label>
@@ -136,7 +100,7 @@ export default function AvosPaternos2({ onFormChange }) {
                 type="checkbox"
                 checked={noKnowledge}
                 onChange={handleNoKnowledgeChange}
-                className="avosm-checkbox"
+                className="avosp-checkbox"
               />
               Não tenho conhecimento da saúde dos meus avós paternos
             </label>
@@ -147,7 +111,7 @@ export default function AvosPaternos2({ onFormChange }) {
           <>
             {grandmotherHadCancer && (
               <>
-                <label className="avosm-label">
+                <label className="avosp-label">
                   Tipo de câncer da minha avó:
                   <Select
                     isMulti
@@ -157,14 +121,15 @@ export default function AvosPaternos2({ onFormChange }) {
                       (detail) => detail.type
                     )}
                     onChange={handleCancerTypeChangeGrandmother}
-                    className="avosm-select"
+                    className="avosp-select"
                   />
                 </label>
 
+                {/* Renderizar campos de idade para cada tipo de câncer selecionado */}
                 {grandmotherCancerDetails.map((detail, index) => (
                   <div key={index}>
-                    <label className="avosm-label">
-                      Idade do diagnóstico de {detail.type.label}:
+                    <label className="avosp-label">
+                      Idade para o diagnóstico de {detail.type.label}:
                       {detail.showAgeDropdown ? (
                         <Select
                           placeholder="Selecione a idade"
@@ -177,7 +142,7 @@ export default function AvosPaternos2({ onFormChange }) {
                               return newDetails;
                             })
                           }
-                          className="avosm-select"
+                          className="avosp-select"
                         />
                       ) : (
                         <input
@@ -190,13 +155,13 @@ export default function AvosPaternos2({ onFormChange }) {
                               return newDetails;
                             })
                           }
-                          className="avosm-input"
+                          className="avosp-input"
                         />
                       )}
                       <button
                         type="button"
                         onClick={() => handleAgeToggle(index, true)}
-                        className="avosm-toggle-button"
+                        className="avosp-toggle-button"
                       >
                         {detail.showAgeDropdown ? "Digitar idade" : "Não sei"}
                       </button>
@@ -225,7 +190,7 @@ export default function AvosPaternos2({ onFormChange }) {
 
             {grandfatherHadCancer && (
               <>
-                <label className="avosm-label">
+                <label className="avosp-label">
                   Tipo de câncer do meu avô:
                   <Select
                     isMulti
@@ -235,13 +200,14 @@ export default function AvosPaternos2({ onFormChange }) {
                       (detail) => detail.type
                     )}
                     onChange={handleCancerTypeChangeGrandfather}
-                    className="avosm-select"
+                    className="avosp-select"
                   />
                 </label>
 
+                {/* Renderizar campos de idade para cada tipo de câncer selecionado */}
                 {grandfatherCancerDetails.map((detail, index) => (
                   <div key={index}>
-                    <label className="avosm-label">
+                    <label className="avosp-label">
                       Idade para o diagnóstico de {detail.type.label}:
                       {detail.showAgeDropdown ? (
                         <Select
@@ -255,7 +221,7 @@ export default function AvosPaternos2({ onFormChange }) {
                               return newDetails;
                             })
                           }
-                          className="avosm-select"
+                          className="avosp-select"
                         />
                       ) : (
                         <input
@@ -268,13 +234,13 @@ export default function AvosPaternos2({ onFormChange }) {
                               return newDetails;
                             })
                           }
-                          className="avosm-input"
+                          className="avosp-input"
                         />
                       )}
                       <button
                         type="button"
                         onClick={() => handleAgeToggle(index, false)}
-                        className="avosm-toggle-button"
+                        className="avosp-toggle-button"
                       >
                         {detail.showAgeDropdown ? "Digitar idade" : "Não sei"}
                       </button>
@@ -306,7 +272,3 @@ export default function AvosPaternos2({ onFormChange }) {
     </div>
   );
 }
-
-AvosPaternos2.propTypes = {
-  onFormChange: PropTypes.func.isRequired,
-};

@@ -1,40 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
 import "./PrimosPrimasPaternos2.css"; // Altere para o CSS apropriado
 import InfoIcon from "../../assets/information-2-fill.svg"; // Importe o SVG aqui
-import PropTypes from "prop-types";
 
-export default function PrimosPrimasPaternos2({ onFormChange }) {
+export default function PrimosPrimasPaternos2() {
   const [tooltipIndex, setTooltipIndex] = useState(null);
   const [noKnowledge, setNoKnowledge] = useState(false);
   const [primosHadCancer, setPrimosHadCancer] = useState(null);
   const [primosDetails, setPrimosDetails] = useState([
     { relationship: "", type: null, ages: [], showAgeDropdown: false },
   ]);
-
-  useEffect(() => {
-    // Atualiza os dados dos primos ao mudar
-    onFormChange({
-      primosList: primosDetails.map((primo, index) => ({
-        id: index,
-        temPrimos: true,
-        qtdPrimos: primosDetails.length,
-        teveCancer: primosHadCancer,
-        qtdPrimosCancer: primo.type ? primo.type.length : 0,
-        ladoPaterno: primo.relationship, // Altere se necessário
-        sexo: primo.relationship === "primo" ? "masculino" : "feminino", // Altere conforme a lógica do seu aplicativo
-        outroCancerList: primo.type
-          ? primo.type.map((opt) => ({
-              id: 0, // ID único para cada tipo de câncer
-              idadeDiagnostico: opt.age?.value || opt.age || "", // Idade do diagnóstico do tipo de câncer
-              tipoCancer: opt.label,
-            }))
-          : [],
-      })),
-    });
-  }, [primosDetails, primosHadCancer, onFormChange]);
 
   const handleCancerChange = (value) => {
     setPrimosHadCancer(value);
@@ -194,7 +171,7 @@ export default function PrimosPrimasPaternos2({ onFormChange }) {
                     )}
                   </label>
                 ))}
-                {/* Botão para remover primo */}
+                {/* Botão para remover primo */} 
                 <button type="button" onClick={() => handleRemovePrimo(index)} className="ppp-delete-button">
                   Deletar
                 </button>
@@ -210,8 +187,3 @@ export default function PrimosPrimasPaternos2({ onFormChange }) {
     </div>
   );
 }
-
-
-PrimosPrimasPaternos2.propTypes = {
-  onFormChange: PropTypes.func.isRequired,
-};

@@ -1,9 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
 import "./FamiliaresDistantesPaterno2.css";
-import PropTypes from "prop-types";
 
 const relationshipOptions = [
   { value: "meio-tio paterno", label: "Meio-Tio Paterno" },
@@ -21,7 +20,7 @@ const relationshipOptions = [
   { value: "outro", label: "Outro" },
 ];
 
-export default function FamiliaresDistantesPaterno2({ onFormChange }) {
+export default function FamiliaresDistantesPaterno2() {
   const [distantesHadCancer, setDistantesHadCancer] = useState(null);
   const [distantesDetails, setDistantesDetails] = useState([
     {
@@ -31,22 +30,6 @@ export default function FamiliaresDistantesPaterno2({ onFormChange }) {
       customRelationship: "",
     },
   ]);
-
-  useEffect(() => {
-    // Atualiza a lista de familiares distantes ao mudar
-    onFormChange({
-      outroFamiliarList: distantesDetails.map((distante, index) => ({
-        id: 0,
-        teveCancer: distantesHadCancer,
-        qualFamiliar: distante.relationship || distante.customRelationship,
-        outroCancerList: distante.cancerTypes.map((cancer) => ({
-          id: 0,
-          idadeDiagnostico: cancer.age || 0,
-          tipoCancer: cancer.label || "",
-        })),
-      })),
-    });
-  }, [distantesDetails, distantesHadCancer, onFormChange]);
 
   const handleDistantesHadCancerChange = (value) => {
     setDistantesHadCancer(value);
@@ -254,8 +237,3 @@ export default function FamiliaresDistantesPaterno2({ onFormChange }) {
     </div>
   );
 }
-
-
-FamiliaresDistantesPaterno2.propTypes = {
-  onFormChange: PropTypes.func.isRequired,
-};

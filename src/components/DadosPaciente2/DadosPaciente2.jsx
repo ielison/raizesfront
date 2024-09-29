@@ -43,11 +43,11 @@ export default function DadosPaciente2({ onFormChange }) {
   useEffect(() => {
     sessionStorage.setItem("userData", JSON.stringify(userData));
     sessionStorage.setItem("diagnoses", JSON.stringify(diagnoses));
-    sessionStorage.setItem("hasCancer", JSON.stringify(hasCancer));
+    sessionStorage.setItem("hasCancer", JSON.stringify(hasCancer)); // Salvando hasCancer
     sessionStorage.setItem(
       "hasOtherDiagnosis",
       JSON.stringify(hasOtherDiagnosis)
-    );
+    ); // Salvando hasOtherDiagnosis
   }, [userData, diagnoses, hasCancer, hasOtherDiagnosis]);
 
   const handleAddDiagnosis = () => {
@@ -57,54 +57,64 @@ export default function DadosPaciente2({ onFormChange }) {
   const handleRemoveDiagnosis = (index) => {
     const updatedDiagnoses = diagnoses.filter((_, i) => i !== index);
     setDiagnoses(updatedDiagnoses);
-    updateForm();
+    onFormChange({
+      usuariPrincipal: {
+        ...userData,
+        outroCancerList: updatedDiagnoses.map((d) => ({
+          idCancer: 0,
+          tipoCancer: d.type.map((opt) => opt.label).join(", ") || "",
+          idadeDiagnostico: d.age ? Number(d.age) : 0,
+        })),
+      },
+    });
   };
 
   const handleOtherDiagnosisChange = (e) => {
     const newHasOtherDiagnosis = e.target.value === "sim";
     setHasOtherDiagnosis(newHasOtherDiagnosis);
+    onFormChange({ outroCancer: newHasOtherDiagnosis });
 
     if (!newHasOtherDiagnosis) {
       setDiagnoses([{ type: [], age: "" }]);
+      onFormChange({ outroCancerList: [] });
     }
-    updateForm();
   };
 
   const handleFieldChange = (field, value) => {
     const processedValue =
       field === "telefone" ? value.replace(/\D/g, "") : value;
-    const updatedUserData = { ...userData, [field]: processedValue };
+    const updatedUserData = {
+      ...userData,
+      [field]: processedValue,
+      outroCancer: hasOtherDiagnosis,
+    };
     setUserData(updatedUserData);
-    updateForm();
+
+    onFormChange({
+      usuariPrincipal: {
+        ...updatedUserData,
+        qualCancer: updatedUserData.qualCancer || "",
+        outroCancerList: diagnoses.map((d) => ({
+          idCancer: 0,
+          tipoCancer: d.type.map((opt) => opt.label).join(", ") || "",
+          idadeDiagnostico: d.age ? Number(d.age) : 0,
+        })),
+      },
+    });
   };
 
   const handleDiagnosisChange = (index, field, value) => {
     const updatedDiagnoses = [...diagnoses];
     updatedDiagnoses[index][field] = value;
-    setDiagnoses(updatedDiagnoses);
-    updateForm();
-  };
 
-  const updateForm = () => {
-    onFormChange({
-      usuariPrincipal: {
-        quizId: 0,
-        teveCancer: hasCancer,
-        qualCancer: userData.qualCancer || "",
-        idadeDiagnostico: userData.idadeDiagnostico || 0,
-        outroCancer: hasOtherDiagnosis,
-        sexo: userData.sexo || "string",
-        nome: userData.nome || "string",
-        idade: userData.idade || 0,
-        telefone: userData.telefone || "string",
-        dataConsulta: userData.dataConsulta || "string",
-        outroCancerList: diagnoses.map((d) => ({
-          idCancer: 0,
-          tipoCancer: d.type.map((opt) => opt.label).join(", ") || "string",
-          idadeDiagnostico: d.age ? Number(d.age) : 0,
-        })),
-      },
-    });
+    // Update userData with the current diagnoses
+    setDiagnoses(updatedDiagnoses);
+    handleFieldChange(
+      "qualCancer",
+      updatedDiagnoses
+        .map((d) => d.type.map((opt) => opt.label).join(", "))
+        .join(", ")
+    );
   };
 
   return (
@@ -119,6 +129,7 @@ export default function DadosPaciente2({ onFormChange }) {
         />
       </label>
 
+      {/* Campo de Telefone */}
       <div className="dp-row">
         <label className="telefone-paciente">
           <span>Telefone</span>
