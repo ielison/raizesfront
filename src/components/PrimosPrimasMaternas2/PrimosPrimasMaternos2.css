@@ -1,0 +1,80 @@
+.ppm-modal-content {
+  display: flex;
+  flex-direction: row;
+  background: #fff;
+  border-radius: 8px;
+  width: 760px;
+  /* Fixed width */
+  height: 650px;
+  /* Fixed height */
+  overflow: auto;
+  /* Allow scrolling if necessary */
+}
+
+.tooltip-idade--pp {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  width: 500px;
+  transform: translateY(-100%);
+  margin-bottom: 45px;
+  color: #3f3f3f;
+}
+
+
+.ppm-form-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.ppm-close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background: transparent;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.ppm-title {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.ppm-grupo {
+  display: flex;
+  flex-direction: column;
+}
+
+.ppm-checkbox-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  /* Add margin for spacing */
+}
+
+.ppm-checkbox-group label {
+  margin-bottom: 10px;
+  /* Space between radio buttons */
+}
+
+.ppm-btn-add {
+  background: #28a745;
+  margin-top: 10px;
+  /* Add margin for spacing */
+}
+
+.ppm-form-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  /* Space between buttons and form */
+}

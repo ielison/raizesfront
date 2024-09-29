@@ -1,0 +1,143 @@
+.sobrinhos-sobrinhas-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sobrinhos-sobrinhas-modal-content {
+  display: flex;
+  flex-direction: row;
+  background: #fff;
+  border-radius: 8px;
+  width: 760px;
+  /* Largura fixa */
+  height: 650px;
+  /* Altura fixa */
+  overflow: hidden;
+  /* Esconde o conteúdo que ultrapassar */
+}
+
+.ss-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+}
+
+.sobrinhos-sobrinhas-form-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+
+.sobrinhos-sobrinhas-close-button {
+  border: none;
+  background: transparent;
+  font-size: 24px;
+  cursor: pointer;
+  color: #000;
+  align-self: flex-start;
+  margin-left: auto;
+}
+
+h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+input[type="number"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+
+.ss-btn-back,
+.ss-btn-next {
+  background: var(--primary-500);
+  /* Cor azul */
+  color: #fff;
+  /* Texto branco */
+  border: none;
+  /* Sem borda */
+  padding: 10px 15px;
+  /* Espaçamento dos botões */
+  font-size: 16px;
+  /* Tamanho do texto */
+  cursor: pointer;
+  /* Cursor pointer */
+  border-radius: 4px;
+  /* Bordas arredondadas */
+}
+
+.ss-btn-back {
+  background: white;
+  border: 1px solid var(--primary-500);
+  border-radius: 4px;
+  color: var(--primary-500);
+  /* Cor cinza */
+}
+
+.ss-btn-next:hover {
+  background-color: var(--primary-700);
+}
+
+.ss-btn-back:hover {
+  background: var(--secondary-500);
+  border-radius: 4px;
+  color: black;
+  border-color: white;
+}
+
+.ss-form-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.checkbox-group label {
+  margin-right: 15px;
+}
+
+.ss-btn-add {
+  background: none;
+  /* Sem fundo */
+  color: rgb(119, 119, 119);
+  /* Cor cinza */
+  border: none;
+  /* Sem borda */
+  padding: 5px;
+  /* Espaçamento reduzido */
+  cursor: pointer;
+  /* Cursor pointer */
+  font-size: 16px;
+  /* Tamanho do texto */
+  font-weight: bold;
+  /* Peso do texto */
+  align-self: flex-end;
+  /* Alinhamento ao final do container */
+}
