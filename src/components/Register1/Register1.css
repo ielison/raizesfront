@@ -12,10 +12,19 @@
 }
 
 .register1-button {
-  margin: 32px 5px;
+  margin: 30px 0px;
   width: 100%;
   display: flex;
-  justify-content: center;
+  background-color: var(--primary-500);
+  color: #fff;
+  border: none;
+  padding: 11px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: stretch;
 }
 
 

@@ -8,6 +8,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 9999; /* Ensure it appears above other elements */
 }
 
 .ii-modal-content {
@@ -15,12 +16,14 @@
   flex-direction: row;
   background: #fff;
   border-radius: 8px;
-  width: 760px;
-  height: 650px;
+  width: 80%;
+  max-width: 760px;
+  height: 90%;
+  max-height: 650px;
   overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease-in-out;
 }
-
-
 
 .ii-form-container {
   display: flex;
@@ -28,8 +31,8 @@
   width: 100%;
   padding: 20px;
   overflow-y: auto;
+  margin-bottom: 10px;
 }
-
 
 .ii-form-buttons {
   display: flex;
@@ -37,8 +40,7 @@
   margin-top: 20px;
 }
 
-.ii-btn-back,
-.ii-btn-next {
+.ii-btn-back, .ii-btn-next {
   background: var(--primary-500);
   color: #fff;
   border: none;
@@ -46,6 +48,7 @@
   font-size: 16px;
   cursor: pointer;
   border-radius: 5px;
+  transition: background-color 0.3s ease;
 }
 
 .ii-btn-next:hover {
@@ -57,7 +60,12 @@
   border: 1px solid var(--primary-500);
   border-radius: 4px;
   color: var(--primary-500);
+}
 
+.ii-btn-back:hover {
+  background: var(--secondary-500);
+  color: black;
+  border-color: white;
 }
 
 .btn-naosei {
@@ -68,17 +76,12 @@
   margin-top: 5px;
   width: 124px;
   height: 32px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .btn-naosei:hover {
   background: var(--secondary-500);
-  color: black;
-  border-color: white;
-}
-
-.ii-btn-back:hover {
-  background: var(--secondary-500);
-  border-radius: 4px;
   color: black;
   border-color: white;
 }
@@ -88,54 +91,32 @@
   flex-wrap: wrap;
 }
 
-.ii-checkbox-group-first {
-  display: flex;
-  align-items: stretch;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-content: space-between;
-  height: 150px;
-  margin-top: 30px;
-}
-
-.ii-radio-group label,
-.ii-radio-group-first label {
+.ii-checkbox-group label {
   display: flex;
   align-items: center;
   gap: 10px;
   cursor: pointer;
 }
 
-.ii-title {
-  margin: 0;
-}
-
-.ii-radio-group input[type="radio"],
-.ii-radio-group-first input[type="radio"] {
+.ii-radio-group input[type="radio"], .ii-checkbox-group input[type="checkbox"] {
   appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  background-color: #ECECEC;
+  background-color: #ececec;
   border: 2px solid #8c8c8c;
   padding: 6px;
   border-radius: 4px;
   width: 18px;
   height: 18px;
-  display: inline-block;
-  position: relative;
   cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-.ii-radio-group input[type="radio"]:checked,
-.ii-radio-group-first input[type="radio"]:checked {
+.ii-radio-group input[type="radio"]:checked, .ii-checkbox-group input[type="checkbox"]:checked {
   background-color: #274195;
   border-color: #274195;
 }
 
-.ii-radio-group input[type="radio"]:checked::after,
-.ii-radio-group-first input[type="radio"]:checked::after {
+.ii-radio-group input[type="radio"]:checked::after, .ii-checkbox-group input[type="checkbox"]:checked::after {
   content: "";
-  display: block;
   position: absolute;
   top: 2px;
   left: 6px;
@@ -146,8 +127,7 @@
   transform: rotate(45deg);
 }
 
-.ii-radio-group input[type="radio"]:focus,
-.ii-radio-group-first input[type="radio"]:focus {
+.ii-checkbox-group input[type="checkbox"]:focus, .ii-radio-group input[type="radio"]:focus {
   outline: none;
   box-shadow: 0 0 2px 2px rgba(14, 118, 168, 0.4);
 }
@@ -156,50 +136,64 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-direction: row;
 }
 
 .ii-close-button {
-  border: none;
   background: transparent;
   font-size: 24px;
-  cursor: pointer;
   color: #000;
+  cursor: pointer;
   align-self: flex-start;
   margin-left: auto;
-  /* Alinha o botão à direita */
-}
-
-.ii-possui-irmao span {
-  padding-top: 20px;
-  margin-bottom: 16px;
-}
-
-.ii-possui-irmao {
-  gap: 40px;
-}
-
-.ii-btn-add {
-  background: none;
-  /* Sem fundo */
-  color: rgb(119, 119, 119);
-  /* Cor cinza */
-  border: none;
-  /* Sem borda */
-  padding: 5px;
-  /* Espaçamento reduzido */
-  cursor: pointer;
-  /* Cursor pointer */
-  font-size: 16px;
-  /* Tamanho do texto */
-  font-weight: bold;
-  /* Peso do texto */
-  align-self: flex-end;
-  /* Alinhamento ao final do container */
 }
 
 .ii-idade {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
+}
+
+.ii-btn-add {
+  background: none;
+  color: rgb(119, 119, 119);
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  align-self: flex-end;
+  transition: color 0.3s ease;
+}
+
+.ii-btn-add:hover {
+  color: var(--primary-500);
+}
+
+.tooltip-idade-ii {
+  background: #333;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  position: absolute;
+  z-index: 1000;
+  white-space: nowrap;
+  transform: translateY(-5px);
+}
+
+@media screen and (max-width: 768px) {
+  .ii-modal-content {
+    width: 95%;
+    height: auto;
+    flex-direction: column;
+  }
+
+  .ii-form-container {
+    padding: 10px;
+  }
+
+  .ii-form-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
 }

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import "./DadosPaciente2.css";
 import InputMask from "react-input-mask";
 import Select from "react-select";
-import DeleteIcon from "../../assets/trash.svg"; 
+import DeleteIcon from "../../assets/trash.svg";
 import { cancerOptions } from "../../data/cancerOptions";
 
 export default function DadosPaciente2({ onFormChange }) {
@@ -44,8 +44,11 @@ export default function DadosPaciente2({ onFormChange }) {
     sessionStorage.setItem("userData", JSON.stringify(userData));
     sessionStorage.setItem("diagnoses", JSON.stringify(diagnoses));
     sessionStorage.setItem("hasCancer", JSON.stringify(hasCancer));
-    sessionStorage.setItem("hasOtherDiagnosis", JSON.stringify(hasOtherDiagnosis));
-    
+    sessionStorage.setItem(
+      "hasOtherDiagnosis",
+      JSON.stringify(hasOtherDiagnosis)
+    );
+
     // Atualiza o formulário sempre que algo muda
     onFormChange({
       usuariPrincipal: {

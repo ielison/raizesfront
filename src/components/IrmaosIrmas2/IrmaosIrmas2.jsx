@@ -88,65 +88,65 @@ export default function IrmaosIrmas2({ onFormChange }) {
 
   return (
     <div className="ii-modal-content" onClick={(e) => e.stopPropagation()}>
-      <div className="ii-form-container">
-        <label className="ii-possui-irmao">
-          <span>O(A) Sr(a) possui irmãos ou meios-irmãos?</span>
-          <div className="ii-radio-group">
-            {Object.entries(relationshipLabels).map(([key, label]) => (
-              <label key={key}>
+    <div className="ii-form-container">
+      <label className="ii-possui-irmao">
+        <span>O(A) Sr(a) possui irmãos ou meios-irmãos?</span>
+        <div className="ii-checkbox-group">
+          {Object.entries(relationshipLabels).map(([key, label]) => (
+            <label key={key} className="ii-checkbox">
+              <input
+                type="checkbox"
+                name="relationship"
+                value={key}
+                checked={relationships.includes(key)}
+                onChange={handleRelationshipChange}
+              />
+              {label}
+            </label>
+          ))}
+        </div>
+      </label>
+      {relationships.length > 0 &&
+        !relationships.includes("naoPossuoIrmaos") && (
+          <>
+            {relationships.map((relation, index) => (
+              <label key={index}>
+                {relationshipLabels[relation]}
                 <input
-                  type="checkbox"
-                  name="relationship"
-                  value={key}
-                  checked={relationships.includes(key)}
-                  onChange={handleRelationshipChange}
+                  type="number"
+                  placeholder="Quantidade"
+                  onChange={(e) =>
+                    handleQuantityChange(index, Number(e.target.value))
+                  }
+                  min="0"
                 />
-                {label}
               </label>
             ))}
-          </div>
-        </label>
-        {relationships.length > 0 &&
-          !relationships.includes("naoPossuoIrmaos") && (
-            <>
-              {relationships.map((relation, index) => (
-                <label key={index}>
-                  {relationshipLabels[relation]}
+            <label>
+              Algum deles foi acometido por algum câncer ou neoplasia?
+              <div className="ii-radio-group">
+                <label>
                   <input
-                    type="number"
-                    placeholder="Quantidade"
-                    onChange={(e) =>
-                      handleQuantityChange(index, Number(e.target.value))
-                    }
-                    min="0"
+                    type="radio"
+                    name="hasCancer"
+                    value="sim"
+                    checked={hasCancer === true}
+                    onChange={() => setHasCancer(true)}
                   />
+                  Sim
                 </label>
-              ))}
-              <label>
-                Algum deles foi acometido por algum câncer ou neoplasia?
-                <div className="ii-radio-group">
-                  <label>
-                    <input
-                      type="radio"
-                      name="hasCancer"
-                      value="sim"
-                      checked={hasCancer === true}
-                      onChange={() => setHasCancer(true)}
-                    />
-                    Sim
-                  </label>
-                  <label>
-                    <input
-                      type="radio"
-                      name="hasCancer"
-                      value="nao"
-                      checked={hasCancer === false}
-                      onChange={() => setHasCancer(false)}
-                    />
-                    Não
-                  </label>
-                </div>
-              </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="hasCancer"
+                    value="nao"
+                    checked={hasCancer === false}
+                    onChange={() => setHasCancer(false)}
+                  />
+                  Não
+                </label>
+              </div>
+            </label>
               {hasCancer && (
                 <>
                   {siblings.map((sibling, index) => (

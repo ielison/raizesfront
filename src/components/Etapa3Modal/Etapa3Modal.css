@@ -49,21 +49,3 @@ p {
   margin-top: 20px;
 }
 
-button {
-  background-color: var(--primary-500);
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 5px;
-  margin-right: 10px;
-}
-
-button.btn-back-em3 {
-  background: #6c757d;
-}
-
-button.btn-next-em3 {
-  background: #007bff;
-}

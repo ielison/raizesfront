@@ -1,0 +1,55 @@
+button {
+  background-color: var(--primary-500);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+  position: relative;
+  appearance: none;
+  background-color: #ececec;
+  border: 2px solid #8c8c8c;
+  padding: 6px;
+  border-radius: 4px;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+input[type="radio"]:checked,
+input[type="checkbox"]:checked {
+  background-color: #274195;
+  border-color: #274195;
+}
+
+input[type="radio"]:checked::after,
+input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 6px;
+  /* Para o checkbox pode ser ajustado para centralizar melhor */
+  width: 4px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  display: inline-block;
+}
+
+input[type="checkbox"]:focus,
+input[type="radio"]:focus {
+  outline: none;
+  box-shadow: 0 0 2px 2px rgba(14, 118, 168, 0.4);
+}
+
+.child-container {
+  margin-top: 10px;
+}

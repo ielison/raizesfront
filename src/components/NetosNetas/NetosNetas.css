@@ -71,36 +71,6 @@ input[type="number"] {
   border-radius: 4px;
 }
 
-input[type="checkbox"] {
-  background-color: #ECECEC;
-  border: 2px solid #8c8c8c;
-  padding: 6px;
-  border-radius: 4px;
-  width: 18px;
-  height: 18px;
-  display: inline-block;
-  position: relative;
-  cursor: pointer;
-}
-
-.checkbox-group input[type="checkbox"]:checked {
-  background-color: var(--primary-500);
-  border-color: #274195;
-}
-
-button {
-  background-color: var(--primary-500);
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  border-radius: 5px;
-  margin-right: 10px;
-}
-
-
-
 .nn-form-buttons {
   display: flex;
   /* Use flexbox for horizontal layout */
@@ -110,42 +80,6 @@ button {
   /* Keep top margin */
 }
 
-.nn-btn-back,
-.nn-btn-next {
-  background: var(--primary-500);
-  /* Cor azul */
-  color: #fff;
-  /* Texto branco */
-  border: none;
-  /* Sem borda */
-  padding: 10px 15px;
-  /* Espaçamento dos botões */
-  font-size: 16px;
-  /* Tamanho do texto */
-  cursor: pointer;
-  /* Cursor pointer */
-  border-radius: 4px;
-  /* Bordas arredondadas */
-}
-
-.nn-btn-next:hover {
-  background-color: var(--primary-700);
-}
-
-.nn-btn-back {
-  background: white;
-  border: 1px solid var(--primary-500);
-  border-radius: 4px;
-  color: var(--primary-500);
-  /* Cor cinza */
-}
-
-.nn-btn-back:hover {
-  background: var(--secondary-500);
-  border-radius: 4px;
-  color: black;
-  border-color: white;
-}
 
 .nn-btn-add {
   background: none;

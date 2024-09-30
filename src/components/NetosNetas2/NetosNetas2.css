@@ -11,7 +11,9 @@
   /* Esconde o conteúdo que ultrapassar */
 }
 
-
+.nn-btn-delete {
+  margin: 4px 0px;
+}
 
 .nn-form-container {
   display: flex;
@@ -59,22 +61,9 @@ input[type="number"] {
   border-radius: 4px;
 }
 
-input[type="checkbox"] {
-  background-color: #ECECEC;
-  border: 2px solid #8c8c8c;
-  padding: 6px;
-  border-radius: 4px;
-  width: 18px;
-  height: 18px;
-  display: inline-block;
-  position: relative;
-  cursor: pointer;
-}
 
-.checkbox-group input[type="checkbox"]:checked {
-  background-color: var(--primary-500);
-  border-color: var(--primary-500);
-}
+
+
 
 
 .nn-form-buttons {

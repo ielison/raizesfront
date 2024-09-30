@@ -66,23 +66,6 @@ input[type="number"] {
   border-radius: 4px;
 }
 
-input[type="checkbox"] {
-  background-color: #ECECEC;
-  border: 2px solid #8c8c8c;
-  padding: 6px;
-  border-radius: 4px;
-  width: 18px;
-  height: 18px;
-  display: inline-block;
-  position: relative;
-  cursor: pointer;
-}
-.checkbox-group input[type="checkbox"]:checked{
-  background-color: var(--primary-500);
-  border-color: #274195;
-}
-
-
 .ss-btn-back,
 .ss-btn-next {
   background: var(--primary-500);
