@@ -105,11 +105,11 @@
 }
 
 .pagination button {
-  background-color: #0056b3;
+  background-color: var(--primary-500);
   color: white;
   border: none;
   border-radius: 4px;
-  padding: 8px 12px;
+  padding: 14px 24px;
   cursor: pointer;
   margin: 0 10px;
 }
@@ -124,8 +124,12 @@
   font-size: 16px;
   color: #0056b3;
   background-color: #fff;
-  padding: 5px 30px;
+  padding: 12px 30px;
   border-radius: 4px;
+}
+
+.pagination button:hover{
+  background-color: var(--secondary-500);
 }
 
 /* Botões de relatório */
@@ -151,6 +155,24 @@
   opacity: 1;
   visibility: visible;
 }
+
+/* MeusPacientes.css */
+
+.alto-risco {
+  color: red; /* Cor para alto risco */
+  font-weight: bold; /* Negrito */
+}
+
+.baixo-risco {
+  color: green; /* Cor para baixo risco */
+  font-weight: bold; /* Normal */
+}
+
+.sem-consulta {
+  color: gray; /* Cor para sem consulta */
+  font-style: italic; /* Itálico */
+}
+
 
 /* Responsividade - Tablets (até 1024px) */
 @media (max-width: 1024px) {

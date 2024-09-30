@@ -37,8 +37,8 @@ export default function MeusPacientes() {
               if (consultaResponse.ok) {
                 const consultaData = await consultaResponse.json();
                 paciente.consultaOncogenetica = consultaData
-                  ? "Precisa consulta oncogenética"
-                  : "Não precisa consulta oncogenética";
+                  ? "Paciente de alto risco"
+                  : "Não foram identificados critérios de alto risco";
               } else {
                 paciente.consultaOncogenetica =
                   "Não precisa consulta oncogenética";
@@ -117,32 +117,34 @@ export default function MeusPacientes() {
 
   const baixarRelatorio = async (pacienteId) => {
     console.log(`Baixar relatório do paciente com ID: ${pacienteId}`);
-    
+
     try {
       // Chamada para obter o resultado do quiz
       const resultadoResponse = await fetch(
         `https://testserver-2p40.onrender.com/api/quiz/resultado/${pacienteId}/${idUser}`
       );
-  
+
       if (!resultadoResponse.ok) {
-        throw new Error(`Erro ao obter resultado do quiz: ${resultadoResponse.status}`);
+        throw new Error(
+          `Erro ao obter resultado do quiz: ${resultadoResponse.status}`
+        );
       }
-  
+
       const resultadoData = await resultadoResponse.json();
-      console.log('Resultado do quiz:', resultadoData); // Log da resposta do quiz
+      console.log("Resultado do quiz:", resultadoData); // Log da resposta do quiz
       const precisaPesquisaOncogenetica = resultadoData; // Isso deve ser true ou false
-  
+
       const response = await fetch(
         `https://testserver-2p40.onrender.com/api/quiz/${pacienteId}`
       );
-  
+
       if (!response.ok) {
         throw new Error(`Erro ao baixar relatório: ${response.status}`);
       }
-  
+
       const data = await response.json();
-      console.log('Dados do paciente:', data); // Log da resposta dos dados do paciente
-  
+      console.log("Dados do paciente:", data); // Log da resposta dos dados do paciente
+
       // Adaptar os dados para o formato desejado
       const relatorio = {
         nome: data.usuariPrincipal.nome,
@@ -151,7 +153,7 @@ export default function MeusPacientes() {
         familiares: [],
         precisaPesquisaOncogenetica, // Adiciona o resultado do quiz aqui
       };
-  
+
       // Adicionar informações do pai
       if (data.pai.teveCancer) {
         relatorio.familiares.push({
@@ -166,7 +168,7 @@ export default function MeusPacientes() {
               : 0,
         });
       }
-  
+
       // Adicionar informações da mãe
       if (data.mae.teveCancer) {
         relatorio.familiares.push({
@@ -181,7 +183,7 @@ export default function MeusPacientes() {
               : 0,
         });
       }
-  
+
       // Adicionar informações dos filhos
       data.filhosList.forEach((filho) => {
         if (filho.teveCancer) {
@@ -198,7 +200,7 @@ export default function MeusPacientes() {
           });
         }
       });
-  
+
       // Adicionar informações dos netos
       data.netosList.forEach((neto) => {
         if (neto.teveCancer) {
@@ -215,7 +217,7 @@ export default function MeusPacientes() {
           });
         }
       });
-  
+
       // Adicionar informações dos irmãos
       data.irmaosList.forEach((irmao) => {
         if (irmao.teveCancer) {
@@ -232,7 +234,7 @@ export default function MeusPacientes() {
           });
         }
       });
-  
+
       // Adicionar informações dos sobrinhos
       data.sobrinhosList.forEach((sobrinho) => {
         if (sobrinho.teveCancer) {
@@ -249,7 +251,7 @@ export default function MeusPacientes() {
           });
         }
       });
-  
+
       // Adicionar informações dos tios
       data.tiosList.forEach((tio) => {
         if (tio.teveCancer) {
@@ -266,7 +268,7 @@ export default function MeusPacientes() {
           });
         }
       });
-  
+
       // Adicionar informações dos avós
       data.avosList.forEach((avo) => {
         if (avo.teveCancer) {
@@ -283,7 +285,7 @@ export default function MeusPacientes() {
           });
         }
       });
-  
+
       // Adicionar informações dos primos
       data.primosList.forEach((primo) => {
         if (primo.teveCancer) {
@@ -300,7 +302,7 @@ export default function MeusPacientes() {
           });
         }
       });
-  
+
       // Adicionar informações de outros familiares
       data.outroFamiliarList.forEach((familiar) => {
         if (familiar.teveCancer) {
@@ -317,36 +319,45 @@ export default function MeusPacientes() {
           });
         }
       });
-  
+
       // Enviar os dados formatados para o endpoint desejado
-      const pdfResponse = await fetch("https://testserver-2p40.onrender.com/generatepdf", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(relatorio),
-      });
-  
+      const pdfResponse = await fetch(
+        "https://testserver-2p40.onrender.com/generatepdf",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(relatorio),
+        }
+      );
+
       if (!pdfResponse.ok) {
         throw new Error(`Erro ao gerar PDF: ${pdfResponse.status}`);
       }
-  
-      // Here we handle the PDF response directly
-      const blob = await pdfResponse.blob(); // Get the PDF blob
-      const url = window.URL.createObjectURL(blob); // Create a URL for the blob
-      const a = document.createElement("a"); // Create a link element
-      a.style.display = "none";
-      a.href = url;
-      a.download = `Relatorio_${relatorio.nome}.pdf`; // Set the download attribute
-      document.body.appendChild(a); // Append to the document
-      a.click(); // Simulate click to trigger download
-      window.URL.revokeObjectURL(url); // Clean up
+
+      // Aqui obtemos o blob do PDF
+      const blob = await pdfResponse.blob(); // Obtemos o blob do PDF
+      const url = window.URL.createObjectURL(blob); // Criamos uma URL para o blob
+
+      // Criar um elemento <a> para iniciar o download
+      const a = document.createElement("a");
+      a.style.display = "none"; // Esconder o link
+      a.href = url; // Definimos o URL do blob como o href do link
+      a.download = `Relatorio_${relatorio.nome}.pdf`; // Definimos o atributo download
+
+      document.body.appendChild(a); // Adicionamos o link ao documento
+      a.click(); // Simulamos um clique no link para iniciar o download
+
+      // Remover o link do DOM após o download
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url); // Limpa o URL blob
+
       console.log("PDF gerado com sucesso.");
     } catch (error) {
       console.error(`Erro ao baixar o relatório: ${error}`);
     }
   };
-  
 
   if (isLoading) {
     return <p>Carregando...</p>; // Mensagem de carregamento
@@ -391,7 +402,7 @@ export default function MeusPacientes() {
             </div>
             <div className="divider"></div>
             <div className="report-buttons">
-              <Tooltip text="Abrir relatório">
+              <Tooltip text="Abrir resultado">
                 <button onClick={() => abrirRelatorio(paciente.idQuestionario)}>
                   📄
                 </button>
@@ -414,7 +425,20 @@ export default function MeusPacientes() {
 
             <div className="divider"></div>
             <div className="consulta-oncogenetica">
-              {paciente.consultaOncogenetica}
+              {paciente.consultaOncogenetica === "Paciente de alto risco" ? (
+                <span className="alto-risco">
+                  {paciente.consultaOncogenetica}
+                </span>
+              ) : paciente.consultaOncogenetica ===
+                "Não foram identificados critérios de alto risco" ? (
+                <span className="baixo-risco">
+                  {paciente.consultaOncogenetica}
+                </span>
+              ) : (
+                <span className="sem-consulta">
+                  {paciente.consultaOncogenetica}
+                </span>
+              )}
             </div>
           </div>
         ))}
