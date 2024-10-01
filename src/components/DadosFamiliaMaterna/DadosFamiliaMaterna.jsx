@@ -196,7 +196,7 @@ export default function DadosFamiliaMaterna({ onClose, onBack, onAdvance }) {
               {hasMaternalUnclesAunts && (
                 <>
                   <label className="dfm-label">
-                    Quantos tios?
+                    Quantidade de tios
                     <input
                       type="number"
                       value={uncleAuntQuantities.tios}
@@ -212,7 +212,7 @@ export default function DadosFamiliaMaterna({ onClose, onBack, onAdvance }) {
                   </label>
 
                   <label className="dfm-label">
-                    Quantas tias?
+                    Quantidade de tias
                     <input
                       type="number"
                       value={uncleAuntQuantities.tias}

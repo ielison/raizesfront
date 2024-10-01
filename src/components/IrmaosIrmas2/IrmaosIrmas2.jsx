@@ -3,9 +3,9 @@ import Select from "react-select";
 import PropTypes from "prop-types";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
-import DeleteIcon from "../../assets/trash.svg";
 import "./IrmaosIrmas2.css";
-import InfoIcon from "../../assets/information-2-fill.svg"; // Importe o SVG aqui
+import DeleteIcon from "../../assets/trash.svg";
+import InfoIcon from "../../assets/information-2-fill.svg";
 
 export default function IrmaosIrmas2({ onFormChange }) {
   const [relationships, setRelationships] = useState([]);
@@ -14,23 +14,22 @@ export default function IrmaosIrmas2({ onFormChange }) {
   const [tooltipIndex, setTooltipIndex] = useState(null);
 
   const relationshipLabels = {
-    irmaos: "Irmãos",
-    irma: "Irmãs",
-    meioIrmaosPaterno: "Meios-irmãos (paterno)",
-    meioIrmasPaterno: "Meios-irmãs (paterno)",
-    meioIrmaosMaterno: "Meios-irmãos (materno)",
-    meioIrmasMaterno: "Meios-irmãs (materno)",
+    irmaos: "Irmão",
+    irma: "Irmã",
+    meioIrmaosPaterno: "Meios-irmão (paterno)",
+    meioIrmasPaterno: "Meios-irmã (paterno)",
+    meioIrmaosMaterno: "Meios-irmão (materno)",
+    meioIrmasMaterno: "Meios-irmã (materno)",
     naoPossuoIrmaos: "Não possuo irmãos",
   };
 
   useEffect(() => {
     const irmaosList = siblings.map((sibling) => ({
       id: sibling.id || 0,
-      temIrmao: true,
-      qtdIrmao: siblings.length,
+      temIrmaos: true,
+      qtdIrmaos: siblings.length,
       teveCancer: hasCancer,
       qtdeIrmaosCancer: sibling.type.length > 0 ? 1 : 0,
-      sexo: sibling.sex,
       outroCancerList: sibling.type.map((tipo) => ({
         id: 0,
         idadeDiagnostico: sibling.age ? sibling.age.value || sibling.age : 0,
@@ -38,7 +37,6 @@ export default function IrmaosIrmas2({ onFormChange }) {
       })),
     }));
 
-    // Pass formatted data to onFormChange
     onFormChange({ irmaosList });
   }, [siblings, hasCancer, onFormChange]);
 
@@ -61,7 +59,6 @@ export default function IrmaosIrmas2({ onFormChange }) {
       ...siblings,
       {
         id: siblings.length,
-        sex: "",
         type: [],
         age: "",
         showAgeDropdown: false,
@@ -69,8 +66,8 @@ export default function IrmaosIrmas2({ onFormChange }) {
     ]);
   };
 
-  const handleRemoveSibling = (index) => {
-    const newSiblings = siblings.filter((_, idx) => idx !== index);
+  const handleDeleteSibling = (index) => {
+    const newSiblings = siblings.filter((_, i) => i !== index);
     setSiblings(newSiblings);
   };
 
@@ -82,88 +79,88 @@ export default function IrmaosIrmas2({ onFormChange }) {
 
   const handleQuantityChange = (index, value) => {
     const newSiblings = [...siblings];
-    newSiblings[index].quantity = value; // Ensure to store the quantity in the sibling object
+    newSiblings[index].quantity = value;
     setSiblings(newSiblings);
   };
 
   return (
     <div className="ii-modal-content" onClick={(e) => e.stopPropagation()}>
-    <div className="ii-form-container">
-      <label className="ii-possui-irmao">
-        <span>O(A) Sr(a) possui irmãos ou meios-irmãos?</span>
-        <div className="ii-checkbox-group">
-          {Object.entries(relationshipLabels).map(([key, label]) => (
-            <label key={key} className="ii-checkbox">
-              <input
-                type="checkbox"
-                name="relationship"
-                value={key}
-                checked={relationships.includes(key)}
-                onChange={handleRelationshipChange}
-              />
-              {label}
-            </label>
-          ))}
-        </div>
-      </label>
-      {relationships.length > 0 &&
-        !relationships.includes("naoPossuoIrmaos") && (
-          <>
-            {relationships.map((relation, index) => (
-              <label key={index}>
-                {relationshipLabels[relation]}
+      <div className="ii-form-container">
+        <label className="ii-possui-irmao">
+          <span>O(A) Sr(a) possui irmão ou irmã?</span>
+          <div className="ii-radio-group">
+            {Object.entries(relationshipLabels).map(([key, label]) => (
+              <label key={key}>
                 <input
-                  type="number"
-                  placeholder="Quantidade"
-                  onChange={(e) =>
-                    handleQuantityChange(index, Number(e.target.value))
-                  }
-                  min="0"
+                  type="checkbox"
+                  name="relationship"
+                  value={key}
+                  checked={relationships.includes(key)}
+                  onChange={handleRelationshipChange}
                 />
+                {label}
               </label>
             ))}
-            <label>
-              Algum deles foi acometido por algum câncer ou neoplasia?
-              <div className="ii-radio-group">
-                <label>
+          </div>
+        </label>
+        {relationships.length > 0 &&
+          !relationships.includes("naoPossuoIrmaos") && (
+            <>
+              {relationships.map((relation, index) => (
+                <label key={index}>
+                  {relationshipLabels[relation]}
                   <input
-                    type="radio"
-                    name="hasCancer"
-                    value="sim"
-                    checked={hasCancer === true}
-                    onChange={() => setHasCancer(true)}
+                    type="number"
+                    placeholder="Quantidade"
+                    onChange={(e) =>
+                      handleQuantityChange(index, Number(e.target.value))
+                    }
+                    min="0"
                   />
-                  Sim
                 </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="hasCancer"
-                    value="nao"
-                    checked={hasCancer === false}
-                    onChange={() => setHasCancer(false)}
-                  />
-                  Não
-                </label>
-              </div>
-            </label>
+              ))}
+              <label>
+                Algum deles foi acometido por algum câncer ou neoplasia?
+                <div className="ii-radio-group">
+                  <label>
+                    <input
+                      type="radio"
+                      name="hasCancer"
+                      value="sim"
+                      checked={hasCancer === true}
+                      onChange={() => setHasCancer(true)}
+                    />
+                    Sim
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="hasCancer"
+                      value="nao"
+                      checked={hasCancer === false}
+                      onChange={() => setHasCancer(false)}
+                    />
+                    Não
+                  </label>
+                </div>
+              </label>
               {hasCancer && (
                 <>
                   {siblings.map((sibling, index) => (
                     <div key={index}>
                       <label>
-                        Sexo
+                        Parentesco
                         <Select
-                          options={[
-                            { value: "masculino", label: "Masculino" },
-                            { value: "feminino", label: "Feminino" },
-                          ]}
+                          options={relationships.map((rel) => ({
+                            value: rel,
+                            label: relationshipLabels[rel],
+                          }))}
                           onChange={(selectedOption) => {
                             const newSiblings = [...siblings];
-                            newSiblings[index].sex = selectedOption.value;
+                            newSiblings[index].relation = selectedOption.value;
                             setSiblings(newSiblings);
                           }}
-                          placeholder="Selecione o sexo"
+                          placeholder="Selecione o parentesco"
                         />
                       </label>
                       <label>
@@ -178,12 +175,11 @@ export default function IrmaosIrmas2({ onFormChange }) {
                             newSiblings[index].type = selectedOptions;
                             setSiblings(newSiblings);
                           }}
-                          onClick={(e) => e.stopPropagation()}
                         />
                       </label>
                       <label className="ii-idade">
                         <div className="ii-idade-div">
-                          Idade
+                          Idade do diagnóstico
                           {sibling.showAgeDropdown ? (
                             <Select
                               options={ageOptions}
@@ -225,9 +221,9 @@ export default function IrmaosIrmas2({ onFormChange }) {
                             setTooltipIndex(
                               index === tooltipIndex ? null : index
                             )
-                          } // Alterna o tooltip ao clicar
+                          }
                         />
-                        {tooltipIndex === index && ( // Exiba o tooltip apenas se o index coincidir
+                        {tooltipIndex === index && (
                           <div className="tooltip-idade-ii">
                             Caso seu paciente não saiba a idade exata do
                             diagnóstico de câncer em um familiar, questione se
@@ -237,11 +233,10 @@ export default function IrmaosIrmas2({ onFormChange }) {
                           </div>
                         )}
                       </label>
-                      {/* Botão para remover irmão */}
                       <button
-                        className="ff-btn-delete"
                         type="button"
-                        onClick={() => handleRemoveSibling(index)}
+                        onClick={() => handleDeleteSibling(index)}
+                        className="ii-btn-delete"
                       >
                         <img src={DeleteIcon} alt="Deletar" />
                       </button>

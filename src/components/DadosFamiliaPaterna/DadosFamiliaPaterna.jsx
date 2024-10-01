@@ -81,7 +81,7 @@ export default function DadosFamiliaPaterna({ onClose, onBack, onAdvance }) {
           {!noKnowledge && (
             <>
               <label className="dfp-label">
-                O pai do Sr(a) já teve câncer ou neoplasia?
+                O pai do(a) Sr(a) já teve câncer ou neoplasia?
                 <div className="dfp-checkbox-group">
                   <label>
                     <input
@@ -127,7 +127,7 @@ export default function DadosFamiliaPaterna({ onClose, onBack, onAdvance }) {
                   <label className="dfp-label">
                     <div className="dfp-idade">
                       <span>
-                        Idade
+                        Idade do diagnóstico
                         {showAgeDropdowns[0] ? (
                           <Select
                             placeholder="Selecione a idade"
@@ -196,7 +196,7 @@ export default function DadosFamiliaPaterna({ onClose, onBack, onAdvance }) {
               {hasPaternalUnclesAunts && (
                 <>
                   <label className="dfp-label">
-                    Quantos tios?
+                    Quantidade de tios
                     <input
                       type="number"
                       value={uncleAuntQuantities.tios}
@@ -212,7 +212,7 @@ export default function DadosFamiliaPaterna({ onClose, onBack, onAdvance }) {
                   </label>
 
                   <label className="dfp-label">
-                    Quantas tias?
+                    Quantidade de tias
                     <input
                       type="number"
                       value={uncleAuntQuantities.tias}

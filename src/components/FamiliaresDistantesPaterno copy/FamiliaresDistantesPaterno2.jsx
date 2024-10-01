@@ -5,6 +5,7 @@ import { ageOptions } from "../../data/ageOptions";
 import "./FamiliaresDistantesPaterno2.css";
 import DeleteIcon from "../../assets/trash.svg";
 import PropTypes from "prop-types";
+import InfoIcon from "../../assets/information-2-fill.svg";
 
 const relationshipOptions = [
   { value: "meio-tio paterno", label: "Meio-Tio Paterno" },
@@ -23,54 +24,54 @@ const relationshipOptions = [
 ];
 
 export default function FamiliaresDistantesPaterno2({ onFormChange }) {
+  const [tooltipIndex, setTooltipIndex] = useState(null);
   const [distantesHadCancer, setDistantesHadCancer] = useState(null);
-const [distantesDetails, setDistantesDetails] = useState([
-  {
-    relationship: "",
-    cancerTypes: [],
-    showAgeDropdowns: [],
-    customRelationship: "",
-  },
-]);
+  const [distantesDetails, setDistantesDetails] = useState([
+    {
+      relationship: "",
+      cancerTypes: [],
+      showAgeDropdowns: [],
+      customRelationship: "",
+    },
+  ]);
 
-useEffect(() => {
-  const outroFamiliarList = [];
+  useEffect(() => {
+    const outroFamiliarList = [];
 
-  // Se não tiver conhecimento (distantesHadCancer === null), retorna uma lista vazia
-  if (distantesHadCancer === null) {
-    onFormChange({ outroFamiliarList: [] });
-    return;
-  }
-
-  // Mapeia distantesDetails para preencher outroFamiliarList
-  distantesDetails.forEach((distante, index) => {
-    // Se nenhum familiar distante teve câncer, adicione um objeto indicando isso
-    if (!distantesHadCancer) {
-      outroFamiliarList.push({
-        id: index,
-        teveCancer: false,
-        qualFamiliar: distante.relationship || distante.customRelationship,
-        outroCancerList: [], // Lista vazia se não teve câncer
-      });
-    } else {
-      // Caso contrário, retorna os dados reais
-      outroFamiliarList.push({
-        id: index,
-        teveCancer: true,
-        qualFamiliar: distante.relationship || distante.customRelationship,
-        outroCancerList: distante.cancerTypes.map((cancer) => ({
-          id: 0, // ID único para cada tipo de câncer
-          idadeDiagnostico: cancer.age || 0, // Certifique-se de pegar o valor diretamente
-          tipoCancer: cancer.label || "",
-        })),
-      });
+    // Se não tiver conhecimento (distantesHadCancer === null), retorna uma lista vazia
+    if (distantesHadCancer === null) {
+      onFormChange({ outroFamiliarList: [] });
+      return;
     }
-  });
 
-  // Chama a função de alteração de formulário com a lista atualizada
-  onFormChange({ outroFamiliarList });
-}, [distantesDetails, distantesHadCancer, onFormChange]);
+    // Mapeia distantesDetails para preencher outroFamiliarList
+    distantesDetails.forEach((distante, index) => {
+      // Se nenhum familiar distante teve câncer, adicione um objeto indicando isso
+      if (!distantesHadCancer) {
+        outroFamiliarList.push({
+          id: index,
+          teveCancer: false,
+          qualFamiliar: distante.relationship || distante.customRelationship,
+          outroCancerList: [], // Lista vazia se não teve câncer
+        });
+      } else {
+        // Caso contrário, retorna os dados reais
+        outroFamiliarList.push({
+          id: index,
+          teveCancer: true,
+          qualFamiliar: distante.relationship || distante.customRelationship,
+          outroCancerList: distante.cancerTypes.map((cancer) => ({
+            id: 0, // ID único para cada tipo de câncer
+            idadeDiagnostico: cancer.age || 0, // Certifique-se de pegar o valor diretamente
+            tipoCancer: cancer.label || "",
+          })),
+        });
+      }
+    });
 
+    // Chama a função de alteração de formulário com a lista atualizada
+    onFormChange({ outroFamiliarList });
+  }, [distantesDetails, distantesHadCancer, onFormChange]);
 
   const handleDistantesHadCancerChange = (value) => {
     setDistantesHadCancer(value);
@@ -151,7 +152,9 @@ useEffect(() => {
     <div className="fdp-content">
       <label>
         Algum outro familiar do seu lado paterno já teve câncer ou neoplasia?
-        <div className="fdm-subtitle">Familiares distantes como tios-avôs e primos de segundo grau</div>
+        <div className="fdm-subtitle">
+          Familiares distantes como tios-avôs e primos de segundo grau
+        </div>
         <div className="radio-group--fdp">
           <label>
             <input
@@ -227,37 +230,56 @@ useEffect(() => {
                 />
               </label>
               {distante.cancerTypes.map((cancer, typeIndex) => (
-                <div key={typeIndex} className="cancer-detail">
-                  <label>
-                    Idade do diagnóstico de {cancer.label}
-                    {distante.showAgeDropdowns[typeIndex] ? (
-                      <Select
-                        options={ageOptions}
-                        value={
-                          cancer.age
-                            ? { label: cancer.age, value: cancer.age }
-                            : null
-                        }
-                        onChange={(selectedOption) => {
-                          const newDetails = [...distantesDetails];
-                          newDetails[index].cancerTypes[typeIndex].age =
-                            selectedOption?.value || "";
-                          setDistantesDetails(newDetails);
-                        }}
-                      />
-                    ) : (
-                      <input
-                        type="text"
-                        placeholder="Digite a idade"
-                        value={cancer.age || ""}
-                        onChange={(e) => handleAgeChange(e, typeIndex, index)}
-                      />
-                    )}
-                    <button onClick={() => handleAgeToggle(typeIndex, index)}>
+                <div key={typeIndex}>
+                  <label className="fd-cancer-detail">
+                    <div className="cancer-detail-div">
+                      Idade do diagnóstico para ({cancer.label})
+                      {distante.showAgeDropdowns[typeIndex] ? (
+                        <Select
+                          options={ageOptions}
+                          value={
+                            cancer.age
+                              ? { label: cancer.age, value: cancer.age }
+                              : null
+                          }
+                          onChange={(selectedOption) => {
+                            const newDetails = [...distantesDetails];
+                            newDetails[index].cancerTypes[typeIndex].age =
+                              selectedOption?.value || "";
+                            setDistantesDetails(newDetails);
+                          }}
+                        />
+                      ) : (
+                        <input
+                          type="text"
+                          placeholder="Digite a idade"
+                          value={cancer.age || ""}
+                          onChange={(e) => handleAgeChange(e, typeIndex, index)}
+                        />
+                      )}
+                    </div>
+                    <button className="btn-ns" onClick={() => handleAgeToggle(typeIndex, index)}>
                       {distante.showAgeDropdowns[typeIndex]
                         ? "Digitar idade"
                         : "Não sei"}
                     </button>
+                    <img
+                        src={InfoIcon}
+                        alt="Info"
+                        className="info-icon-idade"
+                        onClick={() =>
+                          setTooltipIndex(index === tooltipIndex ? null : index)
+                        }
+                      />
+                      {tooltipIndex === index && (
+                        <div className="tooltip-idade">
+                          Caso seu paciente não saiba a idade exata do
+                          diagnóstico de câncer em um familiar, questione se foi
+                          antes ou depois dos 50 anos. Essa estimativa é mais
+                          fácil de lembrar e ainda oferece um corte de idade
+                          útil para a avaliação de risco.
+                        </div>
+                      )}
                   </label>
                 </div>
               ))}
@@ -272,9 +294,10 @@ useEffect(() => {
             </div>
           ))}
           {/* Botão "Informar +" movido para o final */}
-          <button className="nn-btn-add" onClick={handleAddMore}>
+          <div className="btn-fd">
+          <button className="fd-btn-add" onClick={handleAddMore}>
             Informar +
-          </button>
+          </button></div>
         </>
       )}
     </div>

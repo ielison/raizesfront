@@ -177,7 +177,7 @@ export default function SobrinhosSobrinhas2({ onFormChange }) {
                       </label>
                       <label className="ss-idade">
                         <div className="ss-idade-div">
-                          Idade
+                          Idade do diagnóstico
                           {sibling.showAgeDropdown ? (
                             <Select
                               options={ageOptions}

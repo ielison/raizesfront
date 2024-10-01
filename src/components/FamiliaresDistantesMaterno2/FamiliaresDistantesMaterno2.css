@@ -57,7 +57,9 @@
 }
 
 input[type="text" i] {
-  height: 32px;
+  height: 42px;
+  border-color: #cacaca73;
+  border-radius: 4px;
 }
 
 .btn-back,

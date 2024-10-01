@@ -9,9 +9,8 @@
 .dfm-form-container {
   display: flex;
   flex-direction: column;
-  width: 90%;
+  width: 100%;
   padding: 20px;
-  overflow-y: auto;
 }
 
 
@@ -42,46 +41,24 @@
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  font-size: 16px;
 }
 
 .dfm-checkbox {
   margin-right: 10px;
 }
 
-.dfm-btn-back {
-  background: white;
-  border: 1px solid var(--primary-500);
-  border-radius: 4px;
-  color: var(--primary-500);
-
-}
-
-.dfm-btn-back:hover {
-
-  background: var(--secondary-500);
-  color: black;
-  border-color: white;
-}
-
-.dfm-btn-next {
-  background: var(--primary-500);
-}
-
-.dfm-btn-next:hover {
-  background: var(--primary-700);
-}
 
 .dfm-toggle-button {
-  background: white;
-  color: var(--primary-500);
+  background: var(--primary-500);
+  color: white;
   border: 1px solid var(--primary-500);
   padding: 5px 10px;
   margin-top: 5px;
 }
 
 .dfm-toggle-button:hover {
-  background: #007bff;
-  color: #fff;
+  background: var(--primary-700);
 }
 
 .dfm-form-buttons {
@@ -101,12 +78,18 @@
 
 .dfm-idade {
   display: flex;
-  justify-content: flex-start;
+  flex-direction: row;
+  gap: 22px;
   align-items: flex-end;
-  gap: 10px;
+  justify-content: space-between;
+  margin-top: 8px;
 }
 
 .dfm-idade span {
   display: flex;
   flex-direction: column;
+}
+
+.dfm-cancer-detail{
+  margin-bottom: 16px;
 }

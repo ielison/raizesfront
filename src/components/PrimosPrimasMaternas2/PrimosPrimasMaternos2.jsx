@@ -1,18 +1,70 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
-import "./PrimosPrimasMaternos2.css";
-import DeleteIcon from "../../assets/trash.svg";
+import "./PrimosPrimasMaternos2.css"; // Altere para o CSS apropriado
 import InfoIcon from "../../assets/information-2-fill.svg"; // Importe o SVG aqui
+import PropTypes from "prop-types";
+import DeleteIcon from "../../assets/trash.svg";
 
-export default function PrimosPrimasMaternos2() {
+export default function PrimosPrimasMaternos2({ onFormChange }) {
   const [tooltipIndex, setTooltipIndex] = useState(null);
-  const [noKnowledge, setNoKnowledge] = useState(false);
-  const [primosHadCancer, setPrimosHadCancer] = useState(null);
+  const [noKnowledge, setNoKnowledge] = useState(false); // Inicializa como false
+  const [primosHadCancer, setPrimosHadCancer] = useState(false);
   const [primosDetails, setPrimosDetails] = useState([
     { relationship: "", type: null, ages: [], showAgeDropdown: false },
   ]);
+
+  useEffect(() => {
+    const primosList = [];
+
+    // Se não tiver conhecimento, retorna dados apropriados
+    if (noKnowledge) {
+      onFormChange({ primosList: [] }); // Retorna uma lista vazia se não houver conhecimento
+      return;
+    }
+
+    // Mapeia primosDetails para preencher primosList
+    primosDetails.forEach((primo, index) => {
+      // Se nenhum primo teve câncer, adicione um objeto indicando isso
+      if (!primosHadCancer) {
+        primosList.push({
+          id: index,
+          temPrimos: true,
+          qtdPrimos: primosDetails.length,
+          teveCancer: false,
+          qtdPrimosCancer: 0,
+          ladoMaterno: primo.relationship,
+          sexo: primo.relationship === "primo" ? "masculino" : "feminino",
+          outroCancerList: [],
+        });
+      } else {
+        // Caso contrário, retorna os dados reais
+        primosList.push({
+          id: index,
+          temPrimos: true,
+          qtdPrimos: primosDetails.length,
+          teveCancer: true,
+          qtdPrimosCancer: primo.type ? primo.type.length : 0,
+          ladoMaterno: primo.relationship,
+          sexo: primo.relationship === "primo" ? "masculino" : "feminino",
+          outroCancerList: primo.type
+            ? primo.type.map((opt, typeIndex) => {
+                const ageDetail = primo.ages[typeIndex];
+                return {
+                  id: 0, // ID único para cada tipo de câncer
+                  idadeDiagnostico: ageDetail.age || "", // Certifique-se de pegar o valor diretamente
+                  tipoCancer: opt.label,
+                };
+              })
+            : [],
+        });
+      }
+    });
+
+    // Chama a função de alteração de formulário com a lista atualizada
+    onFormChange({ primosList });
+  }, [primosDetails, primosHadCancer, onFormChange, noKnowledge]);
 
   const handleCancerChange = (value) => {
     setPrimosHadCancer(value);
@@ -51,11 +103,11 @@ export default function PrimosPrimasMaternos2() {
   };
 
   return (
-    <div className="ppm-form-container">
-      <div className="ppm-grupo">
+    <div className="ppp-form-container">
+      <div className="ppp-grupo">
         <label>
-          Algum primo ou prima do seu lado materno já teve câncer ou neoplasia?
-          <div className="ppm-checkbox-group">
+          Algum/alguns primos maternos já foram acometidos?
+          <div className="ppp-checkbox-group">
             <label>
               <input
                 type="radio"
@@ -63,7 +115,7 @@ export default function PrimosPrimasMaternos2() {
                 checked={primosHadCancer === true}
                 onChange={() => handleCancerChange(true)}
               />
-              Algum/alguns primos maternos já foram acometidos
+              Sim
             </label>
             <label>
               <input
@@ -72,19 +124,7 @@ export default function PrimosPrimasMaternos2() {
                 checked={primosHadCancer === false}
                 onChange={() => handleCancerChange(false)}
               />
-              Nenhum dos meus primos maternos foram acometidos
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="primosCancer"
-                checked={noKnowledge}
-                onChange={() => {
-                  setNoKnowledge(true);
-                  setPrimosHadCancer(null);
-                }}
-              />
-              Não tenho conhecimento da saúde dos meus primos maternos
+              Não
             </label>
           </div>
         </label>
@@ -93,9 +133,10 @@ export default function PrimosPrimasMaternos2() {
           <>
             {primosDetails.map((primo, index) => (
               <div key={index}>
-                <label>
+                <label className="pp-parentesco">
                   Parentesco:
                   <select
+                    className="pp-parentesco-select"
                     value={primo.relationship}
                     onChange={(e) => {
                       const newDetails = [...primosDetails];
@@ -123,71 +164,83 @@ export default function PrimosPrimasMaternos2() {
                 {primo.type &&
                   primo.ages.map((ageDetail, ageIndex) => (
                     <label key={ageIndex}>
-                      Idade do diagnóstico de {ageDetail.cancerName}:
-                      {ageDetail.showAgeDropdown ? (
-                        <Select
-                          placeholder="Selecione.."
-                          options={ageOptions}
-                          value={ageDetail.age}
-                          onChange={(selectedOption) => {
-                            const newDetails = [...primosDetails];
-                            newDetails[index].ages[ageIndex].age =
-                              selectedOption;
-                            setPrimosDetails(newDetails);
-                          }}
-                        />
-                      ) : (
-                        <input
-                          type="number"
-                          value={ageDetail.age}
-                          onChange={(e) => {
-                            const newDetails = [...primosDetails];
-                            newDetails[index].ages[ageIndex].age =
-                              e.target.value;
-                            setPrimosDetails(newDetails);
-                          }}
-                        />
-                      )}
-                      <button
-                        type="button"
-                        className="ppm-toggle-button"
-                        onClick={() => {
-                          const newDetails = [...primosDetails];
-                          newDetails[index].ages[ageIndex].showAgeDropdown =
-                            !newDetails[index].ages[ageIndex].showAgeDropdown;
-                          setPrimosDetails(newDetails);
-                        }}
-                      >
-                        {ageDetail.showAgeDropdown
-                          ? "Digitar idade"
-                          : "Não sei"}
-                      </button>
-                      <img
-                        src={InfoIcon}
-                        alt="Info"
-                        className="info-icon-idade"
-                        onClick={() =>
-                          setTooltipIndex(
-                            ageIndex === tooltipIndex ? null : ageIndex
-                          )
-                        }
-                      />
-                      {tooltipIndex === ageIndex && (
-                        <div className="tooltip-idade--pp">
-                          Caso seu paciente não saiba a idade exata do
-                          diagnóstico de câncer em um familiar, questione se foi
-                          antes ou depois dos 50 anos. Essa estimativa é mais
-                          fácil de lembrar e ainda oferece um corte de idade
-                          útil para a avaliação de risco.
+                      <div className="pp-idade">
+                        <div>
+                          Idade do diagnóstico para ({ageDetail.cancerName}):
+                          {ageDetail.showAgeDropdown ? (
+                            <Select
+                              placeholder="Selecione.."
+                              options={ageOptions}
+                              value={
+                                ageDetail.age
+                                  ? {
+                                      value: ageDetail.age,
+                                      label: ageDetail.age,
+                                    }
+                                  : null
+                              }
+                              onChange={(selectedOption) => {
+                                const newDetails = [...primosDetails];
+                                newDetails[index].ages[ageIndex].age =
+                                  selectedOption.value; // Armazena apenas o valor
+                                setPrimosDetails(newDetails);
+                              }}
+                            />
+                          ) : (
+                            <input
+                              type="number"
+                              value={ageDetail.age}
+                              onChange={(e) => {
+                                const newDetails = [...primosDetails];
+                                newDetails[index].ages[ageIndex].age =
+                                  e.target.value; // Atualiza a idade
+                                setPrimosDetails(newDetails);
+                              }}
+                            />
+                          )}
                         </div>
-                      )}
+                        <button
+                          type="button"
+                          className="ppp-toggle-button"
+                          onClick={() => {
+                            const newDetails = [...primosDetails];
+                            newDetails[index].ages[ageIndex].showAgeDropdown =
+                              !newDetails[index].ages[ageIndex].showAgeDropdown;
+                            setPrimosDetails(newDetails);
+                          }}
+                        >
+                          {ageDetail.showAgeDropdown
+                            ? "Digitar idade"
+                            : "Não sei"}
+                        </button>
+                        <img
+                          src={InfoIcon}
+                          alt="Info"
+                          className="info-icon-idade"
+                          onClick={() =>
+                            setTooltipIndex(
+                              ageIndex === tooltipIndex ? null : ageIndex
+                            )
+                          }
+                        />
+                        {tooltipIndex === ageIndex && (
+                          <div className="tooltip-idade--pp">
+                            Caso seu paciente não saiba a idade exata do
+                            diagnóstico de câncer em um familiar, questione se
+                            foi antes ou depois dos 50 anos. Essa estimativa é
+                            mais fácil de lembrar e ainda oferece um corte de
+                            idade útil para a avaliação de risco.
+                          </div>
+                        )}
+                      </div>
                     </label>
                   ))}
+
                 {/* Botão para remover primo */}
                 <button
+                  className="ff-btn-delete"
                   type="button"
                   onClick={() => handleRemovePrimo(index)}
-                  className="ppm-delete-button"
                 >
                   <img src={DeleteIcon} alt="Deletar" />
                 </button>
@@ -207,3 +260,7 @@ export default function PrimosPrimasMaternos2() {
     </div>
   );
 }
+
+PrimosPrimasMaternos2.propTypes = {
+  onFormChange: PropTypes.func.isRequired,
+};

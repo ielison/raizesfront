@@ -1,13 +1,13 @@
  .avosm-form-container {
    display: flex;
    flex-direction: column;
-   width: 100%;
-   padding: 20px;
-   overflow-y: auto;
+   background: #fff;
+   border-radius: 8px;
+   width: 95%;
  }
 
- .avosm-grupo{
-  padding: 20px;
+ .avosm-grupo {
+   padding: 20px;
  }
 
  .tooltip-idade-ii {
@@ -24,6 +24,14 @@
    margin-bottom: 85px;
    /* Espaço entre o tooltip e o ícone */
    color: #3f3f3f;
+ }
+
+ .avos-idade {
+   display: flex;
+   flex-direction: row;
+   gap: 22px;
+   align-items: flex-end;
+   justify-content: space-between;
  }
 
  .info-icon-idade {
@@ -82,25 +90,17 @@
    margin-right: 10px;
  }
 
- .avosm-btn-back {
-   background: #6c757d;
- }
-
- .avosm-btn-next {
-   background: #007bff;
- }
 
  .avosm-toggle-button {
-   background: #f8f9fa;
-   color: #007bff;
-   border: 1px solid #007bff;
+   background: var(--primary-500);
+   color: white;
+   border: 1px solid var(--primary-500);
    padding: 5px 10px;
    margin-top: 5px;
  }
 
  .avosm-toggle-button:hover {
-   background: #007bff;
-   color: #fff;
+   background: var(--primary-700);
  }
 
  .avosm-form-buttons {

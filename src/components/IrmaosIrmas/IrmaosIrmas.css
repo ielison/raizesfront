@@ -25,14 +25,14 @@
   transition: all 0.3s ease-in-out;
 }
 
-.ii-form-container {
+/* .ii-form-container {
   display: flex;
   flex-direction: column;
   width: 100%;
   padding: 20px;
   overflow-y: auto;
   margin-bottom: 10px;
-}
+} */
 
 .ii-form-buttons {
   display: flex;
@@ -153,7 +153,7 @@
   align-items: flex-end;
 }
 
-.ii-btn-add {
+/* .ii-btn-add {
   background: none;
   color: rgb(119, 119, 119);
   border: none;
@@ -163,11 +163,11 @@
   font-weight: bold;
   align-self: flex-end;
   transition: color 0.3s ease;
-}
+} */
 
-.ii-btn-add:hover {
+/* .ii-btn-add:hover {
   color: var(--primary-500);
-}
+} */
 
 .tooltip-idade-ii {
   background: #333;
@@ -188,9 +188,9 @@
     flex-direction: column;
   }
 
-  .ii-form-container {
+  /* .ii-form-container {
     padding: 10px;
-  }
+  } */
 
   .ii-form-buttons {
     flex-direction: column;

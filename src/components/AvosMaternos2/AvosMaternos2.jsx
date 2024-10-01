@@ -163,7 +163,7 @@ export default function AvosMaternos2({ onFormChange }) {
             {grandmotherHadCancer && (
               <>
                 <label className="avosm-label">
-                  Tipo de câncer ou neoplasia da minha avó:
+                  Tipo de câncer ou neoplasia da avó:
                   <Select
                     isMulti
                     placeholder="Selecione o tipo de câncer"
@@ -178,36 +178,38 @@ export default function AvosMaternos2({ onFormChange }) {
 
                 {grandmotherCancerDetails.map((detail, index) => (
                   <div key={index}>
-                    <label className="avosm-label">
-                      Idade do diagnóstico de {detail.type.label}:
-                      {detail.showAgeDropdown ? (
-                        <Select
-                          placeholder="Selecione a idade"
-                          options={ageOptions}
-                          value={detail.age}
-                          onChange={(selectedOption) =>
-                            setGrandmotherCancerDetails((prevDetails) => {
-                              const newDetails = [...prevDetails];
-                              newDetails[index].age = selectedOption;
-                              return newDetails;
-                            })
-                          }
-                          className="avosm-select"
-                        />
-                      ) : (
-                        <input
-                          type="number"
-                          value={detail.age}
-                          onChange={(e) =>
-                            setGrandmotherCancerDetails((prevDetails) => {
-                              const newDetails = [...prevDetails];
-                              newDetails[index].age = e.target.value;
-                              return newDetails;
-                            })
-                          }
-                          className="avosm-input"
-                        />
-                      )}
+                    <label className="avos-idade">
+                      <div>
+                        Idade do diagnóstico para ({detail.type.label}):
+                        {detail.showAgeDropdown ? (
+                          <Select
+                            placeholder="Selecione a idade"
+                            options={ageOptions}
+                            value={detail.age}
+                            onChange={(selectedOption) =>
+                              setGrandmotherCancerDetails((prevDetails) => {
+                                const newDetails = [...prevDetails];
+                                newDetails[index].age = selectedOption;
+                                return newDetails;
+                              })
+                            }
+                            className="avosm-select"
+                          />
+                        ) : (
+                          <input
+                            type="number"
+                            value={detail.age}
+                            onChange={(e) =>
+                              setGrandmotherCancerDetails((prevDetails) => {
+                                const newDetails = [...prevDetails];
+                                newDetails[index].age = e.target.value;
+                                return newDetails;
+                              })
+                            }
+                            className="avosm-input"
+                          />
+                        )}
+                      </div>
                       <button
                         type="button"
                         onClick={() => handleAgeToggle(index, true)}
@@ -241,7 +243,7 @@ export default function AvosMaternos2({ onFormChange }) {
             {grandfatherHadCancer && (
               <>
                 <label className="avosm-label">
-                  Tipo de câncer ou neoplasia do meu avô:
+                  Tipo de câncer ou neoplasia do avô:
                   <Select
                     isMulti
                     placeholder="Selecione o tipo de câncer"
@@ -256,36 +258,38 @@ export default function AvosMaternos2({ onFormChange }) {
 
                 {grandfatherCancerDetails.map((detail, index) => (
                   <div key={index}>
-                    <label className="avosm-label">
-                      Idade para o diagnóstico de {detail.type.label}:
-                      {detail.showAgeDropdown ? (
-                        <Select
-                          placeholder="Selecione a idade"
-                          options={ageOptions}
-                          value={detail.age}
-                          onChange={(selectedOption) =>
-                            setGrandfatherCancerDetails((prevDetails) => {
-                              const newDetails = [...prevDetails];
-                              newDetails[index].age = selectedOption;
-                              return newDetails;
-                            })
-                          }
-                          className="avosm-select"
-                        />
-                      ) : (
-                        <input
-                          type="number"
-                          value={detail.age}
-                          onChange={(e) =>
-                            setGrandfatherCancerDetails((prevDetails) => {
-                              const newDetails = [...prevDetails];
-                              newDetails[index].age = e.target.value;
-                              return newDetails;
-                            })
-                          }
-                          className="avosm-input"
-                        />
-                      )}
+                    <label className="avos-idade">
+                      <div>
+                        Idade do diagnóstico para ({detail.type.label}):
+                        {detail.showAgeDropdown ? (
+                          <Select
+                            placeholder="Selecione a idade"
+                            options={ageOptions}
+                            value={detail.age}
+                            onChange={(selectedOption) =>
+                              setGrandfatherCancerDetails((prevDetails) => {
+                                const newDetails = [...prevDetails];
+                                newDetails[index].age = selectedOption;
+                                return newDetails;
+                              })
+                            }
+                            className="avosm-select"
+                          />
+                        ) : (
+                          <input
+                            type="number"
+                            value={detail.age}
+                            onChange={(e) =>
+                              setGrandfatherCancerDetails((prevDetails) => {
+                                const newDetails = [...prevDetails];
+                                newDetails[index].age = e.target.value;
+                                return newDetails;
+                              })
+                            }
+                            className="avosm-input"
+                          />
+                        )}
+                      </div>
                       <button
                         type="button"
                         onClick={() => handleAgeToggle(index, false)}

@@ -65,6 +65,7 @@
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  font-size: 16px;
 }
 
 .dfm-checkbox {
@@ -94,7 +95,7 @@
   background: var(--primary-700);
 }
 
-.dfm-toggle-button {
+/* .dfm-toggle-button {
   background: white;
   color: var(--primary-500);
   border: 1px solid var(--primary-500);
@@ -105,7 +106,7 @@
 .dfm-toggle-button:hover {
   background: #007bff;
   color: #fff;
-}
+} */
 
 .dfm-form-buttons {
   display: flex;

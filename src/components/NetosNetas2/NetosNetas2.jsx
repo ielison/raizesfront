@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import Select from "react-select";
 import PropTypes from "prop-types";
 import { cancerOptions } from "../../data/cancerOptions";
-import { ageOptions } from "../../data/ageOptions"; // Import ageOptions
-import InfoIcon from "../../assets/information-2-fill.svg"; // Importe o SVG aqui
-import DeleteIcon from "../../assets/trash.svg"; // Importe o ícone de deletar aqui
+import { ageOptions } from "../../data/ageOptions";
+import InfoIcon from "../../assets/information-2-fill.svg";
+import DeleteIcon from "../../assets/trash.svg";
 import "./NetosNetas2.css";
 
 export default function NetosNetas2({ onFormChange }) {
@@ -12,6 +12,8 @@ export default function NetosNetas2({ onFormChange }) {
   const [hasCancer, setHasCancer] = useState(false);
   const [grandchildren, setGrandchildren] = useState([]);
   const [tooltipIndex, setTooltipIndex] = useState(null);
+  const [grandsonCount, setGrandsonCount] = useState(0);
+  const [granddaughterCount, setGranddaughterCount] = useState(0);
 
   useEffect(() => {
     // Atualiza os dados dos netos e netas ao mudar
@@ -19,7 +21,7 @@ export default function NetosNetas2({ onFormChange }) {
       netosList: grandchildren.map((grandchild, index) => ({
         id: index,
         temNetos: true,
-        qtdNetos: grandchildren.length,
+        qtdNetos: grandsonCount + granddaughterCount, // Total count of grandchildren
         teveCancer: hasCancer,
         qtdNetosCancer: grandchild.type.length > 0 ? grandchild.type.length : 0,
         sexo: grandchild.sex,
@@ -31,7 +33,7 @@ export default function NetosNetas2({ onFormChange }) {
         })),
       })),
     });
-  }, [grandchildren, hasCancer, onFormChange]);
+  }, [grandchildren, hasCancer, grandsonCount, granddaughterCount, onFormChange]);
 
   const handleAddGrandchild = () => {
     setGrandchildren([
@@ -82,6 +84,31 @@ export default function NetosNetas2({ onFormChange }) {
 
       {hasGrandchildren && (
         <>
+          <div className="qtd-netos">
+            <label>
+              Quantidade de neto(s)
+              <input
+                type="number"
+                onChange={(e) => {
+                  const value = e.target.value;
+                  const count = value >= 0 ? parseInt(value) : 0;
+                  setGrandsonCount(count);
+                }}
+              />
+            </label>
+            <label>
+              Quantidade de neta(s)
+              <input
+                type="number"
+                onChange={(e) => {
+                  const value = e.target.value;
+                  const count = value >= 0 ? parseInt(value) : 0;
+                  setGranddaughterCount(count);
+                }}
+              />
+            </label>
+          </div>
+
           <label>
             Algum deles já teve câncer ou algum outro tipo de neoplasia?
             <div className="checkbox-group">
@@ -116,8 +143,8 @@ export default function NetosNetas2({ onFormChange }) {
                     Parentesco
                     <Select
                       options={[
-                        { value: "masculino", label: "Neto" },
-                        { value: "feminino", label: "Neta" },
+                        { value: "neto", label: "Neto" },
+                        { value: "neta", label: "Neta" },
                       ]}
                       onChange={(selectedOption) => {
                         const newGrandchildren = [...grandchildren];

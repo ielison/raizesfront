@@ -28,10 +28,37 @@
 .fdm-subtitle {
   color: #6d6d6d;
   font-style: italic;
-  font-size: 12px;
+  font-size: 14px;
   margin: 8px 0px;
 }
 
+.fd-cancer-detail {
+  display: flex;
+  align-items: flex-end;
+  gap: 24px;
+  justify-content: space-between;
+}
+.btn-fd{
+  display: flex;
+  justify-content: flex-end;
+}
+
+.fd-btn-add{
+  display: flex;
+  background: none;
+  color: rgb(119, 119, 119);
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  font-size: 24x;
+  font-weight: bold;
+  align-self: flex-end;
+}
+
+.cancer-detail-div{
+  display: flex;
+  flex-direction: column;
+}
 
 .fdp-form-container {
   display: flex;
@@ -69,12 +96,17 @@
   margin-bottom: 10px;
 }
 
+.btn-ns{
+  height: 42px;
+}
+
 .fdp-input[type="number"],
 .fdp-input[type="text"] {
   width: 100%;
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  height: 42px;
 }
 
 .fdp-checkbox {
