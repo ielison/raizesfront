@@ -432,31 +432,31 @@ export default function PacienteModal({ onClose }) {
         body: JSON.stringify(updatedData), // Envia a cópia com a data atualizada
       })
         .then((response) => {
-          console.log("Response status:", response.status);
-          console.log("Response body:", response);
+          console.log("Response status:", response.status); // Mostra o status da resposta
           if (response.ok) {
-            return response.text(); // Se a resposta for texto simples
+            console.log("Resposta OK da API."); // Log se a resposta for OK (200)
+            return "OK"; // Retorna 'OK' sem tentar ler o corpo da resposta
           } else {
             throw new Error("Erro ao enviar os dados: " + response.statusText);
           }
         })
         .then((message) => {
-          console.log("Resposta da API:", message);
+          console.log("Resposta da API:", message); // Exibe "OK" se o status for 200
           setIsCompleted(true); // Indica que a submissão foi concluída
           setIsLoading(false); // Para a animação de carregamento
         })
         .catch((error) => {
-          console.error("Erro:", error);
-          console.error("Erro ao enviar os dados:", error.message);
+          console.error("Erro:", error); // Exibe o erro no console
           setIsLoading(false); // Para a animação em caso de erro
         })
         .finally(() => {
-          setIsLoading(false);
-          onClose(); // Close the modal after completing
+          setIsLoading(false); // Garante que a animação de carregamento será parada
+          onClose(); // Fecha o modal após completar
           localStorage.removeItem("formData"); // Limpa o localStorage
           sessionStorage.clear(); // Limpa o sessionStorage, se necessário
-          console.log("Cadastro finalizado, aguarde"); // Log for completed registration
+          console.log("Cadastro finalizado, aguarde"); // Log final para confirmar o término do processo
         });
+      
     } else {
       if (currentSubItem < steps[currentStep].subItems.length - 1) {
         setCurrentSubItem(currentSubItem + 1);

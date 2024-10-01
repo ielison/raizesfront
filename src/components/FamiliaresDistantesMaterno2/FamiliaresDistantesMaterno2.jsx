@@ -111,6 +111,7 @@ export default function FamiliaresDistantesMaterno2() {
     <div className="fdm-content">
       <label>
         Algum outro familiar do seu lado materno já teve câncer ou neoplasia?
+        <div className="fdm-subtitle">Familiares distantes como tios-avôs e primos de segundo grau</div>
         <div className="radio-group--fdm">
           <label>
             <input

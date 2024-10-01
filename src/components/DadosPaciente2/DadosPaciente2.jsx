@@ -30,10 +30,10 @@ export default function DadosPaciente2({ onFormChange }) {
       storedUserData || {
         nome: "",
         sexo: "",
-        idade: 0,
+        idade: "",
         teveCancer: false,
         qualCancer: "",
-        idadeDiagnostico: 0,
+        idadeDiagnostico: "",
         telefone: "",
         dataConsulta: "",
       }
@@ -95,6 +95,18 @@ export default function DadosPaciente2({ onFormChange }) {
     const updatedDiagnoses = [...diagnoses];
     updatedDiagnoses[index][field] = value;
     setDiagnoses(updatedDiagnoses);
+  };
+
+  const customStyles = {
+    placeholder: (provided) => ({
+      ...provided,
+      color: "grey", // Cor do placeholder
+      fontSize: "14px", // Tamanho da fonte
+    }),
+    control: (provided) => ({
+      ...provided,
+      height: "42px", // Altura do campo
+    }),
   };
 
   return (
@@ -189,6 +201,7 @@ export default function DadosPaciente2({ onFormChange }) {
             <label style={{ flex: 1, marginRight: "10px" }}>
               Qual tipo de câncer ou neoplasia o(a) Sr(a) teve?
               <Select
+                styles={customStyles}
                 isMulti
                 options={cancerOptions}
                 placeholder="Selecione..."
