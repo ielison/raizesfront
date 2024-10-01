@@ -9,37 +9,63 @@ import DeleteIcon from "../../assets/trash.svg";
 
 export default function PrimosPrimasPaternos2({ onFormChange }) {
   const [tooltipIndex, setTooltipIndex] = useState(null);
-  const [noKnowledge, setNoKnowledge] = useState(false);
-  const [primosHadCancer, setPrimosHadCancer] = useState(null);
+  const [noKnowledge, setNoKnowledge] = useState(true);
+  const [primosHadCancer, setPrimosHadCancer] = useState(false);
   const [primosDetails, setPrimosDetails] = useState([
     { relationship: "", type: null, ages: [], showAgeDropdown: false },
   ]);
 
   useEffect(() => {
-    // Atualiza os dados dos primos ao mudar
-    onFormChange({
-      primosList: primosDetails.map((primo, index) => ({
-        id: index,
-        temPrimos: true,
-        qtdPrimos: primosDetails.length,
-        teveCancer: primosHadCancer,
-        qtdPrimosCancer: primo.type ? primo.type.length : 0,
-        ladoPaterno: primo.relationship,
-        sexo: primo.relationship === "primo" ? "masculino" : "feminino",
-        outroCancerList: primo.type
-          ? primo.type.map((opt, typeIndex) => {
-              const ageDetail = primo.ages[typeIndex];
-              return {
-                id: 0, // ID único para cada tipo de câncer
-                idadeDiagnostico: ageDetail.age || "", // Certifique-se de pegar o valor diretamente
-                tipoCancer: opt.label,
-              };
-            })
-          : [],
-      })),
-    });
-  }, [primosDetails, primosHadCancer, onFormChange]);
+    const primosList = [];
 
+    // Se não tiver conhecimento, retorna dados apropriados
+    if (noKnowledge) {
+      onFormChange({ primosList: [] }); // Retorna uma lista vazia se não houver conhecimento
+      return;
+    }
+
+    // Mapeia primosDetails para preencher primosList
+    primosDetails.forEach((primo, index) => {
+      // Se nenhum primo teve câncer, adicione um objeto indicando isso
+      if (!primosHadCancer) {
+        primosList.push({
+          id: index,
+          temPrimos: true,
+          qtdPrimos: primosDetails.length,
+          teveCancer: false,
+          qtdPrimosCancer: 0,
+          ladoPaterno: primo.relationship,
+          sexo: primo.relationship === "primo" ? "masculino" : "feminino",
+          outroCancerList: [],
+        });
+      } else {
+        // Caso contrário, retorna os dados reais
+        primosList.push({
+          id: index,
+          temPrimos: true,
+          qtdPrimos: primosDetails.length,
+          teveCancer: true,
+          qtdPrimosCancer: primo.type ? primo.type.length : 0,
+          ladoPaterno: primo.relationship,
+          sexo: primo.relationship === "primo" ? "masculino" : "feminino",
+          outroCancerList: primo.type
+            ? primo.type.map((opt, typeIndex) => {
+                const ageDetail = primo.ages[typeIndex];
+                return {
+                  id: 0, // ID único para cada tipo de câncer
+                  idadeDiagnostico: ageDetail.age || "", // Certifique-se de pegar o valor diretamente
+                  tipoCancer: opt.label,
+                };
+              })
+            : [],
+        });
+      }
+    });
+
+    // Chama a função de alteração de formulário com a lista atualizada
+    onFormChange({ primosList });
+  }, [primosDetails, primosHadCancer, onFormChange, noKnowledge]);
+  
   const handleCancerChange = (value) => {
     setPrimosHadCancer(value);
     if (value === true || value === false) {

@@ -130,6 +130,7 @@ export default function PacienteModal({ onClose }) {
         qtdSobrinhos: 0,
         teveCancer: false,
         qtdSobrinhosCancer: 0,
+        meioSobrinho: false,
         sexo: "",
         outroCancerList: [
           {
@@ -147,8 +148,8 @@ export default function PacienteModal({ onClose }) {
         qtdTios: 0,
         teveCancer: false,
         qtdTiosCancer: 0,
-        sexo: "",
         ladoParterno: "",
+        sexo: "",
         outroCancerList: [
           {
             id: 0,
@@ -174,7 +175,12 @@ export default function PacienteModal({ onClose }) {
     primosList: [
       {
         id: 0,
+        temPrimos: true,
+        qtdPrimos: 0,
         teveCancer: false,
+        qtdPrimosCancer: 0,
+        ladoPaterno: "", 
+        sexo: "", 
         outroCancerList: [
           {
             id: 0,
@@ -188,6 +194,7 @@ export default function PacienteModal({ onClose }) {
       {
         id: 0,
         teveCancer: false,
+        qualFamiliar: "",
         outroCancerList: [
           {
             id: 0,
@@ -595,7 +602,7 @@ export default function PacienteModal({ onClose }) {
 function SubItem1({ onFormChange }) {
   return (
     <div>
-      <div>Etapa 1 - Dados do paciente</div>
+      <div className="paciente-modal-title">Etapa 1 - Dados do paciente</div>
       <DadosPaciente2 onFormChange={onFormChange} />
     </div>
   );
@@ -604,7 +611,7 @@ function SubItem1({ onFormChange }) {
 function SubItem2({ onFormChange }) {
   return (
     <div>
-      <div>Etapa 1 - Filhos e filhas</div>
+      <div className="paciente-modal-title">Etapa 1 - Filhos e filhas</div>
       <FilhosFilhas2 onFormChange={onFormChange} />
     </div>
   );
@@ -613,7 +620,7 @@ function SubItem2({ onFormChange }) {
 function SubItem3({ onFormChange }) {
   return (
     <div>
-      <div>Etapa 1 - Netos e netas</div>
+      <div className="paciente-modal-title">Etapa 1 - Netos e netas</div>
       <NetosNetas2 onFormChange={onFormChange} />
     </div>
   );
@@ -622,7 +629,7 @@ function SubItem3({ onFormChange }) {
 function SubItem4({ onFormChange }) {
   return (
     <>
-      <div>Etapa 1 - Irmãos e irmãs</div>
+      <div className="paciente-modal-title">Etapa 1 - Irmãos e irmãs</div>
       <IrmaosIrmas2 onFormChange={onFormChange} />
     </>
   );
@@ -631,7 +638,9 @@ function SubItem4({ onFormChange }) {
 function SubItem5({ onFormChange }) {
   return (
     <div>
-      <div>Etapa 1 - Sobrinhos e sobrinhas</div>
+      <div className="paciente-modal-title">
+        Etapa 1 - Sobrinhos e sobrinhas
+      </div>
       <SobrinhoSobrinha2 onFormChange={onFormChange} />
     </div>
   );
@@ -640,7 +649,9 @@ function SubItem5({ onFormChange }) {
 function SubItem6({ onFormChange }) {
   return (
     <div>
-      <div>Etapa 2 - Dados da família materna</div>
+      <div className="paciente-modal-title">
+        Etapa 2 - Dados da família materna
+      </div>
       <DadosFamiliaMaterna2 onFormChange={onFormChange} />
     </div>
   );
@@ -649,7 +660,7 @@ function SubItem6({ onFormChange }) {
 function SubItem7({ onFormChange }) {
   return (
     <div>
-      <div>Etapa 2 - Avós maternos</div>
+      <div className="paciente-modal-title">Etapa 2 - Avós maternos</div>
       <AvosMaternos2 onFormChange={onFormChange} />
     </div>
   );
@@ -658,7 +669,7 @@ function SubItem7({ onFormChange }) {
 function SubItem8({ onFormChange }) {
   return (
     <div>
-      <div>Etapa 2 - Primos e primas</div>
+      <div className="paciente-modal-title">Etapa 2 - Primos e primas</div>
       <PrimosPrimasMaternos2 onFormChange={onFormChange} />
     </div>
   );
@@ -667,7 +678,7 @@ function SubItem8({ onFormChange }) {
 function SubItem9({ onFormChange }) {
   return (
     <div>
-      <div>Etapa 2 - Familiares distantes</div>
+      <div className="paciente-modal-title">Etapa 2 - Familiares distantes</div>
       <FamiliaresDistantesMaterno2 onFormChange={onFormChange} />
     </div>
   );
@@ -676,7 +687,9 @@ function SubItem9({ onFormChange }) {
 function SubItem10({ onFormChange }) {
   return (
     <div>
-      <div>Etapa 3 - Dados da família paterna</div>
+      <div className="paciente-modal-title">
+        Etapa 3 - Dados da família paterna
+      </div>
       <DadosFamiliaPaterna2 onFormChange={onFormChange} />
     </div>
   );
@@ -685,7 +698,7 @@ function SubItem10({ onFormChange }) {
 function SubItem11({ onFormChange }) {
   return (
     <div>
-      <div>Etapa 3 - Avós paternos</div>
+      <div className="paciente-modal-title">Etapa 3 - Avós paternos</div>
       <AvosPaternos2 onFormChange={onFormChange} />
     </div>
   );
@@ -694,7 +707,7 @@ function SubItem11({ onFormChange }) {
 function SubItem12({ onFormChange }) {
   return (
     <div>
-      <div>Etapa 3 - Primos e primas</div>
+      <div className="paciente-modal-title">Etapa 3 - Primos e primas</div>
       <PrimosPrimasPaternos2 onFormChange={onFormChange} />
     </div>
   );
@@ -703,7 +716,7 @@ function SubItem12({ onFormChange }) {
 function SubItem13({ onFormChange }) {
   return (
     <div>
-      <div>Etapa 3 - Familiares distantes</div>
+      <div className="paciente-modal-title">Etapa 3 - Familiares distantes</div>
       <FamiliaresDistantesPaterno2 onFormChange={onFormChange} />
     </div>
   );

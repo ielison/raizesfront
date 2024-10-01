@@ -96,6 +96,13 @@
   font-weight: bold;
 }
 
+
+.paciente-modal-title{
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--primary-700);
+}
+
 .pacienteModal__form {
   flex: 1;
   padding: 20px;
