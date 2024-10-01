@@ -24,30 +24,53 @@ const relationshipOptions = [
 
 export default function FamiliaresDistantesPaterno2({ onFormChange }) {
   const [distantesHadCancer, setDistantesHadCancer] = useState(null);
-  const [distantesDetails, setDistantesDetails] = useState([
-    {
-      relationship: "",
-      cancerTypes: [],
-      showAgeDropdowns: [],
-      customRelationship: "",
-    },
-  ]);
+const [distantesDetails, setDistantesDetails] = useState([
+  {
+    relationship: "",
+    cancerTypes: [],
+    showAgeDropdowns: [],
+    customRelationship: "",
+  },
+]);
 
-  useEffect(() => {
-    // Atualiza a lista de familiares distantes ao mudar
-    onFormChange({
-      outroFamiliarList: distantesDetails.map((distante, index) => ({
-        id: 0,
-        teveCancer: distantesHadCancer,
+useEffect(() => {
+  const outroFamiliarList = [];
+
+  // Se não tiver conhecimento (distantesHadCancer === null), retorna uma lista vazia
+  if (distantesHadCancer === null) {
+    onFormChange({ outroFamiliarList: [] });
+    return;
+  }
+
+  // Mapeia distantesDetails para preencher outroFamiliarList
+  distantesDetails.forEach((distante, index) => {
+    // Se nenhum familiar distante teve câncer, adicione um objeto indicando isso
+    if (!distantesHadCancer) {
+      outroFamiliarList.push({
+        id: index,
+        teveCancer: false,
+        qualFamiliar: distante.relationship || distante.customRelationship,
+        outroCancerList: [], // Lista vazia se não teve câncer
+      });
+    } else {
+      // Caso contrário, retorna os dados reais
+      outroFamiliarList.push({
+        id: index,
+        teveCancer: true,
         qualFamiliar: distante.relationship || distante.customRelationship,
         outroCancerList: distante.cancerTypes.map((cancer) => ({
-          id: 0,
-          idadeDiagnostico: cancer.age || 0,
+          id: 0, // ID único para cada tipo de câncer
+          idadeDiagnostico: cancer.age || 0, // Certifique-se de pegar o valor diretamente
           tipoCancer: cancer.label || "",
         })),
-      })),
-    });
-  }, [distantesDetails, distantesHadCancer, onFormChange]);
+      });
+    }
+  });
+
+  // Chama a função de alteração de formulário com a lista atualizada
+  onFormChange({ outroFamiliarList });
+}, [distantesDetails, distantesHadCancer, onFormChange]);
+
 
   const handleDistantesHadCancerChange = (value) => {
     setDistantesHadCancer(value);
@@ -128,6 +151,7 @@ export default function FamiliaresDistantesPaterno2({ onFormChange }) {
     <div className="fdp-content">
       <label>
         Algum outro familiar do seu lado paterno já teve câncer ou neoplasia?
+        <div className="fdm-subtitle">Familiares distantes como tios-avôs e primos de segundo grau</div>
         <div className="radio-group--fdp">
           <label>
             <input

@@ -25,6 +25,13 @@
   /* Esconde o conteúdo que ultrapassar */
 }
 
+.fdm-subtitle {
+  color: #6d6d6d;
+  font-style: italic;
+  font-size: 12px;
+  margin: 8px 0px;
+}
+
 
 .fdp-form-container {
   display: flex;
