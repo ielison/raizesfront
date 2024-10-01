@@ -11,6 +11,7 @@ export default function MeusPacientes() {
   const [error, setError] = useState(null); // Estado para captura de erros
   const pacientesPerPage = 10;
 
+
   const { idUser } = useAuth(); // Use the custom hook to access context
 
   useEffect(() => {
@@ -26,36 +27,15 @@ export default function MeusPacientes() {
 
         const data = await response.json(); // Converte a resposta em JSON
 
-        // Faz uma chamada adicional para verificar a consulta oncogenética de cada paciente
-        const pacientesComConsulta = await Promise.all(
-          data.map(async (paciente) => {
-            try {
-              const consultaResponse = await fetch(
-                `https://testserver-2p40.onrender.com/api/quiz/resultado/${paciente.idQuestionario}/${idUser}`
-              );
+        // Atualiza o paciente com base na chave "risco"
+        const pacientesComRisco = data.map((paciente) => {
+          paciente.consultaOncogenetica = paciente.risco
+            ? "Paciente de alto risco"
+            : "Não foram identificados critérios de alto risco";
+          return paciente;
+        });
 
-              if (consultaResponse.ok) {
-                const consultaData = await consultaResponse.json();
-                paciente.consultaOncogenetica = consultaData
-                  ? "Paciente de alto risco"
-                  : "Não foram identificados critérios de alto risco";
-              } else {
-                paciente.consultaOncogenetica =
-                  "Não precisa consulta oncogenética";
-              }
-            } catch (error) {
-              console.error(
-                `Erro ao verificar consulta oncogenética: ${error}`
-              );
-              paciente.consultaOncogenetica =
-                "Não precisa consulta oncogenética";
-            }
-
-            return paciente;
-          })
-        );
-
-        setPacientes(pacientesComConsulta); // Armazena os pacientes com consulta oncogenética
+        setPacientes(pacientesComRisco); // Armazena os pacientes com o status de risco
       } catch (error) {
         setError(error.message); // Define a mensagem de erro
       } finally {
