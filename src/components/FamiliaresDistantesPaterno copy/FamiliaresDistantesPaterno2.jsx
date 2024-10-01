@@ -24,7 +24,6 @@ const relationshipOptions = [
 ];
 
 export default function FamiliaresDistantesPaterno2({ onFormChange }) {
-  const [tooltipIndex, setTooltipIndex] = useState(null);
   const [distantesHadCancer, setDistantesHadCancer] = useState(null);
   const [distantesDetails, setDistantesDetails] = useState([
     {
@@ -125,13 +124,21 @@ export default function FamiliaresDistantesPaterno2({ onFormChange }) {
 
   const handleCancerTypeChange = (selectedOption, index) => {
     const newDetails = [...distantesDetails];
-    newDetails[index].cancerTypes = selectedOption || [];
+    newDetails[index].cancerTypes = selectedOption.map((option) => ({
+      ...option,
+      showTooltip: false, // Initialize the tooltip visibility for each cancer type
+    }));
 
-    // Update showAgeDropdowns to match the number of selected cancer types
     newDetails[index].showAgeDropdowns = new Array(selectedOption.length).fill(
       false
     );
+    setDistantesDetails(newDetails);
+  };
 
+  const toggleTooltip = (typeIndex, detailIndex) => {
+    const newDetails = [...distantesDetails];
+    newDetails[detailIndex].cancerTypes[typeIndex].showTooltip =
+      !newDetails[detailIndex].cancerTypes[typeIndex].showTooltip;
     setDistantesDetails(newDetails);
   };
 
@@ -258,31 +265,33 @@ export default function FamiliaresDistantesPaterno2({ onFormChange }) {
                         />
                       )}
                     </div>
-                    <button className="btn-ns" onClick={() => handleAgeToggle(typeIndex, index)}>
+                    <button
+                      className="btn-ns"
+                      onClick={() => handleAgeToggle(typeIndex, index)}
+                    >
                       {distante.showAgeDropdowns[typeIndex]
                         ? "Digitar idade"
                         : "Não sei"}
                     </button>
                     <img
-                        src={InfoIcon}
-                        alt="Info"
-                        className="info-icon-idade"
-                        onClick={() =>
-                          setTooltipIndex(index === tooltipIndex ? null : index)
-                        }
-                      />
-                      {tooltipIndex === index && (
-                        <div className="tooltip-idade">
-                          Caso seu paciente não saiba a idade exata do
-                          diagnóstico de câncer em um familiar, questione se foi
-                          antes ou depois dos 50 anos. Essa estimativa é mais
-                          fácil de lembrar e ainda oferece um corte de idade
-                          útil para a avaliação de risco.
-                        </div>
-                      )}
+                      src={InfoIcon}
+                      alt="Info"
+                      className="info-icon-idade"
+                      onClick={() => toggleTooltip(typeIndex, index)}
+                    />
+                    {cancer.showTooltip && (
+                      <div className="tooltip-idade">
+                        Caso seu paciente não saiba a idade exata do diagnóstico
+                        de câncer em um familiar, questione se foi antes ou
+                        depois dos 50 anos. Essa estimativa é mais fácil de
+                        lembrar e ainda oferece um corte de idade útil para a
+                        avaliação de risco.
+                      </div>
+                    )}
                   </label>
                 </div>
               ))}
+
               {/* Botão de delete para remover o detalhe */}
               <button
                 className="ff-btn-delete"
@@ -295,9 +304,10 @@ export default function FamiliaresDistantesPaterno2({ onFormChange }) {
           ))}
           {/* Botão "Informar +" movido para o final */}
           <div className="btn-fd">
-          <button className="fd-btn-add" onClick={handleAddMore}>
-            Informar +
-          </button></div>
+            <button className="fd-btn-add" onClick={handleAddMore}>
+              Informar +
+            </button>
+          </div>
         </>
       )}
     </div>

@@ -24,7 +24,7 @@ const relationshipOptions = [
 ];
 
 export default function FamiliaresDistantesMaterno2({ onFormChange }) {
-  const [tooltipIndex, setTooltipIndex] = useState(null);
+  
   const [distantesHadCancer, setDistantesHadCancer] = useState(null);
   const [distantesDetails, setDistantesDetails] = useState([
     {
@@ -125,15 +125,23 @@ export default function FamiliaresDistantesMaterno2({ onFormChange }) {
 
   const handleCancerTypeChange = (selectedOption, index) => {
     const newDetails = [...distantesDetails];
-    newDetails[index].cancerTypes = selectedOption || [];
-
-    // Update showAgeDropdowns to match the number of selected cancer types
-    newDetails[index].showAgeDropdowns = new Array(selectedOption.length).fill(
-      false
-    );
-
+    newDetails[index].cancerTypes = selectedOption.map(option => ({
+      ...option,
+      showTooltip: false,  // Initialize the tooltip visibility for each cancer type
+    }));
+  
+    newDetails[index].showAgeDropdowns = new Array(selectedOption.length).fill(false);
     setDistantesDetails(newDetails);
   };
+
+  const toggleTooltip = (typeIndex, detailIndex) => {
+    const newDetails = [...distantesDetails];
+    newDetails[detailIndex].cancerTypes[typeIndex].showTooltip = 
+      !newDetails[detailIndex].cancerTypes[typeIndex].showTooltip;
+    setDistantesDetails(newDetails);
+  };
+  
+  
 
   const handleAgeToggle = (typeIndex, detailIndex) => {
     const newDetails = [...distantesDetails];
@@ -230,59 +238,58 @@ export default function FamiliaresDistantesMaterno2({ onFormChange }) {
                 />
               </label>
               {distante.cancerTypes.map((cancer, typeIndex) => (
-                <div key={typeIndex}>
-                  <label className="fd-cancer-detail">
-                    <div className="cancer-detail-div">
-                      Idade do diagnóstico para ({cancer.label})
-                      {distante.showAgeDropdowns[typeIndex] ? (
-                        <Select
-                          options={ageOptions}
-                          value={
-                            cancer.age
-                              ? { label: cancer.age, value: cancer.age }
-                              : null
-                          }
-                          onChange={(selectedOption) => {
-                            const newDetails = [...distantesDetails];
-                            newDetails[index].cancerTypes[typeIndex].age =
-                              selectedOption?.value || "";
-                            setDistantesDetails(newDetails);
-                          }}
-                        />
-                      ) : (
-                        <input
-                          type="text"
-                          placeholder="Digite a idade"
-                          value={cancer.age || ""}
-                          onChange={(e) => handleAgeChange(e, typeIndex, index)}
-                        />
-                      )}
-                    </div>
-                    <button className="btn-ns" onClick={() => handleAgeToggle(typeIndex, index)}>
-                      {distante.showAgeDropdowns[typeIndex]
-                        ? "Digitar idade"
-                        : "Não sei"}
-                    </button>
-                    <img
-                        src={InfoIcon}
-                        alt="Info"
-                        className="info-icon-idade"
-                        onClick={() =>
-                          setTooltipIndex(index === tooltipIndex ? null : index)
-                        }
-                      />
-                      {tooltipIndex === index && (
-                        <div className="tooltip-idade">
-                          Caso seu paciente não saiba a idade exata do
-                          diagnóstico de câncer em um familiar, questione se foi
-                          antes ou depois dos 50 anos. Essa estimativa é mais
-                          fácil de lembrar e ainda oferece um corte de idade
-                          útil para a avaliação de risco.
-                        </div>
-                      )}
-                  </label>
-                </div>
-              ))}
+  <div key={typeIndex}>
+    <label className="fd-cancer-detail">
+      <div className="cancer-detail-div">
+        Idade do diagnóstico para ({cancer.label})
+        {distante.showAgeDropdowns[typeIndex] ? (
+          <Select
+            options={ageOptions}
+            value={
+              cancer.age
+                ? { label: cancer.age, value: cancer.age }
+                : null
+            }
+            onChange={(selectedOption) => {
+              const newDetails = [...distantesDetails];
+              newDetails[index].cancerTypes[typeIndex].age =
+                selectedOption?.value || "";
+              setDistantesDetails(newDetails);
+            }}
+          />
+        ) : (
+          <input
+            type="text"
+            placeholder="Digite a idade"
+            value={cancer.age || ""}
+            onChange={(e) => handleAgeChange(e, typeIndex, index)}
+          />
+        )}
+      </div>
+      <button
+        className="btn-ns"
+        onClick={() => handleAgeToggle(typeIndex, index)}
+      >
+        {distante.showAgeDropdowns[typeIndex] ? "Digitar idade" : "Não sei"}
+      </button>
+      <img
+        src={InfoIcon}
+        alt="Info"
+        className="info-icon-idade"
+        onClick={() => toggleTooltip(typeIndex, index)}
+      />
+      {cancer.showTooltip && (
+        <div className="tooltip-idade">
+          Caso seu paciente não saiba a idade exata do diagnóstico de câncer em
+          um familiar, questione se foi antes ou depois dos 50 anos. Essa
+          estimativa é mais fácil de lembrar e ainda oferece um corte de idade
+          útil para a avaliação de risco.
+        </div>
+      )}
+    </label>
+  </div>
+))}
+
               {/* Botão de delete para remover o detalhe */}
               <button
                 className="ff-btn-delete"
