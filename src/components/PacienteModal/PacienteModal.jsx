@@ -316,7 +316,7 @@ export default function PacienteModal({ onClose }) {
 
       console.log("Payload to be sent:", JSON.stringify(payloadData, null, 2));
 
-      fetch("https://testee/api/quiz", {
+      fetch("https://testserver-2p40.onrender.com/api/quiz", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
