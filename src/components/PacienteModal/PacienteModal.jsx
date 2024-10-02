@@ -141,69 +141,14 @@ export default function PacienteModal({ onClose }) {
         ],
       },
     ],
-    tiosList: [
-      {
-        id: 0,
-        temTios: false,
-        qtdTios: 0,
-        teveCancer: false,
-        qtdTiosCancer: 0,
-        ladoParterno: "",
-        sexo: "",
-        outroCancerList: [
-          {
-            id: 0,
-            idadeDiagnostico: 0,
-            tipoCancer: "",
-          },
-        ],
-      },
-    ],
-    avosList: [
-      {
-        id: 0,
-        teveCancer: false,
-        outroCancerList: [
-          {
-            id: 0,
-            idadeDiagnostico: 0,
-            tipoCancer: "",
-          },
-        ],
-      },
-    ],
-    primosList: [
-      {
-        id: 0,
-        temPrimos: true,
-        qtdPrimos: 0,
-        teveCancer: false,
-        qtdPrimosCancer: 0,
-        ladoPaterno: "", 
-        sexo: "", 
-        outroCancerList: [
-          {
-            id: 0,
-            idadeDiagnostico: 0,
-            tipoCancer: "",
-          },
-        ],
-      },
-    ],
-    outroFamiliarList: [
-      {
-        id: 0,
-        teveCancer: false,
-        qualFamiliar: "",
-        outroCancerList: [
-          {
-            id: 0,
-            idadeDiagnostico: 0,
-            tipoCancer: "",
-          },
-        ],
-      },
-    ],
+    tiosListMaterno: [],
+    tiosListPaterno: [],
+    avosListMaterno: [],
+    avosListPaterno: [],
+    primosListMaterno: [],
+    primosListPaterno: [],
+    outroFamiliarListMaterno: [],
+    outroFamiliarListPaterno: [],
   });
 
   useEffect(() => {
@@ -211,21 +156,6 @@ export default function PacienteModal({ onClose }) {
     if (savedData) {
       setData(JSON.parse(savedData));
     }
-
-    // Obtendo os tios do sessionStorage
-    const tiosListMaterno =
-      JSON.parse(sessionStorage.getItem("tiosListMaterno")) || [];
-    const tiosListPaterno =
-      JSON.parse(sessionStorage.getItem("tiosListPaterno")) || [];
-
-    // Mesclando os tios maternos e paternos
-    const mergedTios = mergeTios(tiosListMaterno, tiosListPaterno);
-
-    // Atualizando o estado com os tios mesclados
-    setData((prevData) => ({
-      ...prevData,
-      tiosList: mergedTios,
-    }));
   }, []);
 
   useEffect(() => {
@@ -237,65 +167,16 @@ export default function PacienteModal({ onClose }) {
     onClose();
   };
 
-  const mergeTios = (tiosMaterno, tiosPaterno) => {
-    const merged = new Set();
-
-    tiosMaterno.forEach((tio) => {
-      merged.add(JSON.stringify(tio));
-    });
-
-    tiosPaterno.forEach((tio) => {
-      merged.add(JSON.stringify(tio));
-    });
-
-    const mergedTios = Array.from(merged).map((tio) => JSON.parse(tio));
-
-    // Se ambos forem vazios, apenas filtra para deixar os tios que já estão preenchidos
-    if (mergedTios.length === 0) {
-      return mergedTios.filter((tio) => tio.temTios || tio.qtdTios > 0);
-    }
-
-    return mergedTios;
+  const mergeLists = (list1, list2) => {
+    return [...list1, ...list2];
   };
 
   const handleFormChange = (updatedFields) => {
     console.log("Updating Form Fields:", updatedFields);
 
-    const {
-      usuariPrincipal,
-      mae,
-      pai,
-      filhosList,
-      netosList,
-      irmaosList,
-      sobrinhosList,
-      tiosListMaterno = [], // Define um valor padrão se não for passado
-      tiosListPaterno = [], // Define um valor padrão se não for passado
-      avosList,
-      primosList,
-      outroFamiliarList,
-    } = updatedFields;
-
-    console.log("Tios Materno:", tiosListMaterno);
-    console.log("Tios Paterno:", tiosListPaterno);
-
-    // Função para mesclar e filtrar tios
-    const mergedTios = mergeTios(tiosListMaterno, tiosListPaterno);
-
     setData((prevData) => ({
       ...prevData,
       ...updatedFields,
-      usuariPrincipal: { ...prevData.usuariPrincipal, ...usuariPrincipal },
-      mae: { ...prevData.mae, ...mae },
-      pai: { ...prevData.pai, ...pai },
-      filhosList: filhosList || prevData.filhosList,
-      netosList: netosList || prevData.netosList,
-      irmaosList: irmaosList || prevData.irmaosList,
-      sobrinhosList: sobrinhosList || prevData.sobrinhosList,
-      tiosList: mergedTios,
-      avosList: avosList || prevData.avosList,
-      primosList: primosList || prevData.primosList,
-      outroFamiliarList: outroFamiliarList || prevData.outroFamiliarList,
     }));
   };
 
@@ -396,67 +277,77 @@ export default function PacienteModal({ onClose }) {
   );
 
   const handleNext = () => {
-    console.log(`Step: ${currentStep}, Subitem: ${currentSubItem}`); // Debug log
-    console.log("Estado atual de tiosList:", data.tiosList);
+    console.log(`Step: ${currentStep}, Subitem: ${currentSubItem}`);
 
     const currentDate = new Date().toISOString();
 
-    // Cria uma cópia do estado atual com a dataConsulta atualizada
-    const updatedData = {
-      ...data,
-      usuariPrincipal: {
-        ...data.usuariPrincipal,
-        dataConsulta: currentDate,
-        qualCancer: data.usuariPrincipal.qualCancer || "",
-      },
-    };
-
-    // Atualiza o estado para garantir que `data` está sincronizado
-    setData(updatedData);
-
     if (currentStep === 2 && currentSubItem === 3) {
-      console.log(
-        "Último subitem da Etapa 3. Preparando para a animação de carregamento."
-      ); // Log for last subitem
-
-      console.log("Payload to be sent:", JSON.stringify(updatedData, null, 2));
-
       setIsLoading(true);
       setExpandedStep(null);
-      // Send data to API
-      fetch("https://testserver-2p40.onrender.com/api/quiz", {
+
+      // Mescle as listas de tios aqui, antes de enviar o payload
+      const mergedTios = mergeLists(data.tiosListMaterno, data.tiosListPaterno);
+      const mergedAvos = mergeLists(data.avosListMaterno, data.avosListPaterno);
+      const mergedPrimos = mergeLists(data.primosListMaterno, data.primosListPaterno);
+      const mergedOutroFamiliar = mergeLists(data.outroFamiliarListMaterno, data.outroFamiliarListPaterno);
+
+      const payloadData = {
+        ...data,
+        usuariPrincipal: {
+          ...data.usuariPrincipal,
+          dataConsulta: currentDate,
+          qualCancer: data.usuariPrincipal.qualCancer || "",
+        },
+        tiosList: mergedTios,
+        avosList: mergedAvos,
+        primosList: mergedPrimos,
+        outroFamiliarList: mergedOutroFamiliar,
+      };
+
+      // Remova as listas separadas do payload
+      delete payloadData.tiosListMaterno;
+      delete payloadData.tiosListPaterno;
+      delete payloadData.avosListMaterno;
+      delete payloadData.avosListPaterno;
+      delete payloadData.primosListMaterno;
+      delete payloadData.primosListPaterno;
+      delete payloadData.outroFamiliarListMaterno;
+      delete payloadData.outroFamiliarListPaterno;
+
+      console.log("Payload to be sent:", JSON.stringify(payloadData, null, 2));
+
+      fetch("https://testee/api/quiz", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(updatedData), // Envia a cópia com a data atualizada
+        body: JSON.stringify(payloadData),
       })
         .then((response) => {
-          console.log("Response status:", response.status); // Mostra o status da resposta
+          console.log("Response status:", response.status);
           if (response.ok) {
-            console.log("Resposta OK da API."); // Log se a resposta for OK (200)
-            return "OK"; // Retorna 'OK' sem tentar ler o corpo da resposta
+            console.log("Resposta OK da API.");
+            return "OK";
           } else {
             throw new Error("Erro ao enviar os dados: " + response.statusText);
           }
         })
         .then((message) => {
-          console.log("Resposta da API:", message); // Exibe "OK" se o status for 200
-          setIsCompleted(true); // Indica que a submissão foi concluída
-          setIsLoading(false); // Para a animação de carregamento
+          console.log("Resposta da API:", message);
+          setIsCompleted(true);
+          setIsLoading(false);
         })
         .catch((error) => {
-          console.error("Erro:", error); // Exibe o erro no console
-          setIsLoading(false); // Para a animação em caso de erro
+          console.error("Erro:", error);
+          setIsLoading(false);
         })
         .finally(() => {
-          setIsLoading(false); // Garante que a animação de carregamento será parada
-          onClose(); // Fecha o modal após completar
-          localStorage.removeItem("formData"); // Limpa o localStorage
-          sessionStorage.clear(); // Limpa o sessionStorage, se necessário
-          console.log("Cadastro finalizado, aguarde"); // Log final para confirmar o término do processo
+          setIsLoading(false);
+          onClose();
+          localStorage.removeItem("formData");
+          sessionStorage.clear();
+          console.log("Cadastro finalizado, aguarde");
         });
-      
     } else {
       if (currentSubItem < steps[currentStep].subItems.length - 1) {
         setCurrentSubItem(currentSubItem + 1);

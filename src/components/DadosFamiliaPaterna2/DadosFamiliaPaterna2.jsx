@@ -40,6 +40,8 @@ export default function DadosFamiliaPaterna2({ onFormChange, initialData }) {
   );
   const [showAgeDropdowns, setShowAgeDropdowns] = useState([false]);
 
+  
+
   const handleRelationChange = (index, selectedRelation) => {
     setUncleAuntCancerDetails((prev) =>
       prev.map((d, i) =>
@@ -105,13 +107,12 @@ export default function DadosFamiliaPaterna2({ onFormChange, initialData }) {
               {
                 id: index,
                 idadeDiagnostico: detail.age || 0,
-                tipoCancer: detail.type ? detail.type[0]?.value : "", // Acessa o primeiro tipo
+                tipoCancer: detail.type ? detail.type[0]?.value : "",
               },
             ],
           }))
         : [],
     };
-
     console.log("User Data Updated:", updatedUserData);
     onFormChange(updatedUserData);
   }, [

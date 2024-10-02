@@ -35,19 +35,19 @@ export default function FamiliaresDistantesPaterno2({ onFormChange }) {
   ]);
 
   useEffect(() => {
-    const outroFamiliarList = [];
+    const outroFamiliarListPaterno = [];
 
     // Se não tiver conhecimento (distantesHadCancer === null), retorna uma lista vazia
     if (distantesHadCancer === null) {
-      onFormChange({ outroFamiliarList: [] });
+      onFormChange({ outroFamiliarListPaterno: [] });
       return;
     }
 
-    // Mapeia distantesDetails para preencher outroFamiliarList
+    // Mapeia distantesDetails para preencher outroFamiliarListPaterno
     distantesDetails.forEach((distante, index) => {
       // Se nenhum familiar distante teve câncer, adicione um objeto indicando isso
       if (!distantesHadCancer) {
-        outroFamiliarList.push({
+        outroFamiliarListPaterno.push({
           id: index,
           teveCancer: false,
           qualFamiliar: distante.relationship || distante.customRelationship,
@@ -55,7 +55,7 @@ export default function FamiliaresDistantesPaterno2({ onFormChange }) {
         });
       } else {
         // Caso contrário, retorna os dados reais
-        outroFamiliarList.push({
+        outroFamiliarListPaterno.push({
           id: index,
           teveCancer: true,
           qualFamiliar: distante.relationship || distante.customRelationship,
@@ -69,7 +69,7 @@ export default function FamiliaresDistantesPaterno2({ onFormChange }) {
     });
 
     // Chama a função de alteração de formulário com a lista atualizada
-    onFormChange({ outroFamiliarList });
+    onFormChange({ outroFamiliarListPaterno });
   }, [distantesDetails, distantesHadCancer, onFormChange]);
 
   const handleDistantesHadCancerChange = (value) => {

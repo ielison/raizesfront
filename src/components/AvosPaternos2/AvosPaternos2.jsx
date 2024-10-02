@@ -13,7 +13,7 @@ export default function AvosPaternos2({ onFormChange }) {
   const [grandfatherHadCancer, setGrandfatherHadCancer] = useState(false);
   const [grandmotherCancerDetails, setGrandmotherCancerDetails] = useState([]);
   const [grandfatherCancerDetails, setGrandfatherCancerDetails] = useState([]);
-  const [avosList, setAvosList] = useState([]);
+  const [avosListPaterno, setAvosListPaterno] = useState([]);
 
   const handleCancerTypeChangeGrandmother = (selectedOptions) => {
     const updatedDetails = selectedOptions.map((option) => {
@@ -67,10 +67,10 @@ export default function AvosPaternos2({ onFormChange }) {
   };
 
   useEffect(() => {
-    const updatedAvosList = [];
+    const updatedAvosListPaterno = [];
 
     if (grandmotherHadCancer) {
-      updatedAvosList.push({
+      updatedAvosListPaterno.push({
         id: 0,
         teveCancer: true,
         sexo: "Feminino",
@@ -86,8 +86,8 @@ export default function AvosPaternos2({ onFormChange }) {
     }
 
     if (grandfatherHadCancer) {
-      updatedAvosList.push({
-        id: 0,
+      updatedAvosListPaterno.push({
+        id: 1,
         teveCancer: true,
         sexo: "Masculino",
         ladoPaterno: "Paterno",
@@ -101,8 +101,8 @@ export default function AvosPaternos2({ onFormChange }) {
       });
     }
 
-    setAvosList(updatedAvosList);
-    onFormChange({ avosList: updatedAvosList }); // Chama onFormChange sempre que o avosList é atualizado
+    setAvosListPaterno(updatedAvosListPaterno);
+    onFormChange({ avosListPaterno: updatedAvosListPaterno });
   }, [
     grandmotherHadCancer,
     grandfatherHadCancer,

@@ -2,74 +2,59 @@ import { useState, useEffect } from "react";
 import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
-import "./PrimosPrimasMaternos2.css"; // Altere para o CSS apropriado
-import InfoIcon from "../../assets/information-2-fill.svg"; // Importe o SVG aqui
+import "./PrimosPrimasMaternos2.css";
+import InfoIcon from "../../assets/information-2-fill.svg";
 import PropTypes from "prop-types";
 import DeleteIcon from "../../assets/trash.svg";
 
 export default function PrimosPrimasMaternos2({ onFormChange }) {
   const [tooltipIndex, setTooltipIndex] = useState(null);
-  const [noKnowledge, setNoKnowledge] = useState(false); // Inicializa como false
-  const [primosHadCancer, setPrimosHadCancer] = useState(false);
-  const [primosDetails, setPrimosDetails] = useState([
-    { relationship: "", type: null, ages: [], showAgeDropdown: false },
-  ]);
+  const [primosHadCancer, setPrimosHadCancer] = useState(null);
+  const [primosDetails, setPrimosDetails] = useState([]);
 
   useEffect(() => {
-    const primosList = [];
+    let primosListMaterno = [];
 
-    // Se não tiver conhecimento, retorna dados apropriados
-    if (noKnowledge) {
-      onFormChange({ primosList: [] }); // Retorna uma lista vazia se não houver conhecimento
-      return;
+    if (primosHadCancer === false) {
+      // Se não houve câncer, retorna um único objeto indicando isso
+      primosListMaterno = [{
+        id: 0,
+        temPrimos: true,
+        qtdPrimos: 0,
+        teveCancer: false,
+        qtdPrimosCancer: 0,
+        ladoMaterno: "materno",
+        sexo: "",
+        outroCancerList: []
+      }];
+    } else if (primosHadCancer === true) {
+      // Se houve câncer, mapeia os detalhes dos primos
+      primosListMaterno = primosDetails.map((primo, index) => ({
+        id: index,
+        temPrimos: true,
+        qtdPrimos: primosDetails.length,
+        teveCancer: true,
+        qtdPrimosCancer: primo.type ? primo.type.length : 0,
+        ladoMaterno: "materno",
+        sexo: primo.relationship === "primo" ? "masculino" : "feminino",
+        outroCancerList: primo.type
+          ? primo.type.map((opt, typeIndex) => ({
+              id: typeIndex,
+              idadeDiagnostico: primo.ages[typeIndex]?.age || "",
+              tipoCancer: opt.label,
+            }))
+          : [],
+      }));
     }
 
-    // Mapeia primosDetails para preencher primosList
-    primosDetails.forEach((primo, index) => {
-      // Se nenhum primo teve câncer, adicione um objeto indicando isso
-      if (!primosHadCancer) {
-        primosList.push({
-          id: index,
-          temPrimos: true,
-          qtdPrimos: primosDetails.length,
-          teveCancer: false,
-          qtdPrimosCancer: 0,
-          ladoMaterno: primo.relationship,
-          sexo: primo.relationship === "primo" ? "masculino" : "feminino",
-          outroCancerList: [],
-        });
-      } else {
-        // Caso contrário, retorna os dados reais
-        primosList.push({
-          id: index,
-          temPrimos: true,
-          qtdPrimos: primosDetails.length,
-          teveCancer: true,
-          qtdPrimosCancer: primo.type ? primo.type.length : 0,
-          ladoMaterno: primo.relationship,
-          sexo: primo.relationship === "primo" ? "masculino" : "feminino",
-          outroCancerList: primo.type
-            ? primo.type.map((opt, typeIndex) => {
-                const ageDetail = primo.ages[typeIndex];
-                return {
-                  id: 0, // ID único para cada tipo de câncer
-                  idadeDiagnostico: ageDetail.age || "", // Certifique-se de pegar o valor diretamente
-                  tipoCancer: opt.label,
-                };
-              })
-            : [],
-        });
-      }
-    });
-
-    // Chama a função de alteração de formulário com a lista atualizada
-    onFormChange({ primosList });
-  }, [primosDetails, primosHadCancer, onFormChange, noKnowledge]);
+    onFormChange({ primosListMaterno });
+  }, [primosDetails, primosHadCancer, onFormChange]);
 
   const handleCancerChange = (value) => {
     setPrimosHadCancer(value);
-    if (value === true || value === false) {
-      setNoKnowledge(false);
+    if (value === false) {
+      // Limpa os detalhes dos primos se a resposta for "Não"
+      setPrimosDetails([]);
     }
   };
 
@@ -79,15 +64,14 @@ export default function PrimosPrimasMaternos2({ onFormChange }) {
 
     // Adiciona novos campos de idade para cada tipo de câncer selecionado
     const newAges = selectedOption.map((cancer) => ({
-      cancerName: cancer.label, // Guarda o nome do câncer
+      cancerName: cancer.label,
       age: "",
       showAgeDropdown: false,
     }));
-    newDetails[index].ages = newAges; // Adiciona a propriedade ages
+    newDetails[index].ages = newAges;
     setPrimosDetails(newDetails);
   };
 
-  // Função para adicionar um novo primo ou prima
   const handleAddPrimo = () => {
     setPrimosDetails((prevDetails) => [
       ...prevDetails,
@@ -95,7 +79,6 @@ export default function PrimosPrimasMaternos2({ onFormChange }) {
     ]);
   };
 
-  // Função para remover um primo ou prima
   const handleRemovePrimo = (index) => {
     setPrimosDetails((prevDetails) =>
       prevDetails.filter((_, i) => i !== index)
@@ -129,7 +112,7 @@ export default function PrimosPrimasMaternos2({ onFormChange }) {
           </div>
         </label>
 
-        {primosHadCancer && !noKnowledge && (
+        {primosHadCancer === true && (
           <>
             {primosDetails.map((primo, index) => (
               <div key={index}>
@@ -182,7 +165,7 @@ export default function PrimosPrimasMaternos2({ onFormChange }) {
                               onChange={(selectedOption) => {
                                 const newDetails = [...primosDetails];
                                 newDetails[index].ages[ageIndex].age =
-                                  selectedOption.value; // Armazena apenas o valor
+                                  selectedOption.value;
                                 setPrimosDetails(newDetails);
                               }}
                             />
@@ -193,7 +176,7 @@ export default function PrimosPrimasMaternos2({ onFormChange }) {
                               onChange={(e) => {
                                 const newDetails = [...primosDetails];
                                 newDetails[index].ages[ageIndex].age =
-                                  e.target.value; // Atualiza a idade
+                                  e.target.value;
                                 setPrimosDetails(newDetails);
                               }}
                             />
@@ -236,7 +219,6 @@ export default function PrimosPrimasMaternos2({ onFormChange }) {
                     </label>
                   ))}
 
-                {/* Botão para remover primo */}
                 <button
                   className="ff-btn-delete"
                   type="button"
@@ -246,7 +228,6 @@ export default function PrimosPrimasMaternos2({ onFormChange }) {
                 </button>
               </div>
             ))}
-            {/* Botão para adicionar novos primos */}
             <button
               type="button"
               className="nn-btn-add"

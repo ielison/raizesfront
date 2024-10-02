@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useEffect } from "react";
 import Select from "react-select";
 import PropTypes from "prop-types";
@@ -10,34 +12,31 @@ import "./FilhosFilhas2.css";
 export default function FilhosFilhas2({ onFormChange }) {
   const [hasChildren, setHasChildren] = useState(null);
   const [hasCancer, setHasCancer] = useState(false);
+  const [childCount, setChildCount] = useState({ sons: 0, daughters: 0 });
   const [children, setChildren] = useState([]);
   const [tooltipIndex, setTooltipIndex] = useState(null);
 
   useEffect(() => {
-    // Atualiza os dados dos filhos e filhas ao mudar
-    onFormChange({
-      filhosList: children.map((child, index) => ({
-        id: index,
-        temFilhos: true,
-        qtdFilhos: children.length,
-        teveCancer: hasCancer,
-        qtdFilhosCancer: child.type.length > 0 ? child.type.length : 0,
-        sexo: child.sex,
-        mesmoPais: true,
-        outroCancerList: child.type.map((opt) => ({
-          id: opt.id || 0, // ID único para cada tipo de câncer
-          idadeDiagnostico: opt.age?.value || opt.age || "", // Idade do diagnóstico do tipo de câncer
-          tipoCancer: opt.label,
-        })),
-      })),
-    });
-  }, [children, hasCancer, onFormChange]);
+    const filhosList = children.map((child, index) => ({
+      id: index,
+      temFilhos: hasChildren,
+      qtdFilhos: childCount.sons + childCount.daughters,
+      teveCancer: hasCancer,
+      qtdFilhosCancer: children.filter(c => c.type.length > 0).length,
+      sexo: child.sex === 'filho' ? 'masculino' : 'feminino',
+      mesmoPais: true,
+      outroCancerList: child.type.map((opt, idx) => ({
+        id: idx,
+        idadeDiagnostico: opt.age?.value || opt.age || 0,
+        tipoCancer: opt.label
+      }))
+    }));
+
+    onFormChange({ filhosList });
+  }, [children, hasCancer, hasChildren, childCount, onFormChange]);
 
   const handleAddChild = () => {
-    setChildren([
-      ...children,
-      { sex: "", type: [], showAgeDropdowns: {} }, // showAgeDropdowns será um objeto para controlar dropdowns múltiplos
-    ]);
+    setChildren([...children, { sex: "", type: [], showAgeDropdowns: {} }]);
   };
 
   const handleDeleteChild = (indexToDelete) => {
@@ -87,9 +86,10 @@ export default function FilhosFilhas2({ onFormChange }) {
               Quantidade de filho(s)
               <input
                 type="number"
+                value={childCount.sons}
                 onChange={(e) => {
-                  const value = e.target.value;
-                  e.target.value = value >= 0 ? value : 0;
+                  const value = Math.max(0, parseInt(e.target.value) || 0);
+                  setChildCount(prev => ({ ...prev, sons: value }));
                 }}
               />
             </label>
@@ -97,9 +97,10 @@ export default function FilhosFilhas2({ onFormChange }) {
               Quantidade de filha(s)
               <input
                 type="number"
+                value={childCount.daughters}
                 onChange={(e) => {
-                  const value = e.target.value;
-                  e.target.value = value >= 0 ? value : 0;
+                  const value = Math.max(0, parseInt(e.target.value) || 0);
+                  setChildCount(prev => ({ ...prev, daughters: value }));
                 }}
               />
             </label>
@@ -161,7 +162,7 @@ export default function FilhosFilhas2({ onFormChange }) {
                         const newChildren = [...children];
                         newChildren[index].type = selectedOptions.map((opt) => ({
                           ...opt,
-                          age: "", // Inicializa o campo de idade para cada tipo de câncer
+                          age: "", 
                         }));
                         setChildren(newChildren);
                       }}
@@ -216,7 +217,7 @@ export default function FilhosFilhas2({ onFormChange }) {
                           setTooltipIndex(
                             index === tooltipIndex ? null : index
                           )
-                        } // Alterna o tooltip ao clicar
+                        }
                       />
 
                       {tooltipIndex === index && (
@@ -236,7 +237,7 @@ export default function FilhosFilhas2({ onFormChange }) {
                     type="button"
                     onClick={() => handleDeleteChild(index)}
                   >
-                    <img   src={DeleteIcon} alt="Deletar" />
+                    <img src={DeleteIcon} alt="Deletar" />
                   </button>
                 </div>
               ))}
