@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
-import "./FamiliaresDistantesMaterno2.css";
+import "./FamiliaresDistantesPaterno2.css";
 import DeleteIcon from "../../assets/trash.svg";
 import PropTypes from "prop-types";
 import InfoIcon from "../../assets/information-2-fill.svg";
@@ -25,13 +25,13 @@ const relationshipOptions = [
   { value: "outro", label: "Outro" },
 ];
 
-export default function FamiliaresDistantesMaterno2({ onFormChange }) {
+export default function FamiliaresDistantesPaterno2({ onFormChange }) {
   const [distantesHadCancer, setDistantesHadCancer] = useState(() => {
-    const stored = localStorage.getItem("fdm2_distantesHadCancer");
+    const stored = localStorage.getItem("fdp2_distantesHadCancer");
     return stored ? JSON.parse(stored) : null;
   });
   const [distantesDetails, setDistantesDetails] = useState(() => {
-    const stored = localStorage.getItem("fdm2_distantesDetails");
+    const stored = localStorage.getItem("fdp2_distantesDetails");
     return stored
       ? JSON.parse(stored)
       : [
@@ -45,10 +45,10 @@ export default function FamiliaresDistantesMaterno2({ onFormChange }) {
   });
 
   useEffect(() => {
-    let outroFamiliarListMaterno = [];
+    let outroFamiliarListPaterno = [];
 
     if (distantesHadCancer === false || distantesHadCancer === null) {
-      outroFamiliarListMaterno = [
+      outroFamiliarListPaterno = [
         {
           id: 0,
           teveCancer: false,
@@ -57,7 +57,7 @@ export default function FamiliaresDistantesMaterno2({ onFormChange }) {
         },
       ];
     } else if (distantesHadCancer === true) {
-      outroFamiliarListMaterno = distantesDetails.map((distante, index) => ({
+      outroFamiliarListPaterno = distantesDetails.map((distante, index) => ({
         id: index,
         teveCancer: true,
         qualFamiliar: distante.relationship || distante.customRelationship,
@@ -69,40 +69,34 @@ export default function FamiliaresDistantesMaterno2({ onFormChange }) {
       }));
     }
 
-    onFormChange({ outroFamiliarListMaterno });
+    onFormChange({ outroFamiliarListPaterno });
     localStorage.setItem(
-      "fdm2_distantesHadCancer",
+      "fdp2_distantesHadCancer",
       JSON.stringify(distantesHadCancer)
     );
     localStorage.setItem(
-      "fdm2_distantesDetails",
+      "fdp2_distantesDetails",
       JSON.stringify(distantesDetails)
     );
   }, [distantesDetails, distantesHadCancer, onFormChange]);
 
   const handleDistantesHadCancerChange = (value) => {
     setDistantesHadCancer(value);
-    localStorage.setItem("fdm2_distantesHadCancer", JSON.stringify(value));
+    localStorage.setItem("fdp2_distantesHadCancer", JSON.stringify(value));
 
     if (value === false || value === null) {
-      setDistantesDetails([
+      const initialDetails = [
         {
           relationship: "",
           cancerTypes: [],
           showAgeDropdowns: [],
           customRelationship: "",
         },
-      ]);
+      ];
+      setDistantesDetails(initialDetails);
       localStorage.setItem(
-        "fdm2_distantesDetails",
-        JSON.stringify([
-          {
-            relationship: "",
-            cancerTypes: [],
-            showAgeDropdowns: [],
-            customRelationship: "",
-          },
-        ])
+        "fdp2_distantesDetails",
+        JSON.stringify(initialDetails)
       );
     }
   };
@@ -118,13 +112,13 @@ export default function FamiliaresDistantesMaterno2({ onFormChange }) {
       },
     ];
     setDistantesDetails(newDetails);
-    localStorage.setItem("fdm2_distantesDetails", JSON.stringify(newDetails));
+    localStorage.setItem("fdp2_distantesDetails", JSON.stringify(newDetails));
   };
 
   const handleDelete = (index) => {
     const newDetails = distantesDetails.filter((_, i) => i !== index);
     setDistantesDetails(newDetails);
-    localStorage.setItem("fdm2_distantesDetails", JSON.stringify(newDetails));
+    localStorage.setItem("fdp2_distantesDetails", JSON.stringify(newDetails));
   };
 
   const handleRelationshipChange = (selectedOption, index) => {
@@ -136,14 +130,14 @@ export default function FamiliaresDistantesMaterno2({ onFormChange }) {
     }
 
     setDistantesDetails(newDetails);
-    localStorage.setItem("fdm2_distantesDetails", JSON.stringify(newDetails));
+    localStorage.setItem("fdp2_distantesDetails", JSON.stringify(newDetails));
   };
 
   const handleCustomRelationshipChange = (index, value) => {
     const newDetails = [...distantesDetails];
     newDetails[index].customRelationship = value;
     setDistantesDetails(newDetails);
-    localStorage.setItem("fdm2_distantesDetails", JSON.stringify(newDetails));
+    localStorage.setItem("fdp2_distantesDetails", JSON.stringify(newDetails));
   };
 
   const handleCancerTypeChange = (selectedOption, index) => {
@@ -157,7 +151,7 @@ export default function FamiliaresDistantesMaterno2({ onFormChange }) {
       false
     );
     setDistantesDetails(newDetails);
-    localStorage.setItem("fdm2_distantesDetails", JSON.stringify(newDetails));
+    localStorage.setItem("fdp2_distantesDetails", JSON.stringify(newDetails));
   };
 
   const toggleTooltip = (typeIndex, detailIndex) => {
@@ -165,7 +159,7 @@ export default function FamiliaresDistantesMaterno2({ onFormChange }) {
     newDetails[detailIndex].cancerTypes[typeIndex].showTooltip =
       !newDetails[detailIndex].cancerTypes[typeIndex].showTooltip;
     setDistantesDetails(newDetails);
-    localStorage.setItem("fdm2_distantesDetails", JSON.stringify(newDetails));
+    localStorage.setItem("fdp2_distantesDetails", JSON.stringify(newDetails));
   };
 
   const handleAgeToggle = (typeIndex, detailIndex) => {
@@ -173,20 +167,20 @@ export default function FamiliaresDistantesMaterno2({ onFormChange }) {
     newDetails[detailIndex].showAgeDropdowns[typeIndex] =
       !newDetails[detailIndex].showAgeDropdowns[typeIndex];
     setDistantesDetails(newDetails);
-    localStorage.setItem("fdm2_distantesDetails", JSON.stringify(newDetails));
+    localStorage.setItem("fdp2_distantesDetails", JSON.stringify(newDetails));
   };
 
   const handleAgeChange = (e, typeIndex, detailIndex) => {
     const newDetails = [...distantesDetails];
     newDetails[detailIndex].cancerTypes[typeIndex].age = e.target.value;
     setDistantesDetails(newDetails);
-    localStorage.setItem("fdm2_distantesDetails", JSON.stringify(newDetails));
+    localStorage.setItem("fdp2_distantesDetails", JSON.stringify(newDetails));
   };
 
   return (
     <div className="fdp-content">
       <label>
-        Algum outro familiar do seu lado materno já teve câncer ou neoplasia?
+        Algum outro familiar do seu lado paterno já teve câncer ou neoplasia?
         <div className="fdm-subtitle">
           Familiares distantes como tios-avôs e primos de segundo grau
         </div>
@@ -216,7 +210,7 @@ export default function FamiliaresDistantesMaterno2({ onFormChange }) {
               checked={distantesHadCancer === null}
               onChange={() => handleDistantesHadCancerChange(null)}
             />
-            Não tenho conhecimento da saúde dos meus parentes distantes maternos
+            Não tenho conhecimento da saúde dos meus parentes distantes paternos
           </label>
         </div>
       </label>
@@ -282,7 +276,7 @@ export default function FamiliaresDistantesMaterno2({ onFormChange }) {
                               selectedOption?.value || "";
                             setDistantesDetails(newDetails);
                             localStorage.setItem(
-                              "fdm2_distantesDetails",
+                              "fdp2_distantesDetails",
                               JSON.stringify(newDetails)
                             );
                           }}
@@ -342,6 +336,6 @@ export default function FamiliaresDistantesMaterno2({ onFormChange }) {
   );
 }
 
-FamiliaresDistantesMaterno2.propTypes = {
+FamiliaresDistantesPaterno2.propTypes = {
   onFormChange: PropTypes.func.isRequired,
 };

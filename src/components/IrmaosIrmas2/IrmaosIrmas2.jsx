@@ -8,9 +8,18 @@ import DeleteIcon from "../../assets/trash.svg";
 import InfoIcon from "../../assets/information-2-fill.svg";
 
 export default function IrmaosIrmas2({ onFormChange }) {
-  const [relationships, setRelationships] = useState([]);
-  const [hasCancer, setHasCancer] = useState(false);
-  const [siblings, setSiblings] = useState([]);
+  const [relationships, setRelationships] = useState(() => {
+    return JSON.parse(localStorage.getItem("relationships")) || ["naoPossuoIrmaos"];
+  });
+
+  const [hasCancer, setHasCancer] = useState(() => {
+    return JSON.parse(localStorage.getItem("hasCancer")) || false;
+  });
+
+  const [siblings, setSiblings] = useState(() => {
+    return JSON.parse(localStorage.getItem("siblings")) || [];
+  });
+
   const [tooltipIndex, setTooltipIndex] = useState(null);
 
   const relationshipLabels = {
@@ -24,31 +33,68 @@ export default function IrmaosIrmas2({ onFormChange }) {
   };
 
   useEffect(() => {
-    const irmaosList = siblings.map((sibling) => ({
-      id: sibling.id || 0,
-      temIrmaos: true,
-      qtdIrmaos: siblings.length,
-      teveCancer: hasCancer,
-      qtdeIrmaosCancer: sibling.type.length > 0 ? 1 : 0,
-      outroCancerList: sibling.type.map((tipo) => ({
+    localStorage.setItem("relationships", JSON.stringify(relationships));
+    localStorage.setItem("hasCancer", JSON.stringify(hasCancer));
+    localStorage.setItem("siblings", JSON.stringify(siblings));
+
+    const irmaosList = [
+      {
         id: 0,
-        idadeDiagnostico: sibling.age ? sibling.age.value || sibling.age : 0,
-        tipoCancer: tipo.label,
-      })),
-    }));
+        temIrmao: relationships.length > 0 && !relationships.includes("naoPossuoIrmaos"),
+        qtdIrmao: relationships.reduce(
+          (sum, rel) => sum + (siblings.find((s) => s.relation === rel)?.quantity || 0),
+          0
+        ),
+        teveCancer: hasCancer,
+        qtdeIrmaosCancer: siblings.filter((s) => s.type && s.type.length > 0).length,
+        mesmosPais: false,
+        sexo: getSiblingGender(relationships),
+        outroCancerList: siblings.flatMap((sibling) =>
+          (sibling.type || []).map((tipo) => ({
+            id: 0,
+            idadeDiagnostico: sibling.age
+              ? typeof sibling.age === "object"
+                ? sibling.age.value
+                : parseInt(sibling.age)
+              : 0,
+            tipoCancer: tipo.label,
+          }))
+        ),
+      },
+    ];
 
     onFormChange({ irmaosList });
-  }, [siblings, hasCancer, onFormChange]);
+  }, [relationships, siblings, hasCancer, onFormChange]);
+
+  const getSiblingGender = (rels) => {
+    if (
+      rels.includes("irmaos") ||
+      rels.includes("meioIrmaosPaterno") ||
+      rels.includes("meioIrmaosMaterno")
+    ) {
+      return "masculino";
+    }
+    if (
+      rels.includes("irma") ||
+      rels.includes("meioIrmasPaterno") ||
+      rels.includes("meioIrmasMaterno")
+    ) {
+      return "feminino";
+    }
+    return "";
+  };
 
   const handleRelationshipChange = (e) => {
     const { value } = e.target;
 
     if (value === "naoPossuoIrmaos") {
       setRelationships(["naoPossuoIrmaos"]);
+      setSiblings([]);
+      setHasCancer(false);
     } else {
       setRelationships((prev) =>
         prev.includes(value)
-          ? prev.filter((item) => item !== value)
+          ? prev.filter((item) => item !== value && item !== "naoPossuoIrmaos")
           : [...prev.filter((item) => item !== "naoPossuoIrmaos"), value]
       );
     }
@@ -59,9 +105,11 @@ export default function IrmaosIrmas2({ onFormChange }) {
       ...siblings,
       {
         id: siblings.length,
+        relation: "",
         type: [],
         age: "",
         showAgeDropdown: false,
+        quantity: 1,
       },
     ]);
   };
@@ -74,13 +122,22 @@ export default function IrmaosIrmas2({ onFormChange }) {
   const toggleAgeDropdown = (index) => {
     const newSiblings = [...siblings];
     newSiblings[index].showAgeDropdown = !newSiblings[index].showAgeDropdown;
+    newSiblings[index].age = "";
     setSiblings(newSiblings);
   };
 
-  const handleQuantityChange = (index, value) => {
-    const newSiblings = [...siblings];
-    newSiblings[index].quantity = value;
-    setSiblings(newSiblings);
+  const handleQuantityChange = (relation, value) => {
+    const siblingIndex = siblings.findIndex((s) => s.relation === relation);
+    if (siblingIndex !== -1) {
+      const newSiblings = [...siblings];
+      newSiblings[siblingIndex].quantity = value;
+      setSiblings(newSiblings);
+    } else {
+      setSiblings([
+        ...siblings,
+        { relation, quantity: value, type: [], age: "" },
+      ]);
+    }
   };
 
   return (
@@ -106,14 +163,14 @@ export default function IrmaosIrmas2({ onFormChange }) {
         {relationships.length > 0 &&
           !relationships.includes("naoPossuoIrmaos") && (
             <>
-              {relationships.map((relation, index) => (
-                <label key={index}>
+              {relationships.map((relation) => (
+                <label key={relation}>
                   {relationshipLabels[relation]}
                   <input
                     type="number"
                     placeholder="Quantidade"
                     onChange={(e) =>
-                      handleQuantityChange(index, Number(e.target.value))
+                      handleQuantityChange(relation, Number(e.target.value))
                     }
                     min="0"
                   />

@@ -1,19 +1,62 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
-import "./AvosMaternos2.css";
 import InfoIcon from "../../assets/information-2-fill.svg";
 import PropTypes from "prop-types";
 
-export default function AvosMaternos2({ onFormChange }) {
+export default function AvosMaternos2({ onFormChange, initialData = {} }) {
   const [tooltipIndex, setTooltipIndex] = useState(null);
-  const [noKnowledge, setNoKnowledge] = useState(false);
-  const [grandmotherHadCancer, setGrandmotherHadCancer] = useState(false);
-  const [grandfatherHadCancer, setGrandfatherHadCancer] = useState(false);
-  const [grandmotherCancerDetails, setGrandmotherCancerDetails] = useState([]);
-  const [grandfatherCancerDetails, setGrandfatherCancerDetails] = useState([]);
-  const [avosListMaterno, setAvosListMaterno] = useState([]);
+  const [noKnowledge, setNoKnowledge] = useState(() => {
+    const stored = localStorage.getItem("am2_noKnowledge");
+    return stored ? JSON.parse(stored) : initialData?.noKnowledge || false;
+  });
+  const [grandmotherHadCancer, setGrandmotherHadCancer] = useState(() => {
+    const stored = localStorage.getItem("am2_grandmotherHadCancer");
+    return stored
+      ? JSON.parse(stored)
+      : initialData?.avosListMaterno?.some(
+          (avo) => avo.sexo === "feminino" && avo.teveCancer
+        ) || false;
+  });
+  const [grandfatherHadCancer, setGrandfatherHadCancer] = useState(() => {
+    const stored = localStorage.getItem("am2_grandfatherHadCancer");
+    return stored
+      ? JSON.parse(stored)
+      : initialData?.avosListMaterno?.some(
+          (avo) => avo.sexo === "masculino" && avo.teveCancer
+        ) || false;
+  });
+  const [grandmotherCancerDetails, setGrandmotherCancerDetails] = useState(
+    () => {
+      const stored = localStorage.getItem("am2_grandmotherCancerDetails");
+      return stored
+        ? JSON.parse(stored)
+        : initialData?.avosListMaterno
+            ?.find((avo) => avo.sexo === "feminino")
+            ?.outroCancerList.map((cancer) => ({
+              type: { value: cancer.tipoCancer, label: cancer.tipoCancer },
+              age: cancer.idadeDiagnostico,
+              showAgeDropdown: false,
+            })) || [];
+    }
+  );
+  const [grandfatherCancerDetails, setGrandfatherCancerDetails] = useState(
+    () => {
+      const stored = localStorage.getItem("am2_grandfatherCancerDetails");
+      return stored
+        ? JSON.parse(stored)
+        : initialData?.avosListMaterno
+            ?.find((avo) => avo.sexo === "masculino")
+            ?.outroCancerList.map((cancer) => ({
+              type: { value: cancer.tipoCancer, label: cancer.tipoCancer },
+              age: cancer.idadeDiagnostico,
+              showAgeDropdown: false,
+            })) || [];
+    }
+  );
 
   const handleCancerTypeChangeGrandmother = (selectedOptions) => {
     const updatedDetails = selectedOptions.map((option) => {
@@ -25,6 +68,10 @@ export default function AvosMaternos2({ onFormChange }) {
       );
     });
     setGrandmotherCancerDetails(updatedDetails);
+    localStorage.setItem(
+      "am2_grandmotherCancerDetails",
+      JSON.stringify(updatedDetails)
+    );
   };
 
   const handleCancerTypeChangeGrandfather = (selectedOptions) => {
@@ -37,15 +84,25 @@ export default function AvosMaternos2({ onFormChange }) {
       );
     });
     setGrandfatherCancerDetails(updatedDetails);
+    localStorage.setItem(
+      "am2_grandfatherCancerDetails",
+      JSON.stringify(updatedDetails)
+    );
   };
 
   const handleNoKnowledgeChange = () => {
-    setNoKnowledge((prev) => !prev);
-    if (!noKnowledge) {
+    const updatedValue = !noKnowledge;
+    setNoKnowledge(updatedValue);
+    localStorage.setItem("am2_noKnowledge", JSON.stringify(updatedValue));
+    if (updatedValue) {
       setGrandmotherHadCancer(false);
       setGrandfatherHadCancer(false);
       setGrandmotherCancerDetails([]);
       setGrandfatherCancerDetails([]);
+      localStorage.setItem("am2_grandmotherHadCancer", JSON.stringify(false));
+      localStorage.setItem("am2_grandfatherHadCancer", JSON.stringify(false));
+      localStorage.setItem("am2_grandmotherCancerDetails", JSON.stringify([]));
+      localStorage.setItem("am2_grandfatherCancerDetails", JSON.stringify([]));
     }
   };
 
@@ -53,57 +110,76 @@ export default function AvosMaternos2({ onFormChange }) {
     setGrandmotherHadCancer(false);
     setGrandfatherHadCancer(false);
     setNoKnowledge(false);
+    localStorage.setItem("am2_grandmotherHadCancer", JSON.stringify(false));
+    localStorage.setItem("am2_grandfatherHadCancer", JSON.stringify(false));
+    localStorage.setItem("am2_noKnowledge", JSON.stringify(false));
   };
 
   const handleAgeToggle = (index, isGrandmother) => {
     const setter = isGrandmother
       ? setGrandmotherCancerDetails
       : setGrandfatherCancerDetails;
+    const storageKey = isGrandmother
+      ? "am2_grandmotherCancerDetails"
+      : "am2_grandfatherCancerDetails";
     setter((prevDetails) => {
       const newDetails = [...prevDetails];
       newDetails[index].showAgeDropdown = !newDetails[index].showAgeDropdown;
+      localStorage.setItem(storageKey, JSON.stringify(newDetails));
       return newDetails;
     });
   };
 
   useEffect(() => {
-    const updatedAvosListMaterno = [];
+    let updatedAvosListMaterno = [];
 
-    if (grandmotherHadCancer) {
-      updatedAvosListMaterno.push({
-        id: 0,
-        teveCancer: true,
-        sexo: "Feminino",
-        ladoPaterno: "Materno",
-        outroCancerList: grandmotherCancerDetails.map((detail) => ({
+    if (noKnowledge || (!grandmotherHadCancer && !grandfatherHadCancer)) {
+      updatedAvosListMaterno = [
+        {
           id: 0,
-          idadeDiagnostico: detail.age
-            ? parseInt(detail.age.label || detail.age, 10)
-            : 0,
-          tipoCancer: detail.type.label,
-        })),
-      });
+          teveCancer: false,
+          sexo: "",
+          ladoPaterno: "materno",
+          outroCancerList: [],
+        },
+      ];
+    } else {
+      if (grandmotherHadCancer) {
+        updatedAvosListMaterno.push({
+          id: 0,
+          teveCancer: true,
+          sexo: "feminino",
+          ladoPaterno: "materno",
+          outroCancerList: grandmotherCancerDetails.map((detail) => ({
+            id: 0,
+            idadeDiagnostico: detail.age
+              ? parseInt(detail.age.label || detail.age, 10)
+              : 0,
+            tipoCancer: detail.type.label,
+          })),
+        });
+      }
+
+      if (grandfatherHadCancer) {
+        updatedAvosListMaterno.push({
+          id: 1,
+          teveCancer: true,
+          sexo: "masculino",
+          ladoPaterno: "materno",
+          outroCancerList: grandfatherCancerDetails.map((detail) => ({
+            id: 0,
+            idadeDiagnostico: detail.age
+              ? parseInt(detail.age.label || detail.age, 10)
+              : 0,
+            tipoCancer: detail.type.label,
+          })),
+        });
+      }
     }
 
-    if (grandfatherHadCancer) {
-      updatedAvosListMaterno.push({
-        id: 1,
-        teveCancer: true,
-        sexo: "Masculino",
-        ladoPaterno: "Materno",
-        outroCancerList: grandfatherCancerDetails.map((detail) => ({
-          id: 0,
-          idadeDiagnostico: detail.age
-            ? parseInt(detail.age.label || detail.age, 10)
-            : 0,
-          tipoCancer: detail.type.label,
-        })),
-      });
-    }
-
-    setAvosListMaterno(updatedAvosListMaterno);
     onFormChange({ avosListMaterno: updatedAvosListMaterno });
   }, [
+    noKnowledge,
     grandmotherHadCancer,
     grandfatherHadCancer,
     grandmotherCancerDetails,
@@ -121,7 +197,14 @@ export default function AvosMaternos2({ onFormChange }) {
               <input
                 type="checkbox"
                 checked={grandmotherHadCancer}
-                onChange={() => setGrandmotherHadCancer(!grandmotherHadCancer)}
+                onChange={() => {
+                  const updatedValue = !grandmotherHadCancer;
+                  setGrandmotherHadCancer(updatedValue);
+                  localStorage.setItem(
+                    "am2_grandmotherHadCancer",
+                    JSON.stringify(updatedValue)
+                  );
+                }}
                 className="avosm-checkbox"
               />
               Minha avó teve câncer
@@ -130,7 +213,14 @@ export default function AvosMaternos2({ onFormChange }) {
               <input
                 type="checkbox"
                 checked={grandfatherHadCancer}
-                onChange={() => setGrandfatherHadCancer(!grandfatherHadCancer)}
+                onChange={() => {
+                  const updatedValue = !grandfatherHadCancer;
+                  setGrandfatherHadCancer(updatedValue);
+                  localStorage.setItem(
+                    "am2_grandfatherHadCancer",
+                    JSON.stringify(updatedValue)
+                  );
+                }}
                 className="avosm-checkbox"
               />
               Meu avô teve câncer
@@ -186,26 +276,34 @@ export default function AvosMaternos2({ onFormChange }) {
                             placeholder="Selecione a idade"
                             options={ageOptions}
                             value={detail.age}
-                            onChange={(selectedOption) =>
+                            onChange={(selectedOption) => {
                               setGrandmotherCancerDetails((prevDetails) => {
                                 const newDetails = [...prevDetails];
                                 newDetails[index].age = selectedOption;
+                                localStorage.setItem(
+                                  "am2_grandmotherCancerDetails",
+                                  JSON.stringify(newDetails)
+                                );
                                 return newDetails;
-                              })
-                            }
+                              });
+                            }}
                             className="avosm-select"
                           />
                         ) : (
                           <input
                             type="number"
                             value={detail.age}
-                            onChange={(e) =>
+                            onChange={(e) => {
                               setGrandmotherCancerDetails((prevDetails) => {
                                 const newDetails = [...prevDetails];
                                 newDetails[index].age = e.target.value;
+                                localStorage.setItem(
+                                  "am2_grandmotherCancerDetails",
+                                  JSON.stringify(newDetails)
+                                );
                                 return newDetails;
-                              })
-                            }
+                              });
+                            }}
                             className="avosm-input"
                           />
                         )}
@@ -266,26 +364,34 @@ export default function AvosMaternos2({ onFormChange }) {
                             placeholder="Selecione a idade"
                             options={ageOptions}
                             value={detail.age}
-                            onChange={(selectedOption) =>
+                            onChange={(selectedOption) => {
                               setGrandfatherCancerDetails((prevDetails) => {
                                 const newDetails = [...prevDetails];
                                 newDetails[index].age = selectedOption;
+                                localStorage.setItem(
+                                  "am2_grandfatherCancerDetails",
+                                  JSON.stringify(newDetails)
+                                );
                                 return newDetails;
-                              })
-                            }
+                              });
+                            }}
                             className="avosm-select"
                           />
                         ) : (
                           <input
                             type="number"
                             value={detail.age}
-                            onChange={(e) =>
+                            onChange={(e) => {
                               setGrandfatherCancerDetails((prevDetails) => {
                                 const newDetails = [...prevDetails];
                                 newDetails[index].age = e.target.value;
+                                localStorage.setItem(
+                                  "am2_grandfatherCancerDetails",
+                                  JSON.stringify(newDetails)
+                                );
                                 return newDetails;
-                              })
-                            }
+                              });
+                            }}
                             className="avosm-input"
                           />
                         )}
@@ -328,4 +434,22 @@ export default function AvosMaternos2({ onFormChange }) {
 
 AvosMaternos2.propTypes = {
   onFormChange: PropTypes.func.isRequired,
+  initialData: PropTypes.shape({
+    noKnowledge: PropTypes.bool,
+    avosListMaterno: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number,
+        teveCancer: PropTypes.bool,
+        sexo: PropTypes.string,
+        ladoPaterno: PropTypes.string,
+        outroCancerList: PropTypes.arrayOf(
+          PropTypes.shape({
+            id: PropTypes.number,
+            idadeDiagnostico: PropTypes.number,
+            tipoCancer: PropTypes.string,
+          })
+        ),
+      })
+    ),
+  }),
 };

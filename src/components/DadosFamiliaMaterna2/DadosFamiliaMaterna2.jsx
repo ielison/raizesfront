@@ -1,88 +1,125 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
 import InfoIcon from "../../assets/information-2-fill.svg";
-import "./DadosFamiliaMaterna2.css";
 
-export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
+export default function DadosFamiliaMaterna2({
+  onFormChange,
+  initialData = {},
+}) {
   const [tooltipIndex, setTooltipIndex] = useState(null);
-  const [noKnowledge, setNoKnowledge] = useState(
-    initialData?.noKnowledge || false
-  );
-  const [motherHadCancer, setMotherHadCancer] = useState(
-    initialData?.mae?.teveCancer || false
-  );
-  const [motherCancerDetails, setMotherCancerDetails] = useState(
-    initialData?.mae?.outroCancerList || []
-  );
-  const [hasMaternalUnclesAunts, setHasMaternalUnclesAunts] = useState(
-    initialData?.tiosListMaterno?.length > 0 || false
-  );
-  const [uncleAuntQuantities, setUncleAuntQuantities] = useState({
-    tios:
-      initialData?.tiosListMaterno?.filter((item) => item.sexo === "masculino")
-        .length || "",
-    tias:
-      initialData?.tiosListMaterno?.filter((item) => item.sexo === "feminino")
-        .length || "",
+  const [noKnowledge, setNoKnowledge] = useState(() => {
+    const stored = localStorage.getItem("dfm2_noKnowledge");
+    return stored ? JSON.parse(stored) : initialData?.noKnowledge || false;
   });
-  const [uncleAuntCancer, setUncleAuntCancer] = useState(
-    initialData?.tiosListMaterno?.some((item) => item.teveCancer) || false
-  );
-  const [uncleAuntCancerDetails, setUncleAuntCancerDetails] = useState(
-    initialData?.tiosListMaterno?.map((tio) => ({
-      type: tio.outroCancerList[0]?.tipoCancer || null,
-      parentesco: tio.sexo === "masculino" ? "tio" : "tia",
-      age: tio.outroCancerList[0]?.idadeDiagnostico || "",
-    })) || [{ type: null, parentesco: "tio", age: "" }]
-  );
-  const [showAgeDropdowns, setShowAgeDropdowns] = useState([false]);
- 
+  const [motherHadCancer, setMotherHadCancer] = useState(() => {
+    const stored = localStorage.getItem("dfm2_motherHadCancer");
+    return stored ? JSON.parse(stored) : initialData?.mae?.teveCancer || false;
+  });
+  const [motherCancerDetails, setMotherCancerDetails] = useState(() => {
+    const stored = localStorage.getItem("dfm2_motherCancerDetails");
+    return stored
+      ? JSON.parse(stored)
+      : initialData?.mae?.outroCancerList || [];
+  });
+  const [hasMaternalUnclesAunts, setHasMaternalUnclesAunts] = useState(() => {
+    const stored = localStorage.getItem("dfm2_hasMaternalUnclesAunts");
+    return stored
+      ? JSON.parse(stored)
+      : initialData?.tiosListMaterno?.length > 0 || false;
+  });
+  const [uncleAuntQuantities, setUncleAuntQuantities] = useState(() => {
+    const stored = localStorage.getItem("dfm2_uncleAuntQuantities");
+    return stored
+      ? JSON.parse(stored)
+      : {
+          tios:
+            initialData?.tiosListMaterno?.filter(
+              (item) => item.sexo === "masculino"
+            ).length || "",
+          tias:
+            initialData?.tiosListMaterno?.filter(
+              (item) => item.sexo === "feminino"
+            ).length || "",
+        };
+  });
+  const [uncleAuntCancer, setUncleAuntCancer] = useState(() => {
+    const stored = localStorage.getItem("dfm2_uncleAuntCancer");
+    return stored
+      ? JSON.parse(stored)
+      : initialData?.tiosListMaterno?.some((item) => item.teveCancer) || false;
+  });
+  const [uncleAuntCancerDetails, setUncleAuntCancerDetails] = useState(() => {
+    const stored = localStorage.getItem("dfm2_uncleAuntCancerDetails");
+    return stored
+      ? JSON.parse(stored)
+      : initialData?.tiosListMaterno?.map((tio) => ({
+          type: tio.outroCancerList.map((cancer) => ({
+            value: cancer.tipoCancer,
+            label: cancer.tipoCancer,
+            age: cancer.idadeDiagnostico || "",
+            showAgeDropdown: false,
+          })),
+          parentesco:
+            tio.sexo === "masculino"
+              ? { value: "tio", label: "Tio" }
+              : { value: "tia", label: "Tia" },
+        })) || [];
+  });
 
   const handleRelationChange = (index, selectedRelation) => {
-    setUncleAuntCancerDetails((prev) =>
-      prev.map((d, i) =>
-        i === index ? { ...d, parentesco: selectedRelation } : d
-      )
+    const updatedDetails = uncleAuntCancerDetails.map((d, i) =>
+      i === index ? { ...d, parentesco: selectedRelation } : d
+    );
+    setUncleAuntCancerDetails(updatedDetails);
+    localStorage.setItem(
+      "dfm2_uncleAuntCancerDetails",
+      JSON.stringify(updatedDetails)
     );
   };
 
   const handleCancerTypeChange = (selectedOption) => {
-    // Adiciona tipos de câncer ao estado
     const newCancerDetails = selectedOption.map((option) => ({
-      type: option,
-      age: "", // Inicializa a idade como vazia
-      showAgeDropdown: false, // Inicializa a idade como vazia
+      ...option,
+      age: "",
+      showAgeDropdown: false,
     }));
-
     setMotherCancerDetails(newCancerDetails);
+    localStorage.setItem(
+      "dfm2_motherCancerDetails",
+      JSON.stringify(newCancerDetails)
+    );
   };
 
   const handleAgeChange = (index, value) => {
-    const updatedCancerDetails = [...motherCancerDetails];
-    updatedCancerDetails[index].age = value;
+    const updatedCancerDetails = motherCancerDetails.map((detail, i) =>
+      i === index ? { ...detail, age: value } : detail
+    );
     setMotherCancerDetails(updatedCancerDetails);
+    localStorage.setItem(
+      "dfm2_motherCancerDetails",
+      JSON.stringify(updatedCancerDetails)
+    );
   };
 
   const toggleAgeInput = (index) => {
-    const updatedCancerDetails = [...motherCancerDetails];
-    updatedCancerDetails[index].showAgeDropdown =
-      !updatedCancerDetails[index].showAgeDropdown;
+    const updatedCancerDetails = motherCancerDetails.map((detail, i) =>
+      i === index
+        ? { ...detail, showAgeDropdown: !detail.showAgeDropdown }
+        : detail
+    );
     setMotherCancerDetails(updatedCancerDetails);
+    localStorage.setItem(
+      "dfm2_motherCancerDetails",
+      JSON.stringify(updatedCancerDetails)
+    );
   };
 
   useEffect(() => {
-    console.log("Valores antes da atualização:", {
-      motherHadCancer,
-      motherCancerDetails,
-      hasMaternalUnclesAunts,
-      uncleAuntQuantities,
-      uncleAuntCancer,
-      uncleAuntCancerDetails,
-    });
-
     const updatedUserData = {
       ...initialData,
       mae: {
@@ -90,7 +127,7 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
         teveCancer: motherHadCancer,
         outroCancerList: motherCancerDetails.map((cancerDetail) => ({
           idadeDiagnostico: cancerDetail.age || 0,
-          tipoCancer: cancerDetail.type?.value || "string",
+          tipoCancer: cancerDetail.value || "string",
         })),
       },
       tiosListMaterno: hasMaternalUnclesAunts
@@ -100,20 +137,27 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
             qtdTios: uncleAuntQuantities.tios,
             teveCancer: uncleAuntCancer,
             qtdTiosCancer: uncleAuntCancer ? uncleAuntCancerDetails.length : 0,
-            ladoParterno: "materno",
-            sexo: detail.parentesco === "tio" ? "masculino" : "feminino",
-            outroCancerList: [
-              {
-                id: index,
-                idadeDiagnostico: detail.age || 0,
-                tipoCancer: detail.type ? detail.type[0]?.value : "",
-              },
-            ],
+            ladoMaterno: "materno",
+            sexo: detail.parentesco.value === "tio" ? "masculino" : "feminino",
+            outroCancerList: detail.type.map((cancer) => ({
+              id: index,
+              idadeDiagnostico: cancer.age || 0,
+              tipoCancer: cancer.value,
+            })),
           }))
-        : [],
+        : [
+            {
+              id: 0,
+              temTios: false,
+              qtdTios: 0,
+              teveCancer: false,
+              qtdTiosCancer: 0,
+              ladoMaterno: "materno",
+              sexo: "",
+              outroCancerList: [],
+            },
+          ],
     };
-
-    console.log("User Data Updated:", updatedUserData);
     onFormChange(updatedUserData);
   }, [
     motherHadCancer,
@@ -127,44 +171,96 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
   ]);
 
   const handleNoKnowledgeChange = () => {
-    setNoKnowledge(!noKnowledge);
+    const updatedValue = !noKnowledge;
+    setNoKnowledge(updatedValue);
+    localStorage.setItem("dfm2_noKnowledge", JSON.stringify(updatedValue));
   };
 
   const handleMotherHadCancerChange = (value) => {
-    setMotherHadCancer(value === "sim");
-  };
-
-  const handleAgeToggle = (index) => {
-    const newShowAgeDropdowns = [...showAgeDropdowns];
-    newShowAgeDropdowns[index] = !newShowAgeDropdowns[index];
-    setShowAgeDropdowns(newShowAgeDropdowns);
+    const updatedValue = value === "sim";
+    setMotherHadCancer(updatedValue);
+    localStorage.setItem("dfm2_motherHadCancer", JSON.stringify(updatedValue));
   };
 
   const handleUncleAuntCancerChange = (value) => {
-    setUncleAuntCancer(value === "sim");
+    const updatedValue = value === "sim";
+    setUncleAuntCancer(updatedValue);
+    localStorage.setItem("dfm2_uncleAuntCancer", JSON.stringify(updatedValue));
   };
 
   const handleAddCancerDetail = () => {
-    setUncleAuntCancerDetails([
+    const updatedDetails = [
       ...uncleAuntCancerDetails,
-      { type: null, parentesco: "", age: "" },
-    ]);
-    setShowAgeDropdowns([...showAgeDropdowns, false]);
+      { type: [], parentesco: { value: "tio", label: "Tio" } },
+    ];
+    setUncleAuntCancerDetails(updatedDetails);
+    localStorage.setItem(
+      "dfm2_uncleAuntCancerDetails",
+      JSON.stringify(updatedDetails)
+    );
   };
 
   const validateAge = (value) => {
-    // Ensure age is a non-negative number or an empty string
     return value >= 0 || value === "";
   };
 
-  useEffect(() => {
-    if (hasMaternalUnclesAunts) {
-      sessionStorage.setItem(
-        "tiosListMaterno",
-        JSON.stringify(uncleAuntCancerDetails)
-      );
-    }
-  }, [uncleAuntCancerDetails, hasMaternalUnclesAunts]);
+  const handleUncleAuntCancerTypeChange = (index, selectedOptions) => {
+    const updatedDetails = uncleAuntCancerDetails.map((detail, i) =>
+      i === index
+        ? {
+            ...detail,
+            type: selectedOptions.map((option) => ({
+              ...option,
+              age: "",
+              showAgeDropdown: false,
+            })),
+          }
+        : detail
+    );
+    setUncleAuntCancerDetails(updatedDetails);
+    localStorage.setItem(
+      "dfm2_uncleAuntCancerDetails",
+      JSON.stringify(updatedDetails)
+    );
+  };
+
+  const handleUncleAuntAgeChange = (detailIndex, cancerIndex, value) => {
+    const updatedDetails = uncleAuntCancerDetails.map((detail, i) =>
+      i === detailIndex
+        ? {
+            ...detail,
+            type: detail.type.map((cancer, j) =>
+              j === cancerIndex ? { ...cancer, age: value } : cancer
+            ),
+          }
+        : detail
+    );
+    setUncleAuntCancerDetails(updatedDetails);
+    localStorage.setItem(
+      "dfm2_uncleAuntCancerDetails",
+      JSON.stringify(updatedDetails)
+    );
+  };
+
+  const toggleUncleAuntAgeInput = (detailIndex, cancerIndex) => {
+    const updatedDetails = uncleAuntCancerDetails.map((detail, i) =>
+      i === detailIndex
+        ? {
+            ...detail,
+            type: detail.type.map((cancer, j) =>
+              j === cancerIndex
+                ? { ...cancer, showAgeDropdown: !cancer.showAgeDropdown }
+                : cancer
+            ),
+          }
+        : detail
+    );
+    setUncleAuntCancerDetails(updatedDetails);
+    localStorage.setItem(
+      "dfm2_uncleAuntCancerDetails",
+      JSON.stringify(updatedDetails)
+    );
+  };
 
   return (
     <div className="dfm-modal-content" onClick={(e) => e.stopPropagation()}>
@@ -176,13 +272,13 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
             onChange={handleNoKnowledgeChange}
             className="dfm-checkbox"
           />
-          Não tenho conhecimento da saúde e família do minha mãe biológica.
+          Não tenho conhecimento da saúde e família da minha mãe biológica.
         </label>
 
         {!noKnowledge && (
           <>
             <label className="dfm-label">
-              A mãe do(a) Sr(a) já teve câncer ou neoplasia?
+              A mãe do Sr(a) já teve câncer ou neoplasia?
               <div className="dfm-checkbox-group">
                 <label>
                   <input
@@ -210,11 +306,12 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
             {motherHadCancer && (
               <>
                 <label className="dfm-label">
-                  Qual foi o tipo de câncer ou neoplasia que ele teve?
+                  Qual foi o tipo de câncer ou neoplasia que ela teve?
                   <Select
                     isMulti
                     placeholder="Selecione o tipo de câncer"
                     options={cancerOptions}
+                    value={motherCancerDetails}
                     onChange={handleCancerTypeChange}
                     className="dfm-select"
                   />
@@ -224,13 +321,13 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
                   <label key={index} className="dfm-label">
                     <div className="dfm-idade">
                       <span>
-                        Idade do diagnóstico para ({cancerDetail.type.label})
+                        Idade do diagnóstico para ({cancerDetail.label})
                         {cancerDetail.showAgeDropdown ? (
                           <Select
                             placeholder="Selecione a idade"
                             options={[
                               ...ageOptions,
-                              { value: "nao_sei", label: "Não sei" }, // Adiciona a opção "Não sei"
+                              { value: "nao_sei", label: "Não sei" },
                             ]}
                             value={
                               cancerDetail.age
@@ -271,7 +368,7 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
                         className="info-icon-idade"
                         onClick={() =>
                           setTooltipIndex(index === tooltipIndex ? null : index)
-                        } // Alterna o tooltip ao clicar
+                        }
                       />
                       {tooltipIndex === index && (
                         <div className="tooltip-idade">
@@ -296,7 +393,13 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
                     type="checkbox"
                     value="sim"
                     checked={hasMaternalUnclesAunts === true}
-                    onChange={() => setHasMaternalUnclesAunts(true)}
+                    onChange={() => {
+                      setHasMaternalUnclesAunts(true);
+                      localStorage.setItem(
+                        "dfm2_hasMaternalUnclesAunts",
+                        JSON.stringify(true)
+                      );
+                    }}
                     className="dfm-checkbox"
                   />
                   Sim
@@ -306,7 +409,13 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
                     type="checkbox"
                     value="não"
                     checked={hasMaternalUnclesAunts === false}
-                    onChange={() => setHasMaternalUnclesAunts(false)}
+                    onChange={() => {
+                      setHasMaternalUnclesAunts(false);
+                      localStorage.setItem(
+                        "dfm2_hasMaternalUnclesAunts",
+                        JSON.stringify(false)
+                      );
+                    }}
                     className="dfm-checkbox"
                   />
                   Não
@@ -323,10 +432,15 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
                     value={uncleAuntQuantities.tios}
                     onChange={(e) => {
                       if (validateAge(e.target.value)) {
-                        setUncleAuntQuantities((prev) => ({
-                          ...prev,
+                        const updatedQuantities = {
+                          ...uncleAuntQuantities,
                           tios: e.target.value,
-                        }));
+                        };
+                        setUncleAuntQuantities(updatedQuantities);
+                        localStorage.setItem(
+                          "dfm2_uncleAuntQuantities",
+                          JSON.stringify(updatedQuantities)
+                        );
                       }
                     }}
                     className="dfm-input"
@@ -339,10 +453,15 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
                     value={uncleAuntQuantities.tias}
                     onChange={(e) => {
                       if (validateAge(e.target.value)) {
-                        setUncleAuntQuantities((prev) => ({
-                          ...prev,
+                        const updatedQuantities = {
+                          ...uncleAuntQuantities,
                           tias: e.target.value,
-                        }));
+                        };
+                        setUncleAuntQuantities(updatedQuantities);
+                        localStorage.setItem(
+                          "dfm2_uncleAuntQuantities",
+                          JSON.stringify(updatedQuantities)
+                        );
                       }
                     }}
                     className="dfm-input"
@@ -377,9 +496,8 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
 
                 {uncleAuntCancer && (
                   <>
-                    {uncleAuntCancerDetails.map((detail, index) => (
-                      <div key={index} className="dfm-cancer-detail">
-                        {/* Relation Select Dropdown */}
+                    {uncleAuntCancerDetails.map((detail, detailIndex) => (
+                      <div key={detailIndex} className="dfm-cancer-detail">
                         <label>
                           Parentesco
                           <Select
@@ -390,13 +508,12 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
                               { value: "tia", label: "Tia" },
                             ]}
                             onChange={(selectedOption) =>
-                              handleRelationChange(index, selectedOption.value)
+                              handleRelationChange(detailIndex, selectedOption)
                             }
                             className="dfm-select"
                           />
                         </label>
 
-                        {/* Cancer Type Select Dropdown */}
                         <label>
                           Selecione o tipo de câncer ou neoplasia
                           <Select
@@ -404,93 +521,98 @@ export default function DadosFamiliaMaterna2({ onFormChange, initialData }) {
                             isMulti
                             options={cancerOptions}
                             value={detail.type}
-                            onChange={(selectedOption) => {
-                              setUncleAuntCancerDetails((prev) =>
-                                prev.map((d, i) =>
-                                  i === index
-                                    ? { ...d, type: selectedOption }
-                                    : d
-                                )
-                              );
-                            }}
+                            onChange={(selectedOption) =>
+                              handleUncleAuntCancerTypeChange(
+                                detailIndex,
+                                selectedOption
+                              )
+                            }
                             className="dfm-select"
                           />
                         </label>
 
-                        {detail.type &&
-                          detail.type.map((cancerType) => (
-                            <div key={cancerType.value} className="dfm-idade">
-                              <span>
-                                Idade do diagnóstico para ({cancerType.label})
-                                {showAgeDropdowns[index + 1] ? (
-                                  <Select
-                                    placeholder="Selecione a idade"
-                                    options={ageOptions}
-                                    value={detail.age}
-                                    onChange={(selectedOption) => {
-                                      setUncleAuntCancerDetails((prev) =>
-                                        prev.map((d, i) =>
-                                          i === index
-                                            ? {
-                                                ...d,
-                                                age: selectedOption.value,
-                                              }
-                                            : d
-                                        )
+                        {detail.type.map((cancerType, cancerIndex) => (
+                          <div key={cancerIndex} className="dfm-idade">
+                            <span>
+                              Idade do diagnóstico para ({cancerType.label})
+                              {cancerType.showAgeDropdown ? (
+                                <Select
+                                  placeholder="Selecione a idade"
+                                  options={ageOptions}
+                                  value={
+                                    cancerType.age
+                                      ? {
+                                          value: cancerType.age,
+                                          label: cancerType.age,
+                                        }
+                                      : null
+                                  }
+                                  onChange={(selectedOption) => {
+                                    handleUncleAuntAgeChange(
+                                      detailIndex,
+                                      cancerIndex,
+                                      selectedOption.value
+                                    );
+                                  }}
+                                  className="dfm-select"
+                                />
+                              ) : (
+                                <input
+                                  type="number"
+                                  value={cancerType.age}
+                                  onChange={(e) => {
+                                    if (validateAge(e.target.value)) {
+                                      handleUncleAuntAgeChange(
+                                        detailIndex,
+                                        cancerIndex,
+                                        e.target.value
                                       );
-                                    }}
-                                    className="dfm-select"
-                                  />
-                                ) : (
-                                  <input
-                                    type="number"
-                                    value={detail.age}
-                                    onChange={(e) => {
-                                      if (validateAge(e.target.value)) {
-                                        setUncleAuntCancerDetails((prev) =>
-                                          prev.map((d, i) =>
-                                            i === index
-                                              ? { ...d, age: e.target.value }
-                                              : d
-                                          )
-                                        );
-                                      }
-                                    }}
-                                    className="dfm-input"
-                                  />
-                                )}
-                              </span>
-                              <button
-                                type="button"
-                                onClick={() => handleAgeToggle(index + 1)}
-                                className="dfm-toggle-button"
-                              >
-                                {showAgeDropdowns[index + 1]
-                                  ? "Digitar idade"
-                                  : "Não sei"}
-                              </button>
-                              <img
-                                src={InfoIcon}
-                                alt="Info"
-                                className="info-icon-idade"
-                                onClick={() =>
-                                  setTooltipIndex(
-                                    index === tooltipIndex ? null : index
-                                  )
-                                }
-                              />
-                              {tooltipIndex === index && (
-                                <div className="tooltip-idade">
-                                  Caso seu paciente não saiba a idade exata do
-                                  diagnóstico de câncer em um familiar,
-                                  questione se foi antes ou depois dos 50 anos.
-                                  Essa estimativa é mais fácil de lembrar e
-                                  ainda oferece um corte de idade útil para a
-                                  avaliação de risco.
-                                </div>
+                                    }
+                                  }}
+                                  className="dfm-input"
+                                />
                               )}
-                            </div>
-                          ))}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                toggleUncleAuntAgeInput(
+                                  detailIndex,
+                                  cancerIndex
+                                )
+                              }
+                              className="dfm-toggle-button"
+                            >
+                              {cancerType.showAgeDropdown
+                                ? "Digitar idade"
+                                : "Não sei"}
+                            </button>
+                            <img
+                              src={InfoIcon}
+                              alt="Info"
+                              className="info-icon-idade"
+                              onClick={() =>
+                                setTooltipIndex(
+                                  tooltipIndex ===
+                                    `${detailIndex}-${cancerIndex}`
+                                    ? null
+                                    : `${detailIndex}-${cancerIndex}`
+                                )
+                              }
+                            />
+                            {tooltipIndex ===
+                              `${detailIndex}-${cancerIndex}` && (
+                              <div className="tooltip-idade">
+                                Caso seu paciente não saiba a idade exata do
+                                diagnóstico de câncer em um familiar, questione
+                                se foi antes ou depois dos 50 anos. Essa
+                                estimativa é mais fácil de lembrar e ainda
+                                oferece um corte de idade útil para a avaliação
+                                de risco.
+                              </div>
+                            )}
+                          </div>
+                        ))}
                       </div>
                     ))}
                     <button
@@ -536,7 +658,7 @@ DadosFamiliaMaterna2.propTypes = {
     tiosListMaterno: PropTypes.arrayOf(
       PropTypes.shape({
         teveCancer: PropTypes.bool,
-        ladoParterno: PropTypes.string,
+        ladoMaterno: PropTypes.string,
         sexo: PropTypes.string,
         outroCancerList: PropTypes.arrayOf(
           PropTypes.shape({

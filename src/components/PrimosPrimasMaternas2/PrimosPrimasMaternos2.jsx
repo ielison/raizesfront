@@ -1,68 +1,112 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
-import "./PrimosPrimasMaternos2.css";
 import InfoIcon from "../../assets/information-2-fill.svg";
-import PropTypes from "prop-types";
 import DeleteIcon from "../../assets/trash.svg";
+import PropTypes from "prop-types";
 
-export default function PrimosPrimasMaternos2({ onFormChange }) {
+export default function PrimosPrimasMaternos2({
+  onFormChange,
+  initialData = {},
+}) {
   const [tooltipIndex, setTooltipIndex] = useState(null);
-  const [primosHadCancer, setPrimosHadCancer] = useState(null);
-  const [primosDetails, setPrimosDetails] = useState([]);
+  const [primosHadCancer, setPrimosHadCancer] = useState(() => {
+    const stored = localStorage.getItem("ppm2_primosHadCancer");
+    return stored
+      ? JSON.parse(stored)
+      : initialData.primosListMaterno?.[0]?.teveCancer ?? null;
+  });
+  const [primosDetails, setPrimosDetails] = useState(() => {
+    const stored = localStorage.getItem("ppm2_primosDetails");
+    return stored
+      ? JSON.parse(stored)
+      : initialData.primosListMaterno
+          ?.filter((primo) => primo.teveCancer)
+          .map((primo) => ({
+            relationship: primo.sexo === "masculino" ? "primo" : "prima",
+            type: primo.outroCancerList.map((cancer) => ({
+              value: cancer.tipoCancer,
+              label: cancer.tipoCancer,
+            })),
+            ages: primo.outroCancerList.map((cancer) => ({
+              cancerName: cancer.tipoCancer,
+              age: cancer.idadeDiagnostico,
+              showAgeDropdown: false,
+            })),
+          })) || [];
+  });
 
   useEffect(() => {
     let primosListMaterno = [];
 
     if (primosHadCancer === false) {
-      // Se não houve câncer, retorna um único objeto indicando isso
-      primosListMaterno = [{
-        id: 0,
-        temPrimos: true,
-        qtdPrimos: 0,
-        teveCancer: false,
-        qtdPrimosCancer: 0,
-        ladoMaterno: "materno",
-        sexo: "",
-        outroCancerList: []
-      }];
+      primosListMaterno = [
+        {
+          id: 0,
+          temPrimos: true,
+          qtdPrimos: 0,
+          teveCancer: false,
+          qtdPrimosCancer: 0,
+          ladoPaterno: "materno",
+          sexo: "",
+          outroCancerList: [],
+        },
+      ];
     } else if (primosHadCancer === true) {
-      // Se houve câncer, mapeia os detalhes dos primos
       primosListMaterno = primosDetails.map((primo, index) => ({
         id: index,
         temPrimos: true,
         qtdPrimos: primosDetails.length,
         teveCancer: true,
         qtdPrimosCancer: primo.type ? primo.type.length : 0,
-        ladoMaterno: "materno",
+        ladoPaterno: "materno",
         sexo: primo.relationship === "primo" ? "masculino" : "feminino",
         outroCancerList: primo.type
           ? primo.type.map((opt, typeIndex) => ({
               id: typeIndex,
-              idadeDiagnostico: primo.ages[typeIndex]?.age || "",
+              idadeDiagnostico: primo.ages[typeIndex]?.age || 0,
               tipoCancer: opt.label,
             }))
           : [],
       }));
+    } else {
+      primosListMaterno = [
+        {
+          id: 0,
+          temPrimos: false,
+          qtdPrimos: 0,
+          teveCancer: false,
+          qtdPrimosCancer: 0,
+          ladoPaterno: "materno",
+          sexo: "",
+          outroCancerList: [],
+        },
+      ];
     }
 
     onFormChange({ primosListMaterno });
+    localStorage.setItem(
+      "ppm2_primosHadCancer",
+      JSON.stringify(primosHadCancer)
+    );
+    localStorage.setItem("ppm2_primosDetails", JSON.stringify(primosDetails));
   }, [primosDetails, primosHadCancer, onFormChange]);
 
   const handleCancerChange = (value) => {
     setPrimosHadCancer(value);
+    localStorage.setItem("ppm2_primosHadCancer", JSON.stringify(value));
     if (value === false) {
-      // Limpa os detalhes dos primos se a resposta for "Não"
       setPrimosDetails([]);
+      localStorage.setItem("ppm2_primosDetails", JSON.stringify([]));
     }
   };
 
   const handleAddTypeCancer = (index, selectedOption) => {
     const newDetails = [...primosDetails];
     newDetails[index].type = selectedOption;
-
-    // Adiciona novos campos de idade para cada tipo de câncer selecionado
     const newAges = selectedOption.map((cancer) => ({
       cancerName: cancer.label,
       age: "",
@@ -70,19 +114,22 @@ export default function PrimosPrimasMaternos2({ onFormChange }) {
     }));
     newDetails[index].ages = newAges;
     setPrimosDetails(newDetails);
+    localStorage.setItem("ppm2_primosDetails", JSON.stringify(newDetails));
   };
 
   const handleAddPrimo = () => {
-    setPrimosDetails((prevDetails) => [
-      ...prevDetails,
+    const newDetails = [
+      ...primosDetails,
       { relationship: "", type: null, ages: [], showAgeDropdown: false },
-    ]);
+    ];
+    setPrimosDetails(newDetails);
+    localStorage.setItem("ppm2_primosDetails", JSON.stringify(newDetails));
   };
 
   const handleRemovePrimo = (index) => {
-    setPrimosDetails((prevDetails) =>
-      prevDetails.filter((_, i) => i !== index)
-    );
+    const newDetails = primosDetails.filter((_, i) => i !== index);
+    setPrimosDetails(newDetails);
+    localStorage.setItem("ppm2_primosDetails", JSON.stringify(newDetails));
   };
 
   return (
@@ -125,6 +172,10 @@ export default function PrimosPrimasMaternos2({ onFormChange }) {
                       const newDetails = [...primosDetails];
                       newDetails[index].relationship = e.target.value;
                       setPrimosDetails(newDetails);
+                      localStorage.setItem(
+                        "ppm2_primosDetails",
+                        JSON.stringify(newDetails)
+                      );
                     }}
                   >
                     <option value="">Selecione</option>
@@ -167,6 +218,10 @@ export default function PrimosPrimasMaternos2({ onFormChange }) {
                                 newDetails[index].ages[ageIndex].age =
                                   selectedOption.value;
                                 setPrimosDetails(newDetails);
+                                localStorage.setItem(
+                                  "ppm2_primosDetails",
+                                  JSON.stringify(newDetails)
+                                );
                               }}
                             />
                           ) : (
@@ -178,6 +233,10 @@ export default function PrimosPrimasMaternos2({ onFormChange }) {
                                 newDetails[index].ages[ageIndex].age =
                                   e.target.value;
                                 setPrimosDetails(newDetails);
+                                localStorage.setItem(
+                                  "ppm2_primosDetails",
+                                  JSON.stringify(newDetails)
+                                );
                               }}
                             />
                           )}
@@ -190,6 +249,10 @@ export default function PrimosPrimasMaternos2({ onFormChange }) {
                             newDetails[index].ages[ageIndex].showAgeDropdown =
                               !newDetails[index].ages[ageIndex].showAgeDropdown;
                             setPrimosDetails(newDetails);
+                            localStorage.setItem(
+                              "ppm2_primosDetails",
+                              JSON.stringify(newDetails)
+                            );
                           }}
                         >
                           {ageDetail.showAgeDropdown
@@ -244,4 +307,24 @@ export default function PrimosPrimasMaternos2({ onFormChange }) {
 
 PrimosPrimasMaternos2.propTypes = {
   onFormChange: PropTypes.func.isRequired,
+  initialData: PropTypes.shape({
+    primosListMaterno: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number,
+        temPrimos: PropTypes.bool,
+        qtdPrimos: PropTypes.number,
+        teveCancer: PropTypes.bool,
+        qtdPrimosCancer: PropTypes.number,
+        ladoPaterno: PropTypes.string,
+        sexo: PropTypes.string,
+        outroCancerList: PropTypes.arrayOf(
+          PropTypes.shape({
+            id: PropTypes.number,
+            idadeDiagnostico: PropTypes.number,
+            tipoCancer: PropTypes.string,
+          })
+        ),
+      })
+    ),
+  }),
 };

@@ -8,24 +8,24 @@ import { cancerOptions } from "../../data/cancerOptions";
 
 export default function DadosPaciente2({ onFormChange }) {
   const [diagnoses, setDiagnoses] = useState(() => {
-    const storedDiagnoses = JSON.parse(sessionStorage.getItem("diagnoses"));
+    const storedDiagnoses = JSON.parse(localStorage.getItem("diagnoses"));
     return storedDiagnoses || [{ type: [], age: "" }];
   });
 
   const [hasCancer, setHasCancer] = useState(() => {
-    const storedHasCancer = JSON.parse(sessionStorage.getItem("hasCancer"));
+    const storedHasCancer = JSON.parse(localStorage.getItem("hasCancer"));
     return storedHasCancer !== null ? storedHasCancer : false;
   });
 
   const [hasOtherDiagnosis, setHasOtherDiagnosis] = useState(() => {
     const storedHasOtherDiagnosis = JSON.parse(
-      sessionStorage.getItem("hasOtherDiagnosis")
+      localStorage.getItem("hasOtherDiagnosis")
     );
     return storedHasOtherDiagnosis !== null ? storedHasOtherDiagnosis : false;
   });
 
   const [userData, setUserData] = useState(() => {
-    const storedUserData = JSON.parse(sessionStorage.getItem("userData"));
+    const storedUserData = JSON.parse(localStorage.getItem("userData"));
     return (
       storedUserData || {
         nome: "",
@@ -41,10 +41,10 @@ export default function DadosPaciente2({ onFormChange }) {
   });
 
   useEffect(() => {
-    sessionStorage.setItem("userData", JSON.stringify(userData));
-    sessionStorage.setItem("diagnoses", JSON.stringify(diagnoses));
-    sessionStorage.setItem("hasCancer", JSON.stringify(hasCancer));
-    sessionStorage.setItem(
+    localStorage.setItem("userData", JSON.stringify(userData));
+    localStorage.setItem("diagnoses", JSON.stringify(diagnoses));
+    localStorage.setItem("hasCancer", JSON.stringify(hasCancer));
+    localStorage.setItem(
       "hasOtherDiagnosis",
       JSON.stringify(hasOtherDiagnosis)
     );
@@ -96,7 +96,6 @@ export default function DadosPaciente2({ onFormChange }) {
     updatedDiagnoses[index][field] = value;
     setDiagnoses(updatedDiagnoses);
   };
-
 
   return (
     <div className="dp-form-container">

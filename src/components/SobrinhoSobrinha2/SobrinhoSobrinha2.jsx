@@ -8,10 +8,23 @@ import DeleteIcon from "../../assets/trash.svg";
 import InfoIcon from "../../assets/information-2-fill.svg";
 
 export default function SobrinhosSobrinhas2({ onFormChange }) {
-  const [relationships, setRelationships] = useState([]);
-  const [hasCancer, setHasCancer] = useState(false);
-  const [siblings, setSiblings] = useState([]);
+  const [relationships, setRelationships] = useState(() => {
+    return JSON.parse(localStorage.getItem("ss_relationships")) || ["naoPossuoSobrinhos"];
+  });
+
+  const [hasCancer, setHasCancer] = useState(() => {
+    return JSON.parse(localStorage.getItem("ss_hasCancer")) || false;
+  });
+
+  const [siblings, setSiblings] = useState(() => {
+    return JSON.parse(localStorage.getItem("ss_siblings")) || [];
+  });
+
   const [tooltipIndex, setTooltipIndex] = useState(null);
+
+  const [siblingQuantities, setSiblingQuantities] = useState(() => {
+    return JSON.parse(localStorage.getItem("ss_siblingQuantities")) || {};
+  });
 
   const relationshipLabels = {
     sobrinhos: "Sobrinho",
@@ -22,27 +35,91 @@ export default function SobrinhosSobrinhas2({ onFormChange }) {
   };
 
   useEffect(() => {
-    const sobrinhosList = siblings.map((sibling) => ({
-      id: sibling.id || 0,
-      temSobrinhos: true,
-      qtdSobrinhos: siblings.length,
-      teveCancer: hasCancer,
-      qtdeSobrinhosCancer: sibling.type.length > 0 ? 1 : 0,
-      outroCancerList: sibling.type.map((tipo) => ({
-        id: 0,
-        idadeDiagnostico: sibling.age ? sibling.age.value || sibling.age : 0,
-        tipoCancer: tipo.label,
-      })),
-    }));
+    localStorage.setItem("ss_relationships", JSON.stringify(relationships));
+    localStorage.setItem("ss_hasCancer", JSON.stringify(hasCancer));
+    localStorage.setItem("ss_siblings", JSON.stringify(siblings));
+    localStorage.setItem("ss_siblingQuantities", JSON.stringify(siblingQuantities));
+
+    const temSobrinhos = !relationships.includes("naoPossuoSobrinhos");
+    const qtdSobrinhos = Object.values(siblingQuantities).reduce((total, qty) => total + qty, 0);
+
+    let sobrinhosList = [];
+
+    if (relationships.includes("naoPossuoSobrinhos")) {
+      sobrinhosList = [
+        {
+          id: 0,
+          temSobrinhos: false,
+          qtdSobrinhos: 0,
+          teveCancer: false,
+          qtdSobrinhosCancer: 0,
+          meioSobrinho: false,
+          sexo: "",
+          outroCancerList: [],
+        },
+      ];
+    } else {
+      sobrinhosList = siblings
+        .filter((sibling) => sibling.type && sibling.type.length > 0)
+        .map((sibling, index) => ({
+          id: index,
+          temSobrinhos: temSobrinhos,
+          qtdSobrinhos: qtdSobrinhos,
+          teveCancer: true,
+          qtdSobrinhosCancer: siblings.filter((s) => s.type && s.type.length > 0).length,
+          meioSobrinho: sibling.relation && sibling.relation.includes("meio"),
+          sexo:
+            (sibling.relation && sibling.relation.includes("sobrinhos")) ||
+            (sibling.relation && sibling.relation.includes("meioSobrinhos"))
+              ? "masculino"
+              : "feminino",
+          outroCancerList: sibling.type
+            ? sibling.type.map((tipo) => ({
+                id: 0,
+                idadeDiagnostico: sibling.ages && sibling.ages[tipo.value]
+                  ? typeof sibling.ages[tipo.value] === "object"
+                    ? sibling.ages[tipo.value].value
+                    : parseInt(sibling.ages[tipo.value])
+                  : 0,
+                tipoCancer: tipo.label,
+              }))
+            : [],
+        }));
+
+      if (sobrinhosList.length === 0 && temSobrinhos) {
+        sobrinhosList.push({
+          id: 0,
+          temSobrinhos: temSobrinhos,
+          qtdSobrinhos: qtdSobrinhos,
+          teveCancer: hasCancer,
+          qtdSobrinhosCancer: 0,
+          meioSobrinho:
+            relationships.includes("meioSobrinhos") ||
+            relationships.includes("meiaSobrinhas"),
+          sexo:
+            relationships.includes("sobrinhos") ||
+            relationships.includes("meioSobrinhos")
+              ? "masculino"
+              : relationships.includes("sobrinhas") ||
+                relationships.includes("meiaSobrinhas")
+              ? "feminino"
+              : "",
+          outroCancerList: [],
+        });
+      }
+    }
 
     onFormChange({ sobrinhosList });
-  }, [siblings, hasCancer, onFormChange]);
+  }, [relationships, siblings, hasCancer, siblingQuantities, onFormChange]);
 
   const handleRelationshipChange = (e) => {
     const { value } = e.target;
 
     if (value === "naoPossuoSobrinhos") {
       setRelationships(["naoPossuoSobrinhos"]);
+      setSiblings([]);
+      setHasCancer(false);
+      setSiblingQuantities({});
     } else {
       setRelationships((prev) =>
         prev.includes(value)
@@ -57,9 +134,10 @@ export default function SobrinhosSobrinhas2({ onFormChange }) {
       ...siblings,
       {
         id: siblings.length,
+        relation: "",
         type: [],
-        age: "",
-        showAgeDropdown: false,
+        ages: {},
+        showAgeDropdowns: {},
       },
     ]);
   };
@@ -69,16 +147,18 @@ export default function SobrinhosSobrinhas2({ onFormChange }) {
     setSiblings(newSiblings);
   };
 
-  const toggleAgeDropdown = (index) => {
+  const toggleAgeDropdown = (siblingIndex, cancerType) => {
     const newSiblings = [...siblings];
-    newSiblings[index].showAgeDropdown = !newSiblings[index].showAgeDropdown;
+    newSiblings[siblingIndex].showAgeDropdowns[cancerType] =
+      !newSiblings[siblingIndex].showAgeDropdowns[cancerType];
     setSiblings(newSiblings);
   };
 
-  const handleQuantityChange = (index, value) => {
-    const newSiblings = [...siblings];
-    newSiblings[index].quantity = value;
-    setSiblings(newSiblings);
+  const handleQuantityChange = (relation, value) => {
+    setSiblingQuantities((prev) => ({
+      ...prev,
+      [relation]: value,
+    }));
   };
 
   return (
@@ -104,14 +184,15 @@ export default function SobrinhosSobrinhas2({ onFormChange }) {
         {relationships.length > 0 &&
           !relationships.includes("naoPossuoSobrinhos") && (
             <>
-              {relationships.map((relation, index) => (
-                <label key={index}>
+              {relationships.map((relation) => (
+                <label key={relation}>
                   {relationshipLabels[relation]}
                   <input
                     type="number"
                     placeholder="Quantidade"
+                    value={siblingQuantities[relation] || ""}
                     onChange={(e) =>
-                      handleQuantityChange(index, Number(e.target.value))
+                      handleQuantityChange(relation, Number(e.target.value))
                     }
                     min="0"
                   />
@@ -144,8 +225,8 @@ export default function SobrinhosSobrinhas2({ onFormChange }) {
               </label>
               {hasCancer && (
                 <>
-                  {siblings.map((sibling, index) => (
-                    <div key={index}>
+                  {siblings.map((sibling, siblingIndex) => (
+                    <div key={siblingIndex}>
                       <label>
                         Parentesco
                         <Select
@@ -155,7 +236,8 @@ export default function SobrinhosSobrinhas2({ onFormChange }) {
                           }))}
                           onChange={(selectedOption) => {
                             const newSiblings = [...siblings];
-                            newSiblings[index].relation = selectedOption.value;
+                            newSiblings[siblingIndex].relation =
+                              selectedOption.value;
                             setSiblings(newSiblings);
                           }}
                           placeholder="Selecione o parentesco"
@@ -170,70 +252,80 @@ export default function SobrinhosSobrinhas2({ onFormChange }) {
                           value={sibling.type}
                           onChange={(selectedOptions) => {
                             const newSiblings = [...siblings];
-                            newSiblings[index].type = selectedOptions;
+                            newSiblings[siblingIndex].type = selectedOptions;
                             setSiblings(newSiblings);
                           }}
                         />
                       </label>
-                      <label className="ss-idade">
-                        <div className="ss-idade-div">
-                          Idade do diagnóstico
-                          {sibling.showAgeDropdown ? (
-                            <Select
-                              options={ageOptions}
-                              placeholder="Selecione a idade"
-                              value={sibling.age}
-                              onChange={(selectedOption) => {
-                                const newSiblings = [...siblings];
-                                newSiblings[index].age = selectedOption;
-                                setSiblings(newSiblings);
-                              }}
-                            />
-                          ) : (
-                            <input
-                              type="number"
-                              placeholder="Digite a idade"
-                              value={sibling.age}
-                              onChange={(e) => {
-                                const value = e.target.value;
-                                const newSiblings = [...siblings];
-                                newSiblings[index].age = value >= 0 ? value : 0;
-                                setSiblings(newSiblings);
-                              }}
-                            />
-                          )}
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => toggleAgeDropdown(index)}
-                        >
-                          {sibling.showAgeDropdown
-                            ? "Digitar idade"
-                            : "Não sei"}
-                        </button>
-                        <img
-                          src={InfoIcon}
-                          alt="Info"
-                          className="info-icon-idade"
-                          onClick={() =>
-                            setTooltipIndex(
-                              index === tooltipIndex ? null : index
-                            )
-                          }
-                        />
-                        {tooltipIndex === index && (
-                          <div className="tooltip-idade-ss">
-                            Caso seu paciente não saiba a idade exata do
-                            diagnóstico de câncer em um familiar, questione se
-                            foi antes ou depois dos 50 anos. Essa estimativa é
-                            mais fácil de lembrar e ainda oferece um corte de
-                            idade útil para a avaliação de risco.
+                      {sibling.type.map((cancerType, typeIndex) => (
+                        <label key={typeIndex} className="ss-idade">
+                          <div className="ss-idade-div">
+                            Idade do diagnóstico para {cancerType.label}
+                            {sibling.showAgeDropdowns[cancerType.value] ? (
+                              <Select
+                                options={ageOptions}
+                                placeholder="Selecione a idade"
+                                value={sibling.ages[cancerType.value]}
+                                onChange={(selectedOption) => {
+                                  const newSiblings = [...siblings];
+                                  newSiblings[siblingIndex].ages[
+                                    cancerType.value
+                                  ] = selectedOption;
+                                  setSiblings(newSiblings);
+                                }}
+                              />
+                            ) : (
+                              <input
+                                type="number"
+                                placeholder="Digite a idade"
+                                value={sibling.ages[cancerType.value] || ""}
+                                onChange={(e) => {
+                                  const value = e.target.value;
+                                  const newSiblings = [...siblings];
+                                  newSiblings[siblingIndex].ages[
+                                    cancerType.value
+                                  ] = value >= 0 ? value : 0;
+                                  setSiblings(newSiblings);
+                                }}
+                              />
+                            )}
                           </div>
-                        )}
-                      </label>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              toggleAgeDropdown(siblingIndex, cancerType.value)
+                            }
+                          >
+                            {sibling.showAgeDropdowns[cancerType.value]
+                              ? "Digitar idade"
+                              : "Não sei"}
+                          </button>
+                          <img
+                            src={InfoIcon}
+                            alt="Info"
+                            className="info-icon-idade"
+                            onClick={() =>
+                              setTooltipIndex(
+                                tooltipIndex === `${siblingIndex}-${typeIndex}`
+                                  ? null
+                                  : `${siblingIndex}-${typeIndex}`
+                              )
+                            }
+                          />
+                          {tooltipIndex === `${siblingIndex}-${typeIndex}` && (
+                            <div className="tooltip-idade-ss">
+                              Caso seu paciente não saiba a idade exata do
+                              diagnóstico de câncer em um familiar, questione se
+                              foi antes ou depois dos 50 anos. Essa estimativa é
+                              mais fácil de lembrar e ainda oferece um corte de
+                              idade útil para a avaliação de risco.
+                            </div>
+                          )}
+                        </label>
+                      ))}
                       <button
                         type="button"
-                        onClick={() => handleDeleteSibling(index)}
+                        onClick={() => handleDeleteSibling(siblingIndex)}
                         className="ss-btn-delete"
                       >
                         <img src={DeleteIcon} alt="Deletar" />

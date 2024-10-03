@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { useState, useEffect } from "react";
 import Select from "react-select";
@@ -10,27 +10,79 @@ import DeleteIcon from "../../assets/trash.svg";
 import "./FilhosFilhas2.css";
 
 export default function FilhosFilhas2({ onFormChange }) {
-  const [hasChildren, setHasChildren] = useState(null);
-  const [hasCancer, setHasCancer] = useState(false);
-  const [childCount, setChildCount] = useState({ sons: 0, daughters: 0 });
-  const [children, setChildren] = useState([]);
+  const [hasChildren, setHasChildren] = useState(() => {
+    return JSON.parse(localStorage.getItem("hasChildren")) || false;
+  });
+
+  const [hasCancer, setHasCancer] = useState(() => {
+    return JSON.parse(localStorage.getItem("hasCancer")) || false;
+  });
+
+  const [childCount, setChildCount] = useState(() => {
+    return (
+      JSON.parse(localStorage.getItem("childCount")) || {
+        sons: 0,
+        daughters: 0,
+      }
+    );
+  });
+
+  const [children, setChildren] = useState(() => {
+    return JSON.parse(localStorage.getItem("children")) || [];
+  });
+
   const [tooltipIndex, setTooltipIndex] = useState(null);
 
   useEffect(() => {
-    const filhosList = children.map((child, index) => ({
-      id: index,
-      temFilhos: hasChildren,
-      qtdFilhos: childCount.sons + childCount.daughters,
-      teveCancer: hasCancer,
-      qtdFilhosCancer: children.filter(c => c.type.length > 0).length,
-      sexo: child.sex === 'filho' ? 'masculino' : 'feminino',
-      mesmoPais: true,
-      outroCancerList: child.type.map((opt, idx) => ({
-        id: idx,
-        idadeDiagnostico: opt.age?.value || opt.age || 0,
-        tipoCancer: opt.label
-      }))
-    }));
+    localStorage.setItem("hasChildren", JSON.stringify(hasChildren));
+    localStorage.setItem("hasCancer", JSON.stringify(hasCancer));
+    localStorage.setItem("childCount", JSON.stringify(childCount));
+    localStorage.setItem("children", JSON.stringify(children));
+
+    let filhosList;
+
+    if (hasChildren === false) {
+      filhosList = [
+        {
+          id: 0,
+          temFilhos: false,
+          qtdFilhos: 0,
+          teveCancer: false,
+          qtdFilhosCancer: 0,
+          sexo: "",
+          mesmoPais: true,
+          outroCancerList: [],
+        },
+      ];
+    } else if (hasCancer) {
+      filhosList = children.map((child, index) => ({
+        id: index,
+        temFilhos: true,
+        qtdFilhos: childCount.sons + childCount.daughters,
+        teveCancer: true,
+        qtdFilhosCancer: children.filter((c) => c.type.length > 0).length,
+        sexo: child.sex === "filho" ? "masculino" : "feminino",
+        mesmoPais: true,
+        outroCancerList: child.type.map((opt, idx) => ({
+          id: idx,
+          idadeDiagnostico: opt.age?.value || opt.age || 0,
+          tipoCancer: opt.label,
+        })),
+      }));
+    } else {
+      filhosList = [
+        {
+          id: 0,
+          temFilhos: true,
+          qtdFilhos: childCount.sons + childCount.daughters,
+          teveCancer: false,
+          qtdFilhosCancer: 0,
+          sexo: childCount.sons > 0 ? "masculino" : "feminino",
+          mesmoPais: true,
+          outroCancerList: [],
+        },
+      ];
+    }
 
     onFormChange({ filhosList });
   }, [children, hasCancer, hasChildren, childCount, onFormChange]);
@@ -79,7 +131,7 @@ export default function FilhosFilhas2({ onFormChange }) {
         </div>
       </label>
 
-      {hasChildren && (
+      {hasChildren === true && (
         <>
           <div className="qtd-filhos">
             <label>
@@ -89,7 +141,7 @@ export default function FilhosFilhas2({ onFormChange }) {
                 value={childCount.sons}
                 onChange={(e) => {
                   const value = Math.max(0, parseInt(e.target.value) || 0);
-                  setChildCount(prev => ({ ...prev, sons: value }));
+                  setChildCount((prev) => ({ ...prev, sons: value }));
                 }}
               />
             </label>
@@ -100,7 +152,7 @@ export default function FilhosFilhas2({ onFormChange }) {
                 value={childCount.daughters}
                 onChange={(e) => {
                   const value = Math.max(0, parseInt(e.target.value) || 0);
-                  setChildCount(prev => ({ ...prev, daughters: value }));
+                  setChildCount((prev) => ({ ...prev, daughters: value }));
                 }}
               />
             </label>
@@ -160,10 +212,12 @@ export default function FilhosFilhas2({ onFormChange }) {
                       value={child.type}
                       onChange={(selectedOptions) => {
                         const newChildren = [...children];
-                        newChildren[index].type = selectedOptions.map((opt) => ({
-                          ...opt,
-                          age: "", 
-                        }));
+                        newChildren[index].type = selectedOptions.map(
+                          (opt) => ({
+                            ...opt,
+                            age: "",
+                          })
+                        );
                         setChildren(newChildren);
                       }}
                     />
@@ -214,9 +268,7 @@ export default function FilhosFilhas2({ onFormChange }) {
                         alt="Info"
                         className="info-icon-idade"
                         onClick={() =>
-                          setTooltipIndex(
-                            index === tooltipIndex ? null : index
-                          )
+                          setTooltipIndex(index === tooltipIndex ? null : index)
                         }
                       />
 
@@ -225,8 +277,8 @@ export default function FilhosFilhas2({ onFormChange }) {
                           Caso seu paciente não saiba a idade exata do
                           diagnóstico de câncer em um familiar, questione se foi
                           antes ou depois dos 50 anos. Essa estimativa é mais
-                          fácil de lembrar e ainda oferece um corte de idade útil
-                          para a avaliação de risco.
+                          fácil de lembrar e ainda oferece um corte de idade
+                          útil para a avaliação de risco.
                         </div>
                       )}
                     </label>

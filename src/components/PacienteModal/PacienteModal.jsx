@@ -13,7 +13,7 @@ import PrimosPrimasMaternos2 from "../PrimosPrimasMaternas2/PrimosPrimasMaternos
 import FamiliaresDistantesMaterno2 from "../FamiliaresDistantesMaterno2/FamiliaresDistantesMaterno2";
 import AvosPaternos2 from "../AvosPaternos2/AvosPaternos2";
 import DadosFamiliaPaterna2 from "../DadosFamiliaPaterna2/DadosFamiliaPaterna2";
-import FamiliaresDistantesPaterno2 from "../FamiliaresDistantesPaterno copy/FamiliaresDistantesPaterno2";
+import FamiliaresDistantesPaterno2 from "../FamiliaresDistantesPaterno2/FamiliaresDistantesPaterno2";
 
 import { useAuth } from "../../context/AuthContext";
 
@@ -276,6 +276,165 @@ export default function PacienteModal({ onClose }) {
     []
   );
 
+  const ensureLowerCase = (obj) => {
+    if (typeof obj !== "object" || obj === null) {
+      return obj;
+    }
+    return Object.fromEntries(
+      Object.entries(obj).map(([key, value]) => {
+        if (key === "sexo" || key === "ladoPaterno") {
+          return [key, typeof value === "string" ? value.toLowerCase() : value];
+        }
+        if (Array.isArray(value)) {
+          return [key, value.map(ensureLowerCase)];
+        }
+        if (typeof value === "object") {
+          return [key, ensureLowerCase(value)];
+        }
+        return [key, value];
+      })
+    );
+  };
+
+  const collectLocalStorageData = () => {
+    const localStorageData = {
+      dadosPaciente: JSON.parse(localStorage.getItem("dp2_data") || "{}"),
+      filhosFilhas: JSON.parse(
+        localStorage.getItem("ff2_filhosDetails") || "[]"
+      ),
+      netosNetas: JSON.parse(localStorage.getItem("nn2_netosDetails") || "[]"),
+      irmaosIrmas: JSON.parse(
+        localStorage.getItem("ii2_irmaosDetails") || "[]"
+      ),
+      sobrinhosSobrinhas: JSON.parse(
+        localStorage.getItem("ss2_sobrinhosDetails") || "[]"
+      ),
+      dadosFamiliaMaterna: {
+        noKnowledge: JSON.parse(
+          localStorage.getItem("dfm2_noKnowledge") || "false"
+        ),
+        motherHadCancer: JSON.parse(
+          localStorage.getItem("dfm2_motherHadCancer") || "false"
+        ),
+        motherCancerDetails: JSON.parse(
+          localStorage.getItem("dfm2_motherCancerDetails") || "[]"
+        ),
+        hasMaternalUnclesAunts: JSON.parse(
+          localStorage.getItem("dfm2_hasMaternalUnclesAunts") || "false"
+        ),
+        uncleAuntQuantities: JSON.parse(
+          localStorage.getItem("dfm2_uncleAuntQuantities") || "{}"
+        ),
+        uncleAuntCancer: JSON.parse(
+          localStorage.getItem("dfm2_uncleAuntCancer") || "false"
+        ),
+        uncleAuntCancerDetails: JSON.parse(
+          localStorage.getItem("dfm2_uncleAuntCancerDetails") || "[]"
+        ),
+      },
+      avosMaternos: {
+        noKnowledge: JSON.parse(
+          localStorage.getItem("am2_noKnowledge") || "false"
+        ),
+        grandmotherHadCancer: JSON.parse(
+          localStorage.getItem("am2_grandmotherHadCancer") || "false"
+        ),
+        grandfatherHadCancer: JSON.parse(
+          localStorage.getItem("am2_grandfatherHadCancer") || "false"
+        ),
+        grandmotherCancerDetails: JSON.parse(
+          localStorage.getItem("am2_grandmotherCancerDetails") || "[]"
+        ),
+        grandfatherCancerDetails: JSON.parse(
+          localStorage.getItem("am2_grandfatherCancerDetails") || "[]"
+        ),
+      },
+      primosPrimasMaternos: {
+        primosHadCancer: JSON.parse(
+          localStorage.getItem("ppm2_primosHadCancer") || "null"
+        ),
+        primosDetails: JSON.parse(
+          localStorage.getItem("ppm2_primosDetails") || "[]"
+        ),
+      },
+      familiaresDistantesMaternos: {
+        distantesHadCancer: JSON.parse(
+          localStorage.getItem("fdm2_distantesHadCancer") || "null"
+        ),
+        distantesDetails: JSON.parse(
+          localStorage.getItem("fdm2_distantesDetails") || "[]"
+        ),
+      },
+      dadosFamiliaPaterna: {
+        noKnowledge: JSON.parse(
+          localStorage.getItem("dfp2_noKnowledge") || "false"
+        ),
+        fatherHadCancer: JSON.parse(
+          localStorage.getItem("dfp2_fatherHadCancer") || "false"
+        ),
+        fatherCancerDetails: JSON.parse(
+          localStorage.getItem("dfp2_fatherCancerDetails") || "[]"
+        ),
+        hasPaternalUnclesAunts: JSON.parse(
+          localStorage.getItem("dfp2_hasPaternalUnclesAunts") || "false"
+        ),
+        uncleAuntQuantities: JSON.parse(
+          localStorage.getItem("dfp2_uncleAuntQuantities") || "{}"
+        ),
+        uncleAuntCancer: JSON.parse(
+          localStorage.getItem("dfp2_uncleAuntCancer") || "false"
+        ),
+        uncleAuntCancerDetails: JSON.parse(
+          localStorage.getItem("dfp2_uncleAuntCancerDetails") || "[]"
+        ),
+      },
+      avosPaternos: {
+        noKnowledge: JSON.parse(
+          localStorage.getItem("ap2_noKnowledge") || "false"
+        ),
+        grandmotherHadCancer: JSON.parse(
+          localStorage.getItem("ap2_grandmotherHadCancer") || "false"
+        ),
+        grandfatherHadCancer: JSON.parse(
+          localStorage.getItem("ap2_grandfatherHadCancer") || "false"
+        ),
+        grandmotherCancerDetails: JSON.parse(
+          localStorage.getItem("ap2_grandmotherCancerDetails") || "[]"
+        ),
+        grandfatherCancerDetails: JSON.parse(
+          localStorage.getItem("ap2_grandfatherCancerDetails") || "[]"
+        ),
+      },
+      primosPrimasPaternos: {
+        primosHadCancer: JSON.parse(
+          localStorage.getItem("ppp2_primosHadCancer") || "null"
+        ),
+        primosDetails: JSON.parse(
+          localStorage.getItem("ppp2_primosDetails") || "[]"
+        ),
+      },
+      familiaresDistantesPaternos: {
+        distantesHadCancer: JSON.parse(
+          localStorage.getItem("fdp2_distantesHadCancer") || "null"
+        ),
+        distantesDetails: JSON.parse(
+          localStorage.getItem("fdp2_distantesDetails") || "[]"
+        ),
+      },
+    };
+    return localStorageData;
+  };
+
+  const clearAllStorageData = () => {
+    // Clear all localStorage items
+    localStorage.clear();
+
+    // Clear all sessionStorage items
+    sessionStorage.clear();
+
+    console.log("All localStorage and sessionStorage data has been cleared.");
+  };
+
   const handleNext = () => {
     console.log(`Step: ${currentStep}, Subitem: ${currentSubItem}`);
 
@@ -285,13 +444,18 @@ export default function PacienteModal({ onClose }) {
       setIsLoading(true);
       setExpandedStep(null);
 
-      // Mescle as listas de tios aqui, antes de enviar o payload
       const mergedTios = mergeLists(data.tiosListMaterno, data.tiosListPaterno);
       const mergedAvos = mergeLists(data.avosListMaterno, data.avosListPaterno);
-      const mergedPrimos = mergeLists(data.primosListMaterno, data.primosListPaterno);
-      const mergedOutroFamiliar = mergeLists(data.outroFamiliarListMaterno, data.outroFamiliarListPaterno);
+      const mergedPrimos = mergeLists(
+        data.primosListMaterno,
+        data.primosListPaterno
+      );
+      const mergedOutroFamiliar = mergeLists(
+        data.outroFamiliarListMaterno,
+        data.outroFamiliarListPaterno
+      );
 
-      const payloadData = {
+      const payloadData = ensureLowerCase({
         ...data,
         usuariPrincipal: {
           ...data.usuariPrincipal,
@@ -302,9 +466,9 @@ export default function PacienteModal({ onClose }) {
         avosList: mergedAvos,
         primosList: mergedPrimos,
         outroFamiliarList: mergedOutroFamiliar,
-      };
+      });
 
-      // Remova as listas separadas do payload
+      // Remove the separate lists from the payload
       delete payloadData.tiosListMaterno;
       delete payloadData.tiosListPaterno;
       delete payloadData.avosListMaterno;
@@ -314,8 +478,27 @@ export default function PacienteModal({ onClose }) {
       delete payloadData.outroFamiliarListMaterno;
       delete payloadData.outroFamiliarListPaterno;
 
-      console.log("Payload to be sent:", JSON.stringify(payloadData, null, 2));
+      console.log(
+        "Payload to be sent to /quiz:",
+        JSON.stringify(payloadData, null, 2)
+      );
 
+      // Collect localStorage data
+      const localStorageData = collectLocalStorageData();
+
+      // Create payload for /historico
+      const historicoPayload = {
+        idUser: idUser,
+        data: currentDate,
+        formData: localStorageData,
+      };
+
+      console.log(
+        "Payload to be sent to /historico:",
+        JSON.stringify(historicoPayload, null, 2)
+      );
+
+      // Send data to /quiz
       fetch("https://testserver-2p40.onrender.com/api/quiz", {
         method: "POST",
         headers: {
@@ -324,16 +507,39 @@ export default function PacienteModal({ onClose }) {
         body: JSON.stringify(payloadData),
       })
         .then((response) => {
-          console.log("Response status:", response.status);
+          console.log("Response status from /quiz:", response.status);
           if (response.ok) {
-            console.log("Resposta OK da API.");
+            console.log("Resposta OK da API /quiz.");
             return "OK";
           } else {
-            throw new Error("Erro ao enviar os dados: " + response.statusText);
+            throw new Error(
+              "Erro ao enviar os dados para /quiz: " + response.statusText
+            );
+          }
+        })
+        .then(() => {
+          // Send data to /historico
+          return fetch("https://testee/api/historico", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(historicoPayload),
+          });
+        })
+        .then((response) => {
+          console.log("Response status from /historico:", response.status);
+          if (response.ok) {
+            console.log("Resposta OK da API /historico.");
+            return "OK";
+          } else {
+            throw new Error(
+              "Erro ao enviar os dados para /historico: " + response.statusText
+            );
           }
         })
         .then((message) => {
-          console.log("Resposta da API:", message);
+          console.log("Resposta da API /historico:", message);
           setIsCompleted(true);
           setIsLoading(false);
         })
@@ -345,7 +551,27 @@ export default function PacienteModal({ onClose }) {
           setIsLoading(false);
           onClose();
           localStorage.removeItem("formData");
-          sessionStorage.clear();
+          // Clear all localStorage items
+          Object.keys(localStorage).forEach((key) => {
+            if (
+              key.startsWith("dp2_") ||
+              key.startsWith("ff2_") ||
+              key.startsWith("nn2_") ||
+              key.startsWith("ii2_") ||
+              key.startsWith("ss2_") ||
+              key.startsWith("dfm2_") ||
+              key.startsWith("am2_") ||
+              key.startsWith("ppm2_") ||
+              key.startsWith("fdm2_") ||
+              key.startsWith("dfp2_") ||
+              key.startsWith("ap2_") ||
+              key.startsWith("ppp2_") ||
+              key.startsWith("fdp2_")
+            ) {
+              localStorage.removeItem(key);
+            }
+          });
+          clearAllStorageData();
           console.log("Cadastro finalizado, aguarde");
         });
     } else {
