@@ -1,11 +1,11 @@
-"use client";
-
 import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
 import InfoIcon from "../../assets/information-2-fill.svg";
+import DeleteIcon from "../../assets/trash.svg";
+import "./DadosFamiliaMaterna2.css";
 
 export default function DadosFamiliaMaterna2({
   onFormChange,
@@ -53,6 +53,7 @@ export default function DadosFamiliaMaterna2({
       ? JSON.parse(stored)
       : initialData?.tiosListMaterno?.some((item) => item.teveCancer) || false;
   });
+
   const [uncleAuntCancerDetails, setUncleAuntCancerDetails] = useState(() => {
     const stored = localStorage.getItem("dfm2_uncleAuntCancerDetails");
     return stored
@@ -64,16 +65,35 @@ export default function DadosFamiliaMaterna2({
             age: cancer.idadeDiagnostico || "",
             showAgeDropdown: false,
           })),
-          parentesco:
-            tio.sexo === "masculino"
-              ? { value: "tio", label: "Tio" }
-              : { value: "tia", label: "Tia" },
+          parentesco: null,
         })) || [];
   });
 
   const handleRelationChange = (index, selectedRelation) => {
     const updatedDetails = uncleAuntCancerDetails.map((d, i) =>
       i === index ? { ...d, parentesco: selectedRelation } : d
+    );
+    setUncleAuntCancerDetails(updatedDetails);
+    localStorage.setItem(
+      "dfm2_uncleAuntCancerDetails",
+      JSON.stringify(updatedDetails)
+    );
+  };
+
+  const handleDeleteMotherCancer = (indexToDelete) => {
+    const updatedCancerDetails = motherCancerDetails.filter(
+      (_, index) => index !== indexToDelete
+    );
+    setMotherCancerDetails(updatedCancerDetails);
+    localStorage.setItem(
+      "dfm2_motherCancerDetails",
+      JSON.stringify(updatedCancerDetails)
+    );
+  };
+
+  const handleDeleteUncleAunt = (indexToDelete) => {
+    const updatedDetails = uncleAuntCancerDetails.filter(
+      (_, index) => index !== indexToDelete
     );
     setUncleAuntCancerDetails(updatedDetails);
     localStorage.setItem(
@@ -138,7 +158,11 @@ export default function DadosFamiliaMaterna2({
             teveCancer: uncleAuntCancer,
             qtdTiosCancer: uncleAuntCancer ? uncleAuntCancerDetails.length : 0,
             ladoMaterno: "materno",
-            sexo: detail.parentesco.value === "tio" ? "masculino" : "feminino",
+            sexo: detail.parentesco
+              ? detail.parentesco.value === "tio"
+                ? "masculino"
+                : "feminino"
+              : "",
             outroCancerList: detail.type.map((cancer) => ({
               id: index,
               idadeDiagnostico: cancer.age || 0,
@@ -191,7 +215,7 @@ export default function DadosFamiliaMaterna2({
   const handleAddCancerDetail = () => {
     const updatedDetails = [
       ...uncleAuntCancerDetails,
-      { type: [], parentesco: { value: "tio", label: "Tio" } },
+      { type: [], parentesco: null },
     ];
     setUncleAuntCancerDetails(updatedDetails);
     localStorage.setItem(
@@ -318,69 +342,80 @@ export default function DadosFamiliaMaterna2({
                 </label>
 
                 {motherCancerDetails.map((cancerDetail, index) => (
-                  <label key={index} className="dfm-label">
-                    <div className="dfm-idade">
-                      <span>
-                        Idade do diagnóstico para ({cancerDetail.label})
-                        {cancerDetail.showAgeDropdown ? (
-                          <Select
-                            placeholder="Selecione a idade"
-                            options={[
-                              ...ageOptions,
-                              { value: "nao_sei", label: "Não sei" },
-                            ]}
-                            value={
-                              cancerDetail.age
-                                ? {
-                                    value: cancerDetail.age,
-                                    label: cancerDetail.age,
-                                  }
-                                : null
-                            }
-                            onChange={(selectedOption) => {
-                              handleAgeChange(index, selectedOption.label);
-                            }}
-                            className="dfm-select"
-                          />
-                        ) : (
-                          <input
-                            type="number"
-                            value={cancerDetail.age}
-                            onChange={(e) =>
-                              handleAgeChange(index, e.target.value)
-                            }
-                            className="dfm-input"
-                          />
+                  <div key={index} className="dfm-cancer-detail">
+                    <label className="dfm-label">
+                      <div className="dfm-idade">
+                        <span>
+                          Idade do diagnóstico para ({cancerDetail.label})
+                          {cancerDetail.showAgeDropdown ? (
+                            <Select
+                              placeholder="Selecione a idade"
+                              options={[
+                                ...ageOptions,
+                                { value: "nao_sei", label: "Não sei" },
+                              ]}
+                              value={
+                                cancerDetail.age
+                                  ? {
+                                      value: cancerDetail.age,
+                                      label: cancerDetail.age,
+                                    }
+                                  : null
+                              }
+                              onChange={(selectedOption) => {
+                                handleAgeChange(index, selectedOption.label);
+                              }}
+                              className="dfm-select"
+                            />
+                          ) : (
+                            <input
+                              type="number"
+                              value={cancerDetail.age}
+                              onChange={(e) =>
+                                handleAgeChange(index, e.target.value)
+                              }
+                              className="dfm-input"
+                            />
+                          )}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => toggleAgeInput(index)}
+                          className="dfm-toggle-button"
+                        >
+                          {cancerDetail.showAgeDropdown
+                            ? "Digitar idade"
+                            : "Não sei"}
+                        </button>
+                        <img
+                          src={InfoIcon}
+                          alt="Info"
+                          className="info-icon-idade"
+                          onClick={() =>
+                            setTooltipIndex(
+                              index === tooltipIndex ? null : index
+                            )
+                          }
+                        />
+                        {tooltipIndex === index && (
+                          <div className="tooltip-idade">
+                            Caso seu paciente não saiba a idade exata do
+                            diagnóstico de câncer em um familiar, questione se
+                            foi antes ou depois dos 50 anos. Essa estimativa é
+                            mais fácil de lembrar e ainda oferece um corte de
+                            idade útil para a avaliação de risco.
+                          </div>
                         )}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => toggleAgeInput(index)}
-                        className="dfm-toggle-button"
-                      >
-                        {cancerDetail.showAgeDropdown
-                          ? "Digitar idade"
-                          : "Não sei"}
-                      </button>
-                      <img
-                        src={InfoIcon}
-                        alt="Info"
-                        className="info-icon-idade"
-                        onClick={() =>
-                          setTooltipIndex(index === tooltipIndex ? null : index)
-                        }
-                      />
-                      {tooltipIndex === index && (
-                        <div className="tooltip-idade">
-                          Caso seu paciente não saiba a idade exata do
-                          diagnóstico de câncer em um familiar, questione se foi
-                          antes ou depois dos 50 anos. Essa estimativa é mais
-                          fácil de lembrar e ainda oferece um corte de idade
-                          útil para a avaliação de risco.
-                        </div>
-                      )}
-                    </div>
-                  </label>
+                      </div>
+                    </label>
+                    <button
+                      className="dfm-btn-delete"
+                      type="button"
+                      onClick={() => handleDeleteMotherCancer(index)}
+                    >
+                      <img src={DeleteIcon} alt="Deletar" />
+                    </button>
+                  </div>
                 ))}
               </>
             )}
@@ -613,6 +648,13 @@ export default function DadosFamiliaMaterna2({
                             )}
                           </div>
                         ))}
+                        <button
+                          className="dfm-btn-delete"
+                          type="button"
+                          onClick={() => handleDeleteUncleAunt(detailIndex)}
+                        >
+                          <img src={DeleteIcon} alt="Deletar" />
+                        </button>
                       </div>
                     ))}
                     <button

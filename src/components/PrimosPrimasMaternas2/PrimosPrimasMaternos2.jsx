@@ -1,5 +1,3 @@
-"use client";
-
 import { useState, useEffect } from "react";
 import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
@@ -7,6 +5,7 @@ import { ageOptions } from "../../data/ageOptions";
 import InfoIcon from "../../assets/information-2-fill.svg";
 import DeleteIcon from "../../assets/trash.svg";
 import PropTypes from "prop-types";
+import "./PrimosPrimasMaternos2.css";
 
 export default function PrimosPrimasMaternos2({
   onFormChange,

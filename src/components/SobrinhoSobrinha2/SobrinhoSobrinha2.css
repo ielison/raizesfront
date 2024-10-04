@@ -7,7 +7,7 @@
   overflow-y: hidden;
 }
 
-.ss-idade{
+.ss-idade {
   display: flex;
   flex-direction: row;
   gap: 22px;
@@ -15,13 +15,11 @@
   justify-content: space-between;
 }
 
-/* .parentesco-ss select {
-  height: 32px;
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-} */
+.ss-radio-group.yn {
+  display: flex;
+  margin-top: 8px;
+  gap: 8px;
+}
 
 .ss-header {
   display: flex;

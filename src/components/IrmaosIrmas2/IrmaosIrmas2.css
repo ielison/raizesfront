@@ -70,6 +70,15 @@
   cursor: pointer;
 }
 
+.ii-radio-group.yn {
+
+  display: flex;
+  margin-top: 8px;
+  gap: 8px;
+
+
+}
+
 .ii-idade {
   display: flex;
   flex-direction: row;

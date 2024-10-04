@@ -19,16 +19,18 @@ export default function FilhosFilhas2({ onFormChange }) {
   });
 
   const [childCount, setChildCount] = useState(() => {
-    return (
-      JSON.parse(localStorage.getItem("childCount")) || {
-        sons: 0,
-        daughters: 0,
-      }
-    );
+    const storedChildCount = JSON.parse(localStorage.getItem("childCount"));
+    return storedChildCount
+      ? {
+          sons: storedChildCount.sons || "",
+          daughters: storedChildCount.daughters || "",
+        }
+      : { sons: "", daughters: "" };
   });
 
   const [children, setChildren] = useState(() => {
-    return JSON.parse(localStorage.getItem("children")) || [];
+    const storedChildren = JSON.parse(localStorage.getItem("children"));
+    return storedChildren || [];
   });
 
   const [tooltipIndex, setTooltipIndex] = useState(null);
@@ -58,7 +60,9 @@ export default function FilhosFilhas2({ onFormChange }) {
       filhosList = children.map((child, index) => ({
         id: index,
         temFilhos: true,
-        qtdFilhos: childCount.sons + childCount.daughters,
+        qtdFilhos:
+          (parseInt(childCount.sons) || 0) +
+          (parseInt(childCount.daughters) || 0),
         teveCancer: true,
         qtdFilhosCancer: children.filter((c) => c.type.length > 0).length,
         sexo: child.sex === "filho" ? "masculino" : "feminino",
@@ -74,10 +78,12 @@ export default function FilhosFilhas2({ onFormChange }) {
         {
           id: 0,
           temFilhos: true,
-          qtdFilhos: childCount.sons + childCount.daughters,
+          qtdFilhos:
+            (parseInt(childCount.sons) || 0) +
+            (parseInt(childCount.daughters) || 0),
           teveCancer: false,
           qtdFilhosCancer: 0,
-          sexo: childCount.sons > 0 ? "masculino" : "feminino",
+          sexo: parseInt(childCount.sons) > 0 ? "masculino" : "feminino",
           mesmoPais: true,
           outroCancerList: [],
         },
@@ -140,7 +146,10 @@ export default function FilhosFilhas2({ onFormChange }) {
                 type="number"
                 value={childCount.sons}
                 onChange={(e) => {
-                  const value = Math.max(0, parseInt(e.target.value) || 0);
+                  const value =
+                    e.target.value === ""
+                      ? ""
+                      : Math.max(0, parseInt(e.target.value) || 0);
                   setChildCount((prev) => ({ ...prev, sons: value }));
                 }}
               />
@@ -151,7 +160,10 @@ export default function FilhosFilhas2({ onFormChange }) {
                 type="number"
                 value={childCount.daughters}
                 onChange={(e) => {
-                  const value = Math.max(0, parseInt(e.target.value) || 0);
+                  const value =
+                    e.target.value === ""
+                      ? ""
+                      : Math.max(0, parseInt(e.target.value) || 0);
                   setChildCount((prev) => ({ ...prev, daughters: value }));
                 }}
               />
@@ -195,6 +207,14 @@ export default function FilhosFilhas2({ onFormChange }) {
                         { value: "filho", label: "Filho" },
                         { value: "filha", label: "Filha" },
                       ]}
+                      value={
+                        child.sex
+                          ? {
+                              value: child.sex,
+                              label: child.sex === "filho" ? "Filho" : "Filha",
+                            }
+                          : null
+                      }
                       onChange={(selectedOption) => {
                         const newChildren = [...children];
                         newChildren[index].sex = selectedOption.value;

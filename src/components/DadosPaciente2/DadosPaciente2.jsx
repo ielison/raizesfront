@@ -6,58 +6,72 @@ import Select from "react-select";
 import DeleteIcon from "../../assets/trash.svg";
 import { cancerOptions } from "../../data/cancerOptions";
 
-export default function DadosPaciente2({ onFormChange }) {
+export default function DadosPaciente2({ onFormChange, initialData }) {
   const [diagnoses, setDiagnoses] = useState(() => {
-    const storedDiagnoses = JSON.parse(localStorage.getItem("diagnoses"));
-    return storedDiagnoses || [{ type: [], age: "" }];
+    const storedDiagnoses = localStorage.getItem("dp2_diagnoses");
+    return storedDiagnoses ? JSON.parse(storedDiagnoses) : [{ type: [], age: "" }];
   });
 
   const [hasCancer, setHasCancer] = useState(() => {
-    const storedHasCancer = JSON.parse(localStorage.getItem("hasCancer"));
-    return storedHasCancer !== null ? storedHasCancer : false;
+    const storedHasCancer = localStorage.getItem("dp2_hasCancer");
+    return storedHasCancer ? JSON.parse(storedHasCancer) : false;
   });
 
   const [hasOtherDiagnosis, setHasOtherDiagnosis] = useState(() => {
-    const storedHasOtherDiagnosis = JSON.parse(
-      localStorage.getItem("hasOtherDiagnosis")
-    );
-    return storedHasOtherDiagnosis !== null ? storedHasOtherDiagnosis : false;
+    const storedHasOtherDiagnosis = localStorage.getItem("dp2_hasOtherDiagnosis");
+    return storedHasOtherDiagnosis ? JSON.parse(storedHasOtherDiagnosis) : false;
   });
 
   const [userData, setUserData] = useState(() => {
-    const storedUserData = JSON.parse(localStorage.getItem("userData"));
-    return (
-      storedUserData || {
-        nome: "",
-        sexo: "",
-        idade: "",
-        teveCancer: false,
-        qualCancer: "",
-        idadeDiagnostico: "",
-        telefone: "",
-        dataConsulta: "",
-      }
-    );
+    const storedUserData = localStorage.getItem("dp2_userData");
+    return storedUserData
+      ? JSON.parse(storedUserData)
+      : {
+          nome: "",
+          sexo: "",
+          idade: "",
+          teveCancer: false,
+          qualCancer: [],
+          idadeDiagnostico: "",
+          telefone: "",
+          dataConsulta: "",
+        };
   });
 
   useEffect(() => {
-    localStorage.setItem("userData", JSON.stringify(userData));
-    localStorage.setItem("diagnoses", JSON.stringify(diagnoses));
-    localStorage.setItem("hasCancer", JSON.stringify(hasCancer));
-    localStorage.setItem(
-      "hasOtherDiagnosis",
-      JSON.stringify(hasOtherDiagnosis)
-    );
+    if (initialData) {
+      setUserData(prevData => ({
+        ...prevData,
+        ...initialData.usuariPrincipal,
+        qualCancer: initialData.usuariPrincipal?.qualCancer
+          ? initialData.usuariPrincipal.qualCancer.split(", ").map(cancer => ({ value: cancer, label: cancer }))
+          : []
+      }));
+      setHasCancer(initialData.usuariPrincipal?.teveCancer || false);
+      setHasOtherDiagnosis(initialData.usuariPrincipal?.outroCancer || false);
+      if (initialData.usuariPrincipal?.outroCancerList) {
+        setDiagnoses(
+          initialData.usuariPrincipal.outroCancerList.map((cancer) => ({
+            type: cancer.tipoCancer.split(", ").map(type => ({ value: type, label: type })),
+            age: cancer.idadeDiagnostico.toString(),
+          }))
+        );
+      }
+    }
+  }, [initialData]);useEffect(() => {
+    localStorage.setItem("dp2_userData", JSON.stringify(userData));
+    localStorage.setItem("dp2_diagnoses", JSON.stringify(diagnoses));
+    localStorage.setItem("dp2_hasCancer", JSON.stringify(hasCancer));
+    localStorage.setItem("dp2_hasOtherDiagnosis", JSON.stringify(hasOtherDiagnosis));
 
-    // Atualiza o formulário sempre que algo muda
     onFormChange({
       usuariPrincipal: {
         ...userData,
-        qualCancer: userData.qualCancer || "",
+        qualCancer: userData.qualCancer.map(cancer => cancer.label).join(", "),
         outroCancer: hasOtherDiagnosis,
         outroCancerList: diagnoses.map((d) => ({
           idCancer: 0,
-          tipoCancer: d.type.map((opt) => opt.label).join(", ") || "",
+          tipoCancer: d.type.map((opt) => opt.label).join(", "),
           idadeDiagnostico: d.age ? Number(d.age) : 0,
         })),
       },
@@ -192,11 +206,12 @@ export default function DadosPaciente2({ onFormChange }) {
                 isMulti
                 options={cancerOptions}
                 placeholder="Selecione..."
+                value={userData.qualCancer}
                 onChange={(selectedOptions) => {
-                  const cancerTypes = selectedOptions
-                    .map((opt) => opt.label)
-                    .join(", ");
-                  handleFieldChange("qualCancer", cancerTypes);
+                  setUserData(prev => ({
+                    ...prev,
+                    qualCancer: selectedOptions
+                  }));
                 }}
               />
             </label>
@@ -294,4 +309,5 @@ export default function DadosPaciente2({ onFormChange }) {
 
 DadosPaciente2.propTypes = {
   onFormChange: PropTypes.func.isRequired,
+  initialData: PropTypes.object,
 };

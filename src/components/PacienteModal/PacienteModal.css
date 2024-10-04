@@ -15,12 +15,10 @@
   background: white;
   width: 60%;
   height: 650px;
-  /* Altura fixa do modal */
   position: relative;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  /* Impede que o conteúdo exceda o container */
 }
 
 .step-label {
@@ -40,7 +38,6 @@
   background-color: var(--primary-700);
 }
 
-
 .pacienteModal__close {
   position: absolute;
   top: 10px;
@@ -51,14 +48,12 @@
   cursor: pointer;
   color: #222222;
   z-index: 1001;
-  /* Garante que o botão esteja acima do conteúdo */
 }
 
 .pacienteModal__content {
   display: flex;
   flex: 1;
   overflow: hidden;
-  /* Garante que a rolagem não apareça na área do conteúdo do modal */
 }
 
 .pacienteModal__nav {
@@ -66,14 +61,12 @@
   background-color: #f0f0f0;
   padding: 20px;
   overflow-y: auto;
-  /* Permite rolar a navegação se o conteúdo for maior que a altura do modal */
 }
 
 .pacienteModal__nav ul {
   list-style-type: none;
   padding: 0;
   margin: 0;
-  /* Remove margem para evitar espaçamento indesejado */
 }
 
 .pacienteModal__nav li {
@@ -96,8 +89,7 @@
   font-weight: bold;
 }
 
-
-.paciente-modal-title{
+.paciente-modal-title {
   font-size: 18px;
   font-weight: bold;
   color: var(--primary-700);
@@ -107,32 +99,21 @@
   flex: 1;
   padding: 20px;
   overflow-y: auto;
-  /* Permite rolar o conteúdo do formulário se for maior que a altura do modal */
   padding-bottom: 60px;
-  /* Espaço para os botões na parte inferior */
   overflow-x: hidden;
 }
 
 .pacienteModal__footer {
   position: absolute;
-  /* Posiciona os botões fixamente dentro da modal */
   bottom: 0;
-  /* Fica na parte inferior */
   left: 0;
   right: 0;
-  /* Preenche toda a largura */
   display: flex;
-  /* Usar flexbox para alinhar os botões */
   justify-content: space-between;
-  /* Espaça os botões */
   background: white;
-  /* Cor de fundo dos botões */
   padding: 10px;
-  /* Espaçamento interno */
   box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
-  /* Sombra opcional */
   z-index: 1000;
-  /* Garante que o footer esteja acima do conteúdo do modal */
 }
 
 .pacienteModal__footer button:hover {
@@ -163,4 +144,71 @@
 
 .completion-message button {
   margin-top: 10px;
+}
+
+/* Responsividade para tablets */
+@media screen and (max-width: 1024px) {
+  .pacienteModal__container {
+    width: 80%;
+    height: 80vh;
+  }
+
+  .pacienteModal__nav {
+    width: 30%;
+  }
+
+  .step-label {
+    width: 150px;
+    font-size: 14px;
+  }
+}
+
+/* Responsividade para celulares pequenos */
+@media screen and (max-width: 768px) {
+  .pacienteModal__container {
+    width: 95%;
+    height: 90vh;
+  }
+
+  .pacienteModal__content {
+    flex-direction: column;
+  }
+
+  .pacienteModal__nav {
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    padding: 0;
+  }
+
+  .pacienteModal__nav.show {
+    max-height: 300px;
+    padding: 20px;
+  }
+
+  .pacienteModal__form {
+    padding-top: 60px;
+    /* Espaço para o botão de menu */
+  }
+
+  .step-label {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  /* Botão para mostrar/ocultar navegação em celulares */
+  .mobile-nav-toggle {
+    display: block;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 1001;
+    background: var(--primary-500);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    font-size: 16px;
+    cursor: pointer;
+  }
 }

@@ -17,11 +17,11 @@ export default function NetosNetas2({ onFormChange }) {
   });
 
   const [qtdNetos, setQtdNetos] = useState(() => {
-    return JSON.parse(localStorage.getItem("qtdNetos")) || 0;
+    return localStorage.getItem("qtdNetos") || "";
   });
 
   const [qtdNetas, setQtdNetas] = useState(() => {
-    return JSON.parse(localStorage.getItem("qtdNetas")) || 0;
+    return localStorage.getItem("qtdNetas") || "";
   });
 
   const [netosList, setNetosList] = useState(() => {
@@ -33,8 +33,8 @@ export default function NetosNetas2({ onFormChange }) {
   useEffect(() => {
     localStorage.setItem("temNetos", JSON.stringify(temNetos));
     localStorage.setItem("teveCancer", JSON.stringify(teveCancer));
-    localStorage.setItem("qtdNetos", JSON.stringify(qtdNetos));
-    localStorage.setItem("qtdNetas", JSON.stringify(qtdNetas));
+    localStorage.setItem("qtdNetos", qtdNetos);
+    localStorage.setItem("qtdNetas", qtdNetas);
     localStorage.setItem("netosList", JSON.stringify(netosList));
 
     let updatedNetosList;
@@ -51,7 +51,7 @@ export default function NetosNetas2({ onFormChange }) {
         },
       ];
     } else {
-      const totalNetos = qtdNetos + qtdNetas;
+      const totalNetos = (parseInt(qtdNetos) || 0) + (parseInt(qtdNetas) || 0);
       updatedNetosList = netosList.map((neto, index) => ({
         id: index,
         temNeto: temNetos,
@@ -66,7 +66,7 @@ export default function NetosNetas2({ onFormChange }) {
             : [
                 {
                   id: 0,
-                  idadeDiagnostico: 0,
+                  idadeDiagnostico: "",
                   tipoCancer: "",
                 },
               ],
@@ -127,9 +127,14 @@ export default function NetosNetas2({ onFormChange }) {
               <input
                 type="number"
                 value={qtdNetos}
-                onChange={(e) =>
-                  setQtdNetos(Math.max(0, parseInt(e.target.value) || 0))
-                }
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setQtdNetos(
+                    value === ""
+                      ? ""
+                      : Math.max(0, parseInt(value) || 0).toString()
+                  );
+                }}
               />
             </label>
             <label>
@@ -137,9 +142,14 @@ export default function NetosNetas2({ onFormChange }) {
               <input
                 type="number"
                 value={qtdNetas}
-                onChange={(e) =>
-                  setQtdNetas(Math.max(0, parseInt(e.target.value) || 0))
-                }
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setQtdNetas(
+                    value === ""
+                      ? ""
+                      : Math.max(0, parseInt(value) || 0).toString()
+                  );
+                }}
               />
             </label>
           </div>
@@ -175,18 +185,27 @@ export default function NetosNetas2({ onFormChange }) {
               {netosList.map((neto, netoIndex) => (
                 <div key={netoIndex} className="grandchild-container">
                   <label>
-                    Sexo
+                    Parentesco
                     <Select
                       options={[
-                        { value: "masculino", label: "Masculino" },
-                        { value: "feminino", label: "Feminino" },
+                        { value: "masculino", label: "Neto" },
+                        { value: "feminino", label: "Neta" },
                       ]}
+                      value={
+                        neto.sexo
+                          ? {
+                              value: neto.sexo,
+                              label:
+                                neto.sexo === "masculino" ? "Neto" : "Neta",
+                            }
+                          : null
+                      }
                       onChange={(selectedOption) => {
                         const updatedNetosList = [...netosList];
                         updatedNetosList[netoIndex].sexo = selectedOption.value;
                         setNetosList(updatedNetosList);
                       }}
-                      placeholder="Selecione o sexo"
+                      placeholder="Selecione o parentesco"
                     />
                   </label>
                   <label>
@@ -205,7 +224,7 @@ export default function NetosNetas2({ onFormChange }) {
                           selectedOptions.map((opt, index) => ({
                             id: index,
                             tipoCancer: opt.label,
-                            idadeDiagnostico: 0,
+                            idadeDiagnostico: "",
                           }));
                         setNetosList(updatedNetosList);
                       }}
@@ -237,12 +256,16 @@ export default function NetosNetas2({ onFormChange }) {
                             value={cancer.idadeDiagnostico}
                             onChange={(e) => {
                               const updatedNetosList = [...netosList];
+                              const value = e.target.value;
                               updatedNetosList[netoIndex].outroCancerList[
                                 cancerIndex
-                              ].idadeDiagnostico = Math.max(
-                                0,
-                                parseInt(e.target.value) || 0
-                              );
+                              ].idadeDiagnostico =
+                                value === ""
+                                  ? ""
+                                  : Math.max(
+                                      0,
+                                      parseInt(value) || 0
+                                    ).toString();
                               setNetosList(updatedNetosList);
                             }}
                           />

@@ -1,11 +1,11 @@
-"use client";
-
 import { useState, useEffect } from "react";
 import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
 import InfoIcon from "../../assets/information-2-fill.svg";
 import PropTypes from "prop-types";
+import DeleteIcon from "../../assets/trash.svg";
+import "./AvosMaternos2.css"
 
 export default function AvosMaternos2({ onFormChange, initialData = {} }) {
   const [tooltipIndex, setTooltipIndex] = useState(null);
@@ -72,6 +72,28 @@ export default function AvosMaternos2({ onFormChange, initialData = {} }) {
       "am2_grandmotherCancerDetails",
       JSON.stringify(updatedDetails)
     );
+  };
+
+  const handleDeleteCancerDetail = (index, isGrandmother) => {
+    if (isGrandmother) {
+      setGrandmotherCancerDetails((prevDetails) => {
+        const newDetails = prevDetails.filter((_, i) => i !== index);
+        localStorage.setItem(
+          "am2_grandmotherCancerDetails",
+          JSON.stringify(newDetails)
+        );
+        return newDetails;
+      });
+    } else {
+      setGrandfatherCancerDetails((prevDetails) => {
+        const newDetails = prevDetails.filter((_, i) => i !== index);
+        localStorage.setItem(
+          "am2_grandfatherCancerDetails",
+          JSON.stringify(newDetails)
+        );
+        return newDetails;
+      });
+    }
   };
 
   const handleCancerTypeChangeGrandfather = (selectedOptions) => {
@@ -333,6 +355,13 @@ export default function AvosMaternos2({ onFormChange, initialData = {} }) {
                         </div>
                       )}
                     </label>
+                    <button
+                      className="avosm-btn-delete"
+                      type="button"
+                      onClick={() => handleDeleteCancerDetail(index, true)}
+                    >
+                      <img src={DeleteIcon} alt="Deletar" />
+                    </button>
                   </div>
                 ))}
               </>
@@ -421,6 +450,13 @@ export default function AvosMaternos2({ onFormChange, initialData = {} }) {
                         </div>
                       )}
                     </label>
+                    <button
+                      className="avosm-btn-delete"
+                      type="button"
+                      onClick={() => handleDeleteCancerDetail(index, false)}
+                    >
+                      <img src={DeleteIcon} alt="Deletar" />
+                    </button>
                   </div>
                 ))}
               </>

@@ -289,7 +289,7 @@ export default function FamiliaresDistantesMaterno2({ onFormChange }) {
                         />
                       ) : (
                         <input
-                          type="text"
+                          type="number"
                           placeholder="Digite a idade"
                           value={cancer.age || ""}
                           onChange={(e) => handleAgeChange(e, typeIndex, index)}

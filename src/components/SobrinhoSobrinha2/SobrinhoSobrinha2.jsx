@@ -9,7 +9,11 @@ import InfoIcon from "../../assets/information-2-fill.svg";
 
 export default function SobrinhosSobrinhas2({ onFormChange }) {
   const [relationships, setRelationships] = useState(() => {
-    return JSON.parse(localStorage.getItem("ss_relationships")) || ["naoPossuoSobrinhos"];
+    return (
+      JSON.parse(localStorage.getItem("ss_relationships")) || [
+        "naoPossuoSobrinhos",
+      ]
+    );
   });
 
   const [hasCancer, setHasCancer] = useState(() => {
@@ -38,10 +42,16 @@ export default function SobrinhosSobrinhas2({ onFormChange }) {
     localStorage.setItem("ss_relationships", JSON.stringify(relationships));
     localStorage.setItem("ss_hasCancer", JSON.stringify(hasCancer));
     localStorage.setItem("ss_siblings", JSON.stringify(siblings));
-    localStorage.setItem("ss_siblingQuantities", JSON.stringify(siblingQuantities));
+    localStorage.setItem(
+      "ss_siblingQuantities",
+      JSON.stringify(siblingQuantities)
+    );
 
     const temSobrinhos = !relationships.includes("naoPossuoSobrinhos");
-    const qtdSobrinhos = Object.values(siblingQuantities).reduce((total, qty) => total + qty, 0);
+    const qtdSobrinhos = Object.values(siblingQuantities).reduce(
+      (total, qty) => total + qty,
+      0
+    );
 
     let sobrinhosList = [];
 
@@ -66,7 +76,9 @@ export default function SobrinhosSobrinhas2({ onFormChange }) {
           temSobrinhos: temSobrinhos,
           qtdSobrinhos: qtdSobrinhos,
           teveCancer: true,
-          qtdSobrinhosCancer: siblings.filter((s) => s.type && s.type.length > 0).length,
+          qtdSobrinhosCancer: siblings.filter(
+            (s) => s.type && s.type.length > 0
+          ).length,
           meioSobrinho: sibling.relation && sibling.relation.includes("meio"),
           sexo:
             (sibling.relation && sibling.relation.includes("sobrinhos")) ||
@@ -76,11 +88,12 @@ export default function SobrinhosSobrinhas2({ onFormChange }) {
           outroCancerList: sibling.type
             ? sibling.type.map((tipo) => ({
                 id: 0,
-                idadeDiagnostico: sibling.ages && sibling.ages[tipo.value]
-                  ? typeof sibling.ages[tipo.value] === "object"
-                    ? sibling.ages[tipo.value].value
-                    : parseInt(sibling.ages[tipo.value])
-                  : 0,
+                idadeDiagnostico:
+                  sibling.ages && sibling.ages[tipo.value]
+                    ? typeof sibling.ages[tipo.value] === "object"
+                      ? sibling.ages[tipo.value].value
+                      : parseInt(sibling.ages[tipo.value])
+                    : 0,
                 tipoCancer: tipo.label,
               }))
             : [],
@@ -200,7 +213,7 @@ export default function SobrinhosSobrinhas2({ onFormChange }) {
               ))}
               <label>
                 Algum deles foi acometido por algum câncer ou neoplasia?
-                <div className="ss-radio-group">
+                <div className="ss-radio-group yn">
                   <label>
                     <input
                       type="radio"
@@ -234,6 +247,14 @@ export default function SobrinhosSobrinhas2({ onFormChange }) {
                             value: rel,
                             label: relationshipLabels[rel],
                           }))}
+                          value={
+                            sibling.relation
+                              ? {
+                                  value: sibling.relation,
+                                  label: relationshipLabels[sibling.relation],
+                                }
+                              : null
+                          }
                           onChange={(selectedOption) => {
                             const newSiblings = [...siblings];
                             newSiblings[siblingIndex].relation =
@@ -260,7 +281,7 @@ export default function SobrinhosSobrinhas2({ onFormChange }) {
                       {sibling.type.map((cancerType, typeIndex) => (
                         <label key={typeIndex} className="ss-idade">
                           <div className="ss-idade-div">
-                            Idade do diagnóstico para {cancerType.label}
+                            Idade do diagnóstico para ({cancerType.label})
                             {sibling.showAgeDropdowns[cancerType.value] ? (
                               <Select
                                 options={ageOptions}

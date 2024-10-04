@@ -298,7 +298,7 @@ export default function PacienteModal({ onClose }) {
 
   const collectLocalStorageData = () => {
     const localStorageData = {
-      dadosPaciente: JSON.parse(localStorage.getItem("dp2_data") || "{}"),
+      dadosPaciente: JSON.parse(localStorage.getItem("dp2_userData") || "{}"),
       filhosFilhas: JSON.parse(
         localStorage.getItem("ff2_filhosDetails") || "[]"
       ),
@@ -604,19 +604,7 @@ export default function PacienteModal({ onClose }) {
     setCurrentSubItem(subItemId);
   };
 
-  useEffect(() => {
-    const handleOutsideClick = (e) => {
-      if (modalRef.current && !modalRef.current.contains(e.target)) {
-        onClose();
-      }
-    };
-
-    document.addEventListener("mousedown", handleOutsideClick);
-
-    return () => {
-      document.removeEventListener("mousedown", handleOutsideClick);
-    };
-  }, [onClose]);
+  
 
   useEffect(() => {
     console.log(`Step: ${currentStep}, Subitem: ${currentSubItem}`);
@@ -628,6 +616,8 @@ export default function PacienteModal({ onClose }) {
         <button className="pacienteModal__close" onClick={handleModalClose}>
           &times;
         </button>
+
+        
 
         <div className="pacienteModal__content">
           {isCompleted ? (
