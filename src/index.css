@@ -6,8 +6,21 @@
   --tertiary-500: #7BBDAD;
   --white: #fff;
 
-  --font: 'Poppins', sans-serif;
-  
+  --font: 'Inter', sans-serif;
+
+}
+
+input::placeholder,
+textarea::placeholder {
+  font-family: 'Inter', sans-serif;
+  /* Altere para a fonte desejada */
+  font-size: 14px;
+  /* Tamanho da fonte */
+  color: #888;
+  /* Cor do placeholder */
+  font-weight: normal;
+  /* Espessura da fonte */
+  height: 42px;
 }
 
 * {
@@ -17,7 +30,7 @@
 }
 
 body {
-  
+
   font-family: var(--font) !important;
   font-style: normal;
 }
