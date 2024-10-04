@@ -1,0 +1,79 @@
+.sidebar {
+  width: 250px;
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-right: 1px solid #ddd;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.sidebar ul {
+  list-style-type: none;
+  /* Remove os pontos da lista */
+  padding-left: 0;
+}
+
+.sidebar-title {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+  text-align: left;
+  width: 100%;
+  color: black;
+  display: flex;
+  justify-content: space-between;
+  /* Adiciona espaço entre o texto e a seta */
+  align-items: center;
+}
+
+.arrow {
+  font-size: 0.9rem;
+  /* Tamanho da seta */
+  margin-left: 0.5rem;
+  /* Espaçamento entre o título e a seta */
+}
+
+.sidebar-items {
+  list-style-type: none;
+  /* Remove os pontos da lista */
+  padding-left: 1rem;
+  /* Espaçamento para os itens */
+  margin-top: 0.5rem;
+  max-height: 0;
+  /* Inicia com altura 0 */
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  /* Transição suave */
+  color: #0056b3;
+}
+
+.sidebar-items.expanded {
+  max-height: 500px;
+  /* Altura máxima para a expansão, ajuste conforme necessário */
+}
+
+.sidebar-item {
+  padding: 0.5rem 0;
+  cursor: pointer;
+}
+
+.sidebar-item:hover {
+  background-color: #e9ecef;
+}
+
+.sidebar-item.active {
+  background-color: var(--primary-500);
+  /* Cor de fundo para o item ativo */
+  color: black;
+  /* Cor do texto para o item ativo */
+  font-weight: bold;
+  /* Estilo do texto para o item ativo */
+}
+
+.sidebar-item.active:hover {
+  background-color: #0056b3;
+  /* Cor de fundo ao passar o mouse sobre o item ativo */
+}
