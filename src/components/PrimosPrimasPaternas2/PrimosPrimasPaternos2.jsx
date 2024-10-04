@@ -129,7 +129,7 @@ export default function PrimosPrimasPaternos2({
     <div className="ppp-form-container">
       <div className="ppp-grupo">
         <label>
-          Algum/alguns primos paternos já foram acometidos?
+           Algum/alguns primos paternos já tiveram câncer ou neoplasia?
           <div className="ppp-checkbox-group">
             <label>
               <input
