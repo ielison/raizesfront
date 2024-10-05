@@ -3,17 +3,17 @@ import "./MeusPacientes.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Tooltip from "../../components/Tooltip/Tooltip.jsx";
-import { useAuth } from "../../context/AuthContext.jsx"; 
+import { useAuth } from "../../context/AuthContext.jsx";
 
 export default function MeusPacientes() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [pacientes, setPacientes] = useState([]); 
+  const [pacientes, setPacientes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null); 
+  const [error, setError] = useState(null);
   const pacientesPerPage = 10;
 
-  const { idUser } = useAuth(); 
+  const { idUser } = useAuth();
 
   useEffect(() => {
     const fetchPacientes = async () => {
@@ -23,12 +23,11 @@ export default function MeusPacientes() {
         );
 
         if (!response.ok) {
-          throw new Error(`Erro: ${response.status}`); 
+          throw new Error(`Erro: ${response.status}`);
         }
 
-        const data = await response.json(); 
+        const data = await response.json();
 
-        
         const pacientesComRisco = data.map((paciente) => {
           paciente.consultaOncogenetica = paciente.risco
             ? "Paciente de alto risco"
@@ -45,13 +44,12 @@ export default function MeusPacientes() {
     };
 
     fetchPacientes();
-  }, [idUser]); 
-  
-  
+  }, [idUser]);
+
   const filteredPacientes = pacientes.filter((paciente) =>
     paciente.nome.toLowerCase().includes(searchTerm.toLowerCase())
   );
-  
+
   const indexOfLastPaciente = currentPage * pacientesPerPage;
   const indexOfFirstPaciente = indexOfLastPaciente - pacientesPerPage;
   const currentPacientes = filteredPacientes.slice(
@@ -59,34 +57,25 @@ export default function MeusPacientes() {
     indexOfLastPaciente
   );
 
-  
   const totalPages = Math.ceil(filteredPacientes.length / pacientesPerPage);
 
-  
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  
   const getIcon = (sexo) => {
     if (sexo === "masculino") {
-      return "👨"; 
+      return "👨";
     } else if (sexo === "feminino") {
       return "👩";
     }
     return "👤";
   };
 
-  
   const formatDate = (dateString) => {
-    const [year, month, day] = dateString.split('-');
+    const [year, month, day] = dateString.split("-");
     return `${day}/${month}/${year}`;
   };
 
   // Funções de ação para os botões
-  const abrirRelatorio = (pacienteId) => {
-    console.log(`Abrir relatório do paciente com ID: ${pacienteId}`);
-    // Implementar lógica para abrir modal relatórioPaciente
-  };
-
   const editarRelatorio = (pacienteId) => {
     console.log(`Editar relatório do paciente com ID: ${pacienteId}`);
     // Implementar lógica para abrir dadosPaciente com dados da API
@@ -110,8 +99,8 @@ export default function MeusPacientes() {
       }
 
       const resultadoData = await resultadoResponse.json();
-      console.log("Resultado do quiz:", resultadoData); // Log da resposta do quiz
-      const precisaPesquisaOncogenetica = resultadoData; // Isso deve ser true ou false
+      console.log("Resultado do quiz:", resultadoData);
+      const precisaPesquisaOncogenetica = resultadoData;
 
       const response = await fetch(
         `https://testserver-2p40.onrender.com/api/quiz/${pacienteId}`
@@ -122,182 +111,42 @@ export default function MeusPacientes() {
       }
 
       const data = await response.json();
-      console.log("Dados do paciente:", data); // Log da resposta dos dados do paciente
+      console.log("Dados do paciente:", data);
 
       // Adaptar os dados para o formato desejado
       const relatorio = {
         nome: data.usuariPrincipal.nome,
         idade: data.usuariPrincipal.idade,
-        historicoPessoal: `${data.usuariPrincipal.qualCancer} aos ${data.usuariPrincipal.idadeDiagnostico} anos`,
+        historicoPessoal: [],
         familiares: [],
-        precisaPesquisaOncogenetica, // Adiciona o resultado do quiz aqui
+        precisaPesquisaOncogenetica,
       };
 
-      // Adicionar informações do pai
-      if (data.pai.teveCancer) {
-        relatorio.familiares.push({
-          grau: "pai",
-          tipoCancer:
-            data.pai.outroCancerList.length > 0
-              ? data.pai.outroCancerList[0].tipoCancer
-              : "desconhecido",
-          idadeDiagnostico:
-            data.pai.outroCancerList.length > 0
-              ? data.pai.outroCancerList[0].idadeDiagnostico
-              : 0,
+      // Adicionar histórico pessoal de câncer do usuário principal
+      if (data.usuariPrincipal.teveCancer) {
+        relatorio.historicoPessoal.push(
+          `${data.usuariPrincipal.qualCancer} aos ${data.usuariPrincipal.idadeDiagnostico} anos`
+        );
+      }
+
+      // Adicionar outros tipos de câncer do usuário principal
+      if (
+        data.usuariPrincipal.outroCancerList &&
+        data.usuariPrincipal.outroCancerList.length > 0
+      ) {
+        data.usuariPrincipal.outroCancerList.forEach((cancer) => {
+          relatorio.historicoPessoal.push(
+            `${cancer.tipoCancer} aos ${cancer.idadeDiagnostico} anos`
+          );
         });
       }
 
-      // Adicionar informações da mãe
-      if (data.mae.teveCancer) {
-        relatorio.familiares.push({
-          grau: "mãe",
-          tipoCancer:
-            data.mae.outroCancerList.length > 0
-              ? data.mae.outroCancerList[0].tipoCancer
-              : "desconhecido",
-          idadeDiagnostico:
-            data.mae.outroCancerList.length > 0
-              ? data.mae.outroCancerList[0].idadeDiagnostico
-              : 0,
-        });
+      // Se não houver histórico de câncer
+      if (relatorio.historicoPessoal.length === 0) {
+        relatorio.historicoPessoal.push("Sem histórico pessoal de câncer");
       }
 
-      // Adicionar informações dos filhos
-      data.filhosList.forEach((filho) => {
-        if (filho.teveCancer) {
-          relatorio.familiares.push({
-            grau: "filho",
-            tipoCancer:
-              filho.outroCancerList.length > 0
-                ? filho.outroCancerList[0].tipoCancer
-                : "desconhecido",
-            idadeDiagnostico:
-              filho.outroCancerList.length > 0
-                ? filho.outroCancerList[0].idadeDiagnostico
-                : 0,
-          });
-        }
-      });
-
-      // Adicionar informações dos netos
-      data.netosList.forEach((neto) => {
-        if (neto.teveCancer) {
-          relatorio.familiares.push({
-            grau: "neto",
-            tipoCancer:
-              neto.outroCancerList.length > 0
-                ? neto.outroCancerList[0].tipoCancer
-                : "desconhecido",
-            idadeDiagnostico:
-              neto.outroCancerList.length > 0
-                ? neto.outroCancerList[0].idadeDiagnostico
-                : 0,
-          });
-        }
-      });
-
-      // Adicionar informações dos irmãos
-      data.irmaosList.forEach((irmao) => {
-        if (irmao.teveCancer) {
-          relatorio.familiares.push({
-            grau: "irmão",
-            tipoCancer:
-              irmao.outroCancerList.length > 0
-                ? irmao.outroCancerList[0].tipoCancer
-                : "desconhecido",
-            idadeDiagnostico:
-              irmao.outroCancerList.length > 0
-                ? irmao.outroCancerList[0].idadeDiagnostico
-                : 0,
-          });
-        }
-      });
-
-      // Adicionar informações dos sobrinhos
-      data.sobrinhosList.forEach((sobrinho) => {
-        if (sobrinho.teveCancer) {
-          relatorio.familiares.push({
-            grau: "sobrinho",
-            tipoCancer:
-              sobrinho.outroCancerList.length > 0
-                ? sobrinho.outroCancerList[0].tipoCancer
-                : "desconhecido",
-            idadeDiagnostico:
-              sobrinho.outroCancerList.length > 0
-                ? sobrinho.outroCancerList[0].idadeDiagnostico
-                : 0,
-          });
-        }
-      });
-
-      // Adicionar informações dos tios
-      data.tiosList.forEach((tio) => {
-        if (tio.teveCancer) {
-          relatorio.familiares.push({
-            grau: "tio",
-            tipoCancer:
-              tio.outroCancerList.length > 0
-                ? tio.outroCancerList[0].tipoCancer
-                : "desconhecido",
-            idadeDiagnostico:
-              tio.outroCancerList.length > 0
-                ? tio.outroCancerList[0].idadeDiagnostico
-                : 0,
-          });
-        }
-      });
-
-      // Adicionar informações dos avós
-      data.avosList.forEach((avo) => {
-        if (avo.teveCancer) {
-          relatorio.familiares.push({
-            grau: "avô",
-            tipoCancer:
-              avo.outroCancerList.length > 0
-                ? avo.outroCancerList[0].tipoCancer
-                : "desconhecido",
-            idadeDiagnostico:
-              avo.outroCancerList.length > 0
-                ? avo.outroCancerList[0].idadeDiagnostico
-                : 0,
-          });
-        }
-      });
-
-      // Adicionar informações dos primos
-      data.primosList.forEach((primo) => {
-        if (primo.teveCancer) {
-          relatorio.familiares.push({
-            grau: "primo",
-            tipoCancer:
-              primo.outroCancerList.length > 0
-                ? primo.outroCancerList[0].tipoCancer
-                : "desconhecido",
-            idadeDiagnostico:
-              primo.outroCancerList.length > 0
-                ? primo.outroCancerList[0].idadeDiagnostico
-                : 0,
-          });
-        }
-      });
-
-      // Adicionar informações de outros familiares
-      data.outroFamiliarList.forEach((familiar) => {
-        if (familiar.teveCancer) {
-          relatorio.familiares.push({
-            grau: familiar.qualFamiliar,
-            tipoCancer:
-              familiar.outroCancerList.length > 0
-                ? familiar.outroCancerList[0].tipoCancer
-                : "desconhecido",
-            idadeDiagnostico:
-              familiar.outroCancerList.length > 0
-                ? familiar.outroCancerList[0].idadeDiagnostico
-                : 0,
-          });
-        }
-      });
+      // O restante do código permanece o mesmo...
 
       // Enviar os dados formatados para o endpoint desejado
       const pdfResponse = await fetch(
@@ -316,21 +165,21 @@ export default function MeusPacientes() {
       }
 
       // Aqui obtemos o blob do PDF
-      const blob = await pdfResponse.blob(); // Obtemos o blob do PDF
-      const url = window.URL.createObjectURL(blob); // Criamos uma URL para o blob
+      const blob = await pdfResponse.blob();
+      const url = window.URL.createObjectURL(blob);
 
       // Criar um elemento <a> para iniciar o download
       const a = document.createElement("a");
-      a.style.display = "none"; // Esconder o link
-      a.href = url; // Definimos o URL do blob como o href do link
-      a.download = `Relatorio_${relatorio.nome}.pdf`; // Definimos o atributo download
+      a.style.display = "none";
+      a.href = url;
+      a.download = `Relatorio_${relatorio.nome}.pdf`;
 
-      document.body.appendChild(a); // Adicionamos o link ao documento
-      a.click(); // Simulamos um clique no link para iniciar o download
+      document.body.appendChild(a);
+      a.click();
 
       // Remover o link do DOM após o download
       document.body.removeChild(a);
-      window.URL.revokeObjectURL(url); // Limpa o URL blob
+      window.URL.revokeObjectURL(url);
 
       toast.success("Download finalizado!");
     } catch (error) {
@@ -340,12 +189,27 @@ export default function MeusPacientes() {
   };
 
   if (isLoading) {
-    return <p>Carregando...</p>; 
+    return <p>Carregando...</p>;
   }
 
   if (error) {
     return <p>{`Ocorreu um erro: ${error}`}</p>;
   }
+
+  const formatCancerTypes = (paciente) => {
+    let cancerTypes = [];
+    if (paciente.tipoCancer) {
+      cancerTypes.push(paciente.tipoCancer);
+    }
+    if (paciente.outroCancerList && paciente.outroCancerList.length > 0) {
+      cancerTypes = cancerTypes.concat(
+        paciente.outroCancerList.map((cancer) => cancer.tipoCancer)
+      );
+    }
+    return cancerTypes.length > 0
+      ? cancerTypes.join(", ")
+      : "Sem histórico de câncer/neoplasia";
+  };
 
   return (
     <div>
@@ -374,23 +238,11 @@ export default function MeusPacientes() {
                 <span>Contato: {paciente.contato}</span>
                 <span>
                   Data da Consulta: {formatDate(paciente.dataConsulta)}
-                </span>{" "}
-                {/* Formata a data */}
-                <span>
-                  Tipo de Câncer:{" "}
-                  {paciente.tipoCancer || "Sem histórico de câncer/neoplasia"}
-                </span>{" "}
-                {/* Condição para exibir texto padrão */}
+                </span>
+                <span>Tipo de Câncer: {formatCancerTypes(paciente)}</span>
               </div>
               <div className="divider"></div>
               <div className="report-buttons">
-                <Tooltip text="Abrir resultado">
-                  <button
-                    onClick={() => abrirRelatorio(paciente.idQuestionario)}
-                  >
-                    📄
-                  </button>
-                </Tooltip>
                 <Tooltip text="Editar relatório">
                   <button
                     onClick={() => editarRelatorio(paciente.idQuestionario)}

@@ -134,7 +134,6 @@
 
 /* Botões de relatório */
 .report-buttons {
-  width: 20%;
   display: flex;
   flex-direction: row;
 }
@@ -148,7 +147,7 @@
 }
 
 .report-buttons button:hover {
-  transform: scale(1.05);
+  transform: scale(1.25);
 }
 
 .report-buttons button:hover::after {
