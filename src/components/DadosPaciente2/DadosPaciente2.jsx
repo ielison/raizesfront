@@ -97,17 +97,25 @@ export default function DadosPaciente2({ onFormChange, initialData }) {
   };
 
   const handleFieldChange = (field, value) => {
-    const processedValue =
-      field === "telefone" ? value.replace(/\D/g, "") : value;
+    let processedValue = value;
+    if (field === "telefone") {
+      processedValue = value.replace(/\D/g, "");
+    } else if (field === "idade" || field === "idadeDiagnostico") {
+      processedValue = value === "" ? "" : Math.max(0, parseInt(value, 10));
+    }
     setUserData((prev) => ({
       ...prev,
       [field]: processedValue,
     }));
   };
 
-  const handleDiagnosisChange = (index, field, value) => {
+  const handleDiagnosisChange= (index, field, value) => {
     const updatedDiagnoses = [...diagnoses];
-    updatedDiagnoses[index][field] = value;
+    if (field === "age") {
+      updatedDiagnoses[index][field] = value === "" ? "" : Math.max(0, parseInt(value, 10));
+    } else {
+      updatedDiagnoses[index][field] = value;
+    }
     setDiagnoses(updatedDiagnoses);
   };
 
@@ -158,15 +166,13 @@ export default function DadosPaciente2({ onFormChange, initialData }) {
             type="number"
             min="0"
             value={userData.idade}
-            onChange={(e) =>
-              handleFieldChange("idade", Math.max(0, e.target.value))
-            }
+            onChange={(e) => handleFieldChange("idade", e.target.value)}
           />
         </label>
       </div>
 
       <label>
-        O(A) Sr(a) já teve câncer ou neoplasia?
+        O(A) Sr(a) já teve algum tipo câncer ou neoplasia?
         <div className="radio-group">
           <label>
             <input
@@ -221,12 +227,7 @@ export default function DadosPaciente2({ onFormChange, initialData }) {
                 type="number"
                 min="0"
                 value={userData.idadeDiagnostico}
-                onChange={(e) =>
-                  handleFieldChange(
-                    "idadeDiagnostico",
-                    Math.max(0, e.target.value)
-                  )
-                }
+                onChange={(e) => handleFieldChange("idadeDiagnostico", e.target.value)}
               />
             </label>
           </div>
@@ -263,7 +264,7 @@ export default function DadosPaciente2({ onFormChange, initialData }) {
                 <div key={index}>
                   <div className="dp-row">
                     <label style={{ flex: 1, marginRight: "10px" }}>
-                      Tipo de neoplasia
+                      Tipo de câncer ou neoplasia
                       <Select
                         isMulti
                         options={cancerOptions}
@@ -280,10 +281,7 @@ export default function DadosPaciente2({ onFormChange, initialData }) {
                         type="number"
                         min="0"
                         value={diagnosis.age}
-                        onChange={(e) => {
-                          const ageValue = Math.max(0, e.target.value);
-                          handleDiagnosisChange(index, "age", ageValue);
-                        }}
+                        onChange={(e) => handleDiagnosisChange(index, "age", e.target.value)}
                       />
                     </label>
                   </div>

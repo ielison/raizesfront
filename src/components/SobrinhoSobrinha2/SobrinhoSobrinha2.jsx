@@ -212,7 +212,7 @@ export default function SobrinhosSobrinhas2({ onFormChange }) {
                 </label>
               ))}
               <label>
-                Algum deles foi acometido por algum câncer ou neoplasia?
+                Algum deles já teve câncer ou algum outro tipo de neoplasia?
                 <div className="ss-radio-group yn">
                   <label>
                     <input

@@ -296,7 +296,7 @@ export default function PacienteModal({ onClose }) {
     );
   };
 
-  const collectLocalStorageData = () => {
+  /* const collectLocalStorageData = () => {
     const localStorageData = {
       dadosPaciente: JSON.parse(localStorage.getItem("dp2_userData") || "{}"),
       filhosFilhas: JSON.parse(
@@ -423,7 +423,7 @@ export default function PacienteModal({ onClose }) {
       },
     };
     return localStorageData;
-  };
+  }; */
 
   const clearAllStorageData = () => {
     // Clear all localStorage items
@@ -483,21 +483,6 @@ export default function PacienteModal({ onClose }) {
         JSON.stringify(payloadData, null, 2)
       );
 
-      // Collect localStorage data
-      const localStorageData = collectLocalStorageData();
-
-      // Create payload for /historico
-      const historicoPayload = {
-        idUser: idUser,
-        data: currentDate,
-        formData: localStorageData,
-      };
-
-      console.log(
-        "Payload to be sent to /historico:",
-        JSON.stringify(historicoPayload, null, 2)
-      );
-
       // Send data to /quiz
       fetch("https://testserver-2p40.onrender.com/api/quiz", {
         method: "POST",
@@ -517,29 +502,8 @@ export default function PacienteModal({ onClose }) {
             );
           }
         })
-        .then(() => {
-          // Send data to /historico
-          return fetch("https://testee/api/historico", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(historicoPayload),
-          });
-        })
-        .then((response) => {
-          console.log("Response status from /historico:", response.status);
-          if (response.ok) {
-            console.log("Resposta OK da API /historico.");
-            return "OK";
-          } else {
-            throw new Error(
-              "Erro ao enviar os dados para /historico: " + response.statusText
-            );
-          }
-        })
         .then((message) => {
-          console.log("Resposta da API /historico:", message);
+          console.log("Resposta da API /quiz:", message);
           setIsCompleted(true);
           setIsLoading(false);
         })
@@ -604,8 +568,6 @@ export default function PacienteModal({ onClose }) {
     setCurrentSubItem(subItemId);
   };
 
-  
-
   useEffect(() => {
     console.log(`Step: ${currentStep}, Subitem: ${currentSubItem}`);
   }, [currentStep, currentSubItem]);
@@ -616,8 +578,6 @@ export default function PacienteModal({ onClose }) {
         <button className="pacienteModal__close" onClick={handleModalClose}>
           &times;
         </button>
-
-        
 
         <div className="pacienteModal__content">
           {isCompleted ? (

@@ -17,7 +17,19 @@
   background-color: var(--primary--500) !important;
 }
 
-.tooltip-idade {
+.info-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.info-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.tooltip {
   position: absolute;
   background-color: white;
   border: 1px solid #ccc;
@@ -27,10 +39,16 @@
   z-index: 10;
   width: 500px;
   transform: translateY(-100%);
-  /* Move o tooltip para cima */
   margin-bottom: -65px;
-  /* Espaço entre o tooltip e o ícone */
   color: #3f3f3f;
+  top: 20%;
+  left: 280px;
+}
+
+.top-tooltip {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
 }
 
 .info-icon-idade {
@@ -40,6 +58,9 @@
   /* Espacamento entre o botão e o ícone */
 }
 
+.ff {
+  width: 80%;
+}
 
 
 .ff-form-container {
@@ -234,4 +255,17 @@ input[type="number"] {
 .checkbox-group input[type="radio"]:focus {
   outline: none;
   box-shadow: 0 0 2px 2px rgba(14, 118, 168, 0.4);
+}
+
+@media screen and (max-width: 768px) {
+  .tooltip {
+    width: 70%;
+    max-width: 350px;
+    left: 40%;
+    transform: translateX(-50%) translateY(-100%);
+    margin-bottom: -40px;
+    top: 30%;
+    font-size: 14px;
+    padding: 15px;
+  }
 }

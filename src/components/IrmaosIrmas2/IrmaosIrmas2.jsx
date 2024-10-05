@@ -1,4 +1,6 @@
-import { useState, useEffect } from "react";
+"use client";
+
+import { useState, useEffect, useCallback } from "react";
 import Select from "react-select";
 import PropTypes from "prop-types";
 import { cancerOptions } from "../../data/cancerOptions";
@@ -24,11 +26,11 @@ export default function IrmaosIrmas2({ onFormChange }) {
     return JSON.parse(localStorage.getItem("ii_siblings")) || [];
   });
 
-  const [tooltipIndex, setTooltipIndex] = useState(null);
-
   const [siblingQuantities, setSiblingQuantities] = useState(() => {
     return JSON.parse(localStorage.getItem("ii_siblingQuantities")) || {};
   });
+
+  const [showTooltip, setShowTooltip] = useState(false);
 
   const relationshipLabels = {
     irmaos: "Irmão",
@@ -148,58 +150,88 @@ export default function IrmaosIrmas2({ onFormChange }) {
     }
   };
 
-  const handleAddSibling = () => {
-    setSiblings([
-      ...siblings,
+  const handleAddSibling = useCallback(() => {
+    setSiblings((prevSiblings) => [
+      ...prevSiblings,
       {
-        id: siblings.length,
+        id: prevSiblings.length,
         relation: "",
         type: [],
         ages: {},
         showAgeDropdowns: {},
       },
     ]);
-  };
+  }, []);
 
-  const handleDeleteSibling = (index) => {
-    const newSiblings = siblings.filter((_, i) => i !== index);
-    setSiblings(newSiblings);
-  };
+  const handleDeleteSibling = useCallback((index) => {
+    setSiblings((prevSiblings) => prevSiblings.filter((_, i) => i !== index));
+  }, []);
 
-  const toggleAgeDropdown = (siblingIndex, cancerType) => {
-    const newSiblings = [...siblings];
-    newSiblings[siblingIndex].showAgeDropdowns[cancerType] =
-      !newSiblings[siblingIndex].showAgeDropdowns[cancerType];
-    setSiblings(newSiblings);
-  };
+  const toggleAgeDropdown = useCallback((siblingIndex, cancerType) => {
+    setSiblings((prevSiblings) => {
+      const newSiblings = [...prevSiblings];
+      if (!newSiblings[siblingIndex].showAgeDropdowns) {
+        newSiblings[siblingIndex].showAgeDropdowns = {};
+      }
+      newSiblings[siblingIndex].showAgeDropdowns[cancerType] =
+        !newSiblings[siblingIndex].showAgeDropdowns[cancerType];
+      return newSiblings;
+    });
+  }, []);
 
-  const handleQuantityChange = (relation, value) => {
+  const handleQuantityChange = useCallback((relation, value) => {
     setSiblingQuantities((prev) => ({
       ...prev,
       [relation]: value,
     }));
-  };
+  }, []);
+
+  const toggleTooltip = useCallback(() => {
+    setShowTooltip((prev) => !prev);
+  }, []);
 
   return (
     <div className="ii-modal-content" onClick={(e) => e.stopPropagation()}>
       <div className="ii-form-container">
-        <label className="ii-possui-irmao">
-          <span>O(A) Sr(a) possui irmão ou irmã?</span>
-          <div className="ii-radio-group">
-            {Object.entries(relationshipLabels).map(([key, label]) => (
-              <label key={key}>
-                <input
-                  type="checkbox"
-                  name="relationship"
-                  value={key}
-                  checked={relationships.includes(key)}
-                  onChange={handleRelationshipChange}
-                />
-                {label}
-              </label>
-            ))}
-          </div>
-        </label>
+        <div className="question-with-tooltip">
+          <label className="ii-possui-irmao">
+            <div className="top-tooltip">
+              <div>O(A) Sr(a) possui irmão ou irmã?</div>
+              <div>
+                <button
+                  type="button"
+                  className="info-button"
+                  onClick={toggleTooltip}
+                  aria-label="Informações adicionais"
+                >
+                  <img src={InfoIcon} alt="" className="info-icon" />
+                </button>
+                {showTooltip && (
+                  <div className="tooltip" role="tooltip">
+                    Caso seu paciente não saiba a idade exata do diagnóstico de
+                    câncer em um familiar, questione se foi antes ou depois dos
+                    50 anos. Essa estimativa é mais fácil de lembrar e ainda
+                    oferece um corte de idade útil para a avaliação de risco.
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="ii-radio-group">
+              {Object.entries(relationshipLabels).map(([key, label]) => (
+                <label key={key}>
+                  <input
+                    type="checkbox"
+                    name="relationship"
+                    value={key}
+                    checked={relationships.includes(key)}
+                    onChange={handleRelationshipChange}
+                  />
+                  {label}
+                </label>
+              ))}
+            </div>
+          </label>
+        </div>
         {relationships.length > 0 &&
           !relationships.includes("naoPossuoIrmaos") && (
             <>
@@ -218,7 +250,7 @@ export default function IrmaosIrmas2({ onFormChange }) {
                 </label>
               ))}
               <label>
-                Algum deles foi acometido por algum câncer ou neoplasia?
+                Algum deles já teve câncer ou algum outro tipo de neoplasia?
                 <div className="ii-radio-group yn">
                   <label>
                     <input
@@ -346,30 +378,6 @@ export default function IrmaosIrmas2({ onFormChange }) {
                                 ? "Digitar idade"
                                 : "Não sei"}
                             </button>
-                            <img
-                              src={InfoIcon}
-                              alt="Info"
-                              className="info-icon-idade"
-                              onClick={() =>
-                                setTooltipIndex(
-                                  tooltipIndex ===
-                                    `${siblingIndex}-${typeIndex}`
-                                    ? null
-                                    : `${siblingIndex}-${typeIndex}`
-                                )
-                              }
-                            />
-                            {tooltipIndex ===
-                              `${siblingIndex}-${typeIndex}` && (
-                              <div className="tooltip-idade-ii">
-                                Caso seu paciente não saiba a idade exata do
-                                diagnóstico de câncer em um familiar, questione
-                                se foi antes ou depois dos 50 anos. Essa
-                                estimativa é mais fácil de lembrar e ainda
-                                oferece um corte de idade útil para a avaliação
-                                de risco.
-                              </div>
-                            )}
                           </label>
                         ))}
                       <button

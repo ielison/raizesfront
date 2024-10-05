@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
@@ -43,6 +43,7 @@ export default function FamiliaresDistantesPaterno2({ onFormChange }) {
           },
         ];
   });
+  const [showTooltip, setShowTooltip] = useState(false);
 
   useEffect(() => {
     let outroFamiliarListPaterno = [];
@@ -80,7 +81,7 @@ export default function FamiliaresDistantesPaterno2({ onFormChange }) {
     );
   }, [distantesDetails, distantesHadCancer, onFormChange]);
 
-  const handleDistantesHadCancerChange = (value) => {
+  const handleDistantesHadCancerChange = useCallback((value) => {
     setDistantesHadCancer(value);
     localStorage.setItem("fdp2_distantesHadCancer", JSON.stringify(value));
 
@@ -99,9 +100,9 @@ export default function FamiliaresDistantesPaterno2({ onFormChange }) {
         JSON.stringify(initialDetails)
       );
     }
-  };
+  }, []);
 
-  const handleAddMore = () => {
+  const handleAddMore = useCallback(() => {
     const newDetails = [
       ...distantesDetails,
       {
@@ -113,107 +114,147 @@ export default function FamiliaresDistantesPaterno2({ onFormChange }) {
     ];
     setDistantesDetails(newDetails);
     localStorage.setItem("fdp2_distantesDetails", JSON.stringify(newDetails));
-  };
+  }, [distantesDetails]);
 
-  const handleDelete = (index) => {
-    const newDetails = distantesDetails.filter((_, i) => i !== index);
-    setDistantesDetails(newDetails);
-    localStorage.setItem("fdp2_distantesDetails", JSON.stringify(newDetails));
-  };
+  const handleDelete = useCallback(
+    (index) => {
+      const newDetails = distantesDetails.filter((_, i) => i !== index);
+      setDistantesDetails(newDetails);
+      localStorage.setItem("fdp2_distantesDetails", JSON.stringify(newDetails));
+    },
+    [distantesDetails]
+  );
 
-  const handleRelationshipChange = (selectedOption, index) => {
-    const newDetails = [...distantesDetails];
-    newDetails[index].relationship = selectedOption.value;
+  const handleRelationshipChange = useCallback(
+    (selectedOption, index) => {
+      const newDetails = [...distantesDetails];
+      newDetails[index].relationship = selectedOption.value;
 
-    if (selectedOption.value !== "outro") {
-      newDetails[index].customRelationship = "";
-    }
+      if (selectedOption.value !== "outro") {
+        newDetails[index].customRelationship = "";
+      }
 
-    setDistantesDetails(newDetails);
-    localStorage.setItem("fdp2_distantesDetails", JSON.stringify(newDetails));
-  };
+      setDistantesDetails(newDetails);
+      localStorage.setItem("fdp2_distantesDetails", JSON.stringify(newDetails));
+    },
+    [distantesDetails]
+  );
 
-  const handleCustomRelationshipChange = (index, value) => {
-    const newDetails = [...distantesDetails];
-    newDetails[index].customRelationship = value;
-    setDistantesDetails(newDetails);
-    localStorage.setItem("fdp2_distantesDetails", JSON.stringify(newDetails));
-  };
+  const handleCustomRelationshipChange = useCallback(
+    (index, value) => {
+      const newDetails = [...distantesDetails];
+      newDetails[index].customRelationship = value;
+      setDistantesDetails(newDetails);
+      localStorage.setItem("fdp2_distantesDetails", JSON.stringify(newDetails));
+    },
+    [distantesDetails]
+  );
 
-  const handleCancerTypeChange = (selectedOption, index) => {
-    const newDetails = [...distantesDetails];
-    newDetails[index].cancerTypes = selectedOption.map((option) => ({
-      ...option,
-      showTooltip: false,
-    }));
+  const handleCancerTypeChange = useCallback(
+    (selectedOption, index) => {
+      const newDetails = [...distantesDetails];
+      newDetails[index].cancerTypes = selectedOption.map((option) => ({
+        ...option,
+        showTooltip: false,
+      }));
 
-    newDetails[index].showAgeDropdowns = new Array(selectedOption.length).fill(
-      false
-    );
-    setDistantesDetails(newDetails);
-    localStorage.setItem("fdp2_distantesDetails", JSON.stringify(newDetails));
-  };
+      newDetails[index].showAgeDropdowns = new Array(
+        selectedOption.length
+      ).fill(false);
+      setDistantesDetails(newDetails);
+      localStorage.setItem("fdp2_distantesDetails", JSON.stringify(newDetails));
+    },
+    [distantesDetails]
+  );
 
-  const toggleTooltip = (typeIndex, detailIndex) => {
-    const newDetails = [...distantesDetails];
-    newDetails[detailIndex].cancerTypes[typeIndex].showTooltip =
-      !newDetails[detailIndex].cancerTypes[typeIndex].showTooltip;
-    setDistantesDetails(newDetails);
-    localStorage.setItem("fdp2_distantesDetails", JSON.stringify(newDetails));
-  };
+  const toggleTooltip = useCallback(() => {
+    setShowTooltip((prev) => !prev);
+  }, []);
 
-  const handleAgeToggle = (typeIndex, detailIndex) => {
-    const newDetails = [...distantesDetails];
-    newDetails[detailIndex].showAgeDropdowns[typeIndex] =
-      !newDetails[detailIndex].showAgeDropdowns[typeIndex];
-    setDistantesDetails(newDetails);
-    localStorage.setItem("fdp2_distantesDetails", JSON.stringify(newDetails));
-  };
+  const handleAgeToggle = useCallback(
+    (typeIndex, detailIndex) => {
+      const newDetails = [...distantesDetails];
+      newDetails[detailIndex].showAgeDropdowns[typeIndex] =
+        !newDetails[detailIndex].showAgeDropdowns[typeIndex];
+      setDistantesDetails(newDetails);
+      localStorage.setItem("fdp2_distantesDetails", JSON.stringify(newDetails));
+    },
+    [distantesDetails]
+  );
 
-  const handleAgeChange = (e, typeIndex, detailIndex) => {
-    const newDetails = [...distantesDetails];
-    newDetails[detailIndex].cancerTypes[typeIndex].age = e.target.value;
-    setDistantesDetails(newDetails);
-    localStorage.setItem("fdp2_distantesDetails", JSON.stringify(newDetails));
-  };
+  const handleAgeChange = useCallback(
+    (e, typeIndex, detailIndex) => {
+      const newDetails = [...distantesDetails];
+      newDetails[detailIndex].cancerTypes[typeIndex].age = e.target.value;
+      setDistantesDetails(newDetails);
+      localStorage.setItem("fdp2_distantesDetails", JSON.stringify(newDetails));
+    },
+    [distantesDetails]
+  );
 
   return (
     <div className="fdp-content">
-      <label>
-        Algum outro familiar do seu lado paterno já teve câncer ou neoplasia?
-        <div className="fdm-subtitle">
-          Familiares distantes como tios-avôs e primos de segundo grau
-        </div>
-        <div className="radio-group--fdp">
-          <label>
-            <input
-              type="radio"
-              name="distantesHadCancer"
-              checked={distantesHadCancer === true}
-              onChange={() => handleDistantesHadCancerChange(true)}
-            />
-            Sim
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="distantesHadCancer"
-              checked={distantesHadCancer === false}
-              onChange={() => handleDistantesHadCancerChange(false)}
-            />
-            Não
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="distantesHadCancer"
-              checked={distantesHadCancer === null}
-              onChange={() => handleDistantesHadCancerChange(null)}
-            />
-            Não tenho conhecimento da saúde dos meus parentes distantes paternos
-          </label>
-        </div>
-      </label>
+      <div className="question-with-tooltip">
+        <label>
+          <div className="top-tooltip">
+            <div>
+              Algum outro familiar do seu lado paterno já teve câncer ou
+              neoplasia?
+              <div className="fdm-subtitle">
+                Familiares distantes como tios-avôs e primos de segundo grau
+              </div>
+            </div>
+            <div>
+              <button
+                type="button"
+                className="info-button"
+                onClick={toggleTooltip}
+                aria-label="Informações adicionais"
+              >
+                <img src={InfoIcon} alt="" className="info-icon" />
+              </button>
+              {showTooltip && (
+                <div className="tooltip" role="tooltip">
+                  Caso seu paciente não saiba a idade exata do diagnóstico de
+                  câncer em um familiar, questione se foi antes ou depois dos 50
+                  anos. Essa estimativa é mais fácil de lembrar e ainda oferece
+                  um corte de idade útil para a avaliação de risco.
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="radio-group--fdp">
+            <label>
+              <input
+                type="radio"
+                name="distantesHadCancer"
+                checked={distantesHadCancer === true}
+                onChange={() => handleDistantesHadCancerChange(true)}
+              />
+              Sim
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="distantesHadCancer"
+                checked={distantesHadCancer === false}
+                onChange={() => handleDistantesHadCancerChange(false)}
+              />
+              Não
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="distantesHadCancer"
+                checked={distantesHadCancer === null}
+                onChange={() => handleDistantesHadCancerChange(null)}
+              />
+              Não tenho conhecimento da saúde dos meus parentes distantes
+              paternos
+            </label>
+          </div>
+        </label>
+      </div>
 
       {distantesHadCancer === true && (
         <>
@@ -298,21 +339,6 @@ export default function FamiliaresDistantesPaterno2({ onFormChange }) {
                         ? "Digitar idade"
                         : "Não sei"}
                     </button>
-                    <img
-                      src={InfoIcon}
-                      alt="Info"
-                      className="info-icon-idade"
-                      onClick={() => toggleTooltip(typeIndex, index)}
-                    />
-                    {cancer.showTooltip && (
-                      <div className="tooltip-idade">
-                        Caso seu paciente não saiba a idade exata do diagnóstico
-                        de câncer em um familiar, questione se foi antes ou
-                        depois dos 50 anos. Essa estimativa é mais fácil de
-                        lembrar e ainda oferece um corte de idade útil para a
-                        avaliação de risco.
-                      </div>
-                    )}
                   </label>
                 </div>
               ))}

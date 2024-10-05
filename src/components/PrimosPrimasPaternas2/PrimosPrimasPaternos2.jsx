@@ -1,38 +1,43 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
 import InfoIcon from "../../assets/information-2-fill.svg";
 import DeleteIcon from "../../assets/trash.svg";
 import PropTypes from "prop-types";
+import "./PrimosPrimasPaternos2.css";
 
 export default function PrimosPrimasPaternos2({
   onFormChange,
   initialData = {},
 }) {
-  const [tooltipIndex, setTooltipIndex] = useState(null);
+  const [showTooltip, setShowTooltip] = useState(false);
   const [primosHadCancer, setPrimosHadCancer] = useState(() => {
-    const stored = localStorage.getItem('ppp2_primosHadCancer');
-    return stored ? JSON.parse(stored) : initialData.primosListPaterno?.[0]?.teveCancer ?? null;
+    const stored = localStorage.getItem("ppp2_primosHadCancer");
+    return stored
+      ? JSON.parse(stored)
+      : initialData.primosListPaterno?.[0]?.teveCancer ?? false;
   });
   const [primosDetails, setPrimosDetails] = useState(() => {
-    const stored = localStorage.getItem('ppp2_primosDetails');
-    return stored ? JSON.parse(stored) : initialData.primosListPaterno
-      ?.filter((primo) => primo.teveCancer)
-      .map((primo) => ({
-        relationship: primo.sexo === "masculino" ? "primo" : "prima",
-        type: primo.outroCancerList.map((cancer) => ({
-          value: cancer.tipoCancer,
-          label: cancer.tipoCancer,
-        })),
-        ages: primo.outroCancerList.map((cancer) => ({
-          cancerName: cancer.tipoCancer,
-          age: cancer.idadeDiagnostico,
-          showAgeDropdown: false,
-        })),
-      })) || [];
+    const stored = localStorage.getItem("ppp2_primosDetails");
+    return stored
+      ? JSON.parse(stored)
+      : initialData.primosListPaterno
+          ?.filter((primo) => primo.teveCancer)
+          .map((primo) => ({
+            relationship: primo.sexo === "masculino" ? "primo" : "prima",
+            type: primo.outroCancerList.map((cancer) => ({
+              value: cancer.tipoCancer,
+              label: cancer.tipoCancer,
+            })),
+            ages: primo.outroCancerList.map((cancer) => ({
+              cancerName: cancer.tipoCancer,
+              age: cancer.idadeDiagnostico,
+              showAgeDropdown: false,
+            })),
+          })) || [];
   });
 
   useEffect(() => {
@@ -42,11 +47,11 @@ export default function PrimosPrimasPaternos2({
       primosListPaterno = [
         {
           id: 0,
-          temPrimos: true,
+          temPrimos: false,
           qtdPrimos: 0,
           teveCancer: false,
           qtdPrimosCancer: 0,
-          ladoPaterno: "paterno",
+          ladoPaterno: "",
           sexo: "",
           outroCancerList: [],
         },
@@ -68,68 +73,116 @@ export default function PrimosPrimasPaternos2({
             }))
           : [],
       }));
-    } else {
-      primosListPaterno = [
-        {
-          id: 0,
-          temPrimos: false,
-          qtdPrimos: 0,
-          teveCancer: false,
-          qtdPrimosCancer: 0,
-          ladoPaterno: "paterno",
-          sexo: "",
-          outroCancerList: [],
-        },
-      ];
     }
 
     onFormChange({ primosListPaterno });
-    localStorage.setItem('ppp2_primosHadCancer', JSON.stringify(primosHadCancer));
-    localStorage.setItem('ppp2_primosDetails', JSON.stringify(primosDetails));
+    localStorage.setItem(
+      "ppp2_primosHadCancer",
+      JSON.stringify(primosHadCancer)
+    );
+    localStorage.setItem("ppp2_primosDetails", JSON.stringify(primosDetails));
   }, [primosDetails, primosHadCancer, onFormChange]);
 
-  const handleCancerChange = (value) => {
+  const handleCancerChange = useCallback((value) => {
     setPrimosHadCancer(value);
-    localStorage.setItem('ppp2_primosHadCancer', JSON.stringify(value));
+    localStorage.setItem("ppp2_primosHadCancer", JSON.stringify(value));
     if (value === false) {
       setPrimosDetails([]);
-      localStorage.setItem('ppp2_primosDetails', JSON.stringify([]));
+      localStorage.setItem("ppp2_primosDetails", JSON.stringify([]));
     }
-  };
+  }, []);
 
-  const handleAddTypeCancer = (index, selectedOption) => {
-    const newDetails = [...primosDetails];
-    newDetails[index].type = selectedOption;
-    const newAges = selectedOption.map((cancer) => ({
-      cancerName: cancer.label,
-      age: "",
-      showAgeDropdown: false,
-    }));
-    newDetails[index].ages = newAges;
-    setPrimosDetails(newDetails);
-    localStorage.setItem('ppp2_primosDetails', JSON.stringify(newDetails));
-  };
+  const handleAddTypeCancer = useCallback((index, selectedOption) => {
+    setPrimosDetails((prevDetails) => {
+      const newDetails = [...prevDetails];
+      const currentPrimo = newDetails[index];
 
-  const handleAddPrimo = () => {
-    const newDetails = [
-      ...primosDetails,
-      { relationship: "", type: null, ages: [], showAgeDropdown: false },
-    ];
-    setPrimosDetails(newDetails);
-    localStorage.setItem('ppp2_primosDetails', JSON.stringify(newDetails));
-  };
+      // Create a map of existing cancer types and their ages
+      const existingAges = new Map(
+        currentPrimo.ages.map((age) => [age.cancerName, age])
+      );
 
-  const handleRemovePrimo = (index) => {
-    const newDetails = primosDetails.filter((_, i) => i !== index);
-    setPrimosDetails(newDetails);
-    localStorage.setItem('ppp2_primosDetails', JSON.stringify(newDetails));
-  };
+      // Update the type
+      currentPrimo.type = selectedOption;
+
+      // Update the ages, preserving existing data and adding new entries
+      currentPrimo.ages = selectedOption.map((cancer) => {
+        const existingAge = existingAges.get(cancer.label);
+        return (
+          existingAge || {
+            cancerName: cancer.label,
+            age: "",
+            showAgeDropdown: false,
+          }
+        );
+      });
+
+      localStorage.setItem("ppp2_primosDetails", JSON.stringify(newDetails));
+      return newDetails;
+    });
+  }, []);
+
+  const handleAddPrimo = useCallback(() => {
+    setPrimosDetails((prevDetails) => {
+      const newDetails = [
+        ...prevDetails,
+        { relationship: "", type: null, ages: [], showAgeDropdown: false },
+      ];
+      localStorage.setItem("ppp2_primosDetails", JSON.stringify(newDetails));
+      return newDetails;
+    });
+  }, []);
+
+  const handleRemovePrimo = useCallback((index) => {
+    setPrimosDetails((prevDetails) => {
+      const newDetails = prevDetails.filter((_, i) => i !== index);
+      localStorage.setItem("ppp2_primosDetails", JSON.stringify(newDetails));
+      return newDetails;
+    });
+  }, []);
+
+  const toggleTooltip = useCallback(() => {
+    setShowTooltip((prev) => !prev);
+  }, []);
+
+  const toggleAgeDropdown = useCallback((primoIndex, ageIndex) => {
+    setPrimosDetails((prevDetails) => {
+      const newDetails = [...prevDetails];
+      newDetails[primoIndex].ages[ageIndex].showAgeDropdown =
+        !newDetails[primoIndex].ages[ageIndex].showAgeDropdown;
+      localStorage.setItem("ppp2_primosDetails", JSON.stringify(newDetails));
+      return newDetails;
+    });
+  }, []);
 
   return (
     <div className="ppp-form-container">
-      <div className="ppp-grupo">
+      <div className="question-with-tooltip">
         <label>
-           Algum dos seus primos paternos já teve câncer ou algum outro tipo de neoplasia?
+          <div className="top-tooltip">
+            <div>
+              Algum dos seus primos paternos já teve câncer ou algum outro tipo
+              de neoplasia?
+            </div>
+            <div>
+              <button
+                type="button"
+                className="info-button"
+                onClick={toggleTooltip}
+                aria-label="Informações adicionais"
+              >
+                <img src={InfoIcon} alt="" className="info-icon" />
+              </button>
+              {showTooltip && (
+                <div className="tooltip" role="tooltip">
+                  Caso seu paciente não saiba a idade exata do diagnóstico de
+                  câncer em um familiar, questione se foi antes ou depois dos 50
+                  anos. Essa estimativa é mais fácil de lembrar e ainda oferece
+                  um corte de idade útil para a avaliação de risco.
+                </div>
+              )}
+            </div>
+          </div>
           <div className="ppp-checkbox-group">
             <label>
               <input
@@ -151,137 +204,117 @@ export default function PrimosPrimasPaternos2({
             </label>
           </div>
         </label>
+      </div>
 
-        {primosHadCancer === true && (
-          <>
-            {primosDetails.map((primo, index) => (
-              <div key={index}>
-                <label className="pp-parentesco">
-                  Parentesco:
-                  <select
-                    className="pp-parentesco-select"
-                    value={primo.relationship}
-                    onChange={(e) => {
-                      const newDetails = [...primosDetails];
-                      newDetails[index].relationship = e.target.value;
-                      setPrimosDetails(newDetails);
-                      localStorage.setItem('ppp2_primosDetails', JSON.stringify(newDetails));
-                    }}
-                  >
-                    <option value="">Selecione</option>
-                    <option value="primo">Primo</option>
-                    <option value="prima">Prima</option>
-                  </select>
-                </label>
-                <label>
-                  Tipo de câncer ou neoplasia:
-                  <Select
-                    isMulti
-                    placeholder="Selecione os tipos de câncer desse familiar"
-                    options={cancerOptions}
-                    value={primo.type}
-                    onChange={(selectedOption) =>
-                      handleAddTypeCancer(index, selectedOption)
-                    }
-                  />
-                </label>
-                {primo.type &&
-                  primo.ages.map((ageDetail, ageIndex) => (
-                    <label key={ageIndex}>
-                      <div className="pp-idade">
-                        <div>
-                          Idade do diagnóstico para ({ageDetail.cancerName}):
-                          {ageDetail.showAgeDropdown ? (
-                            <Select
-                              placeholder="Selecione.."
-                              options={ageOptions}
-                              value={
-                                ageDetail.age
-                                  ? {
-                                      value: ageDetail.age,
-                                      label: ageDetail.age,
-                                    }
-                                  : null
-                              }
-                              onChange={(selectedOption) => {
-                                const newDetails = [...primosDetails];
-                                newDetails[index].ages[ageIndex].age =
-                                  selectedOption.value;
-                                setPrimosDetails(newDetails);
-                                localStorage.setItem('ppp2_primosDetails', JSON.stringify(newDetails));
-                              }}
-                            />
-                          ) : (
-                            <input
-                              type="number"
-                              value={ageDetail.age}
-                              onChange={(e) => {
-                                const newDetails = [...primosDetails];
-                                newDetails[index].ages[ageIndex].age =
-                                  e.target.value;
-                                setPrimosDetails(newDetails);
-                                localStorage.setItem('ppp2_primosDetails', JSON.stringify(newDetails));
-                              }}
-                            />
-                          )}
-                        </div>
-                        <button
-                          type="button"
-                          className="ppp-toggle-button"
-                          onClick={() => {
-                            const newDetails = [...primosDetails];
-                            newDetails[index].ages[ageIndex].showAgeDropdown =
-                              !newDetails[index].ages[ageIndex].showAgeDropdown;
-                            setPrimosDetails(newDetails);
-                            localStorage.setItem('ppp2_primosDetails', JSON.stringify(newDetails));
-                          }}
-                        >
-                          {ageDetail.showAgeDropdown
-                            ? "Digitar idade"
-                            : "Não sei"}
-                        </button>
-                        <img
-                          src={InfoIcon}
-                          alt="Info"
-                          className="info-icon-idade"
-                          onClick={() =>
-                            setTooltipIndex(
-                              ageIndex === tooltipIndex ? null : ageIndex
-                            )
-                          }
-                        />
-                        {tooltipIndex === ageIndex && (
-                          <div className="tooltip-idade--pp">
-                            Caso seu paciente não saiba a idade exata do
-                            diagnóstico de câncer em um familiar, questione se
-                            foi antes ou depois dos 50 anos. Essa estimativa é
-                            mais fácil de lembrar e ainda oferece um corte de
-                            idade útil para a avaliação de risco.
-                          </div>
+      {primosHadCancer === true && (
+        <div className="ppp-grupo">
+          {primosDetails.map((primo, index) => (
+            <div key={index}>
+              <label className="pp-parentesco">
+                Parentesco:
+                <select
+                  className="pp-parentesco-select"
+                  value={primo.relationship}
+                  onChange={(e) => {
+                    const newDetails = [...primosDetails];
+                    newDetails[index].relationship = e.target.value;
+                    setPrimosDetails(newDetails);
+                    localStorage.setItem(
+                      "ppp2_primosDetails",
+                      JSON.stringify(newDetails)
+                    );
+                  }}
+                >
+                  <option value="">Selecione</option>
+                  <option value="primo">Primo</option>
+                  <option value="prima">Prima</option>
+                </select>
+              </label>
+              <label>
+                Tipo de câncer ou neoplasia:
+                <Select
+                  isMulti
+                  placeholder="Selecione os tipos de câncer desse familiar"
+                  options={cancerOptions}
+                  value={primo.type}
+                  onChange={(selectedOption) =>
+                    handleAddTypeCancer(index, selectedOption)
+                  }
+                />
+              </label>
+              {primo.type &&
+                primo.ages.map((ageDetail, ageIndex) => (
+                  <label key={ageIndex}>
+                    <div className="pp-idade">
+                      <div className="avos-width">
+                        Idade do diagnóstico para ({ageDetail.cancerName}):
+                        {ageDetail.showAgeDropdown ? (
+                          <Select
+                            placeholder="Selecione.."
+                            options={ageOptions}
+                            value={
+                              ageDetail.age
+                                ? {
+                                    value: ageDetail.age,
+                                    label: ageDetail.age,
+                                  }
+                                : null
+                            }
+                            onChange={(selectedOption) => {
+                              const newDetails = [...primosDetails];
+                              newDetails[index].ages[ageIndex].age =
+                                selectedOption.value;
+                              setPrimosDetails(newDetails);
+                              localStorage.setItem(
+                                "ppp2_primosDetails",
+                                JSON.stringify(newDetails)
+                              );
+                            }}
+                          />
+                        ) : (
+                          <input
+                            type="number"
+                            value={ageDetail.age}
+                            onChange={(e) => {
+                              const newDetails = [...primosDetails];
+                              newDetails[index].ages[ageIndex].age =
+                                e.target.value;
+                              setPrimosDetails(newDetails);
+                              localStorage.setItem(
+                                "ppp2_primosDetails",
+                                JSON.stringify(newDetails)
+                              );
+                            }}
+                          />
                         )}
                       </div>
-                    </label>
-                  ))}
+                      <button
+                        type="button"
+                        className="ppp-toggle-button"
+                        onClick={() => toggleAgeDropdown(index, ageIndex)}
+                      >
+                        {ageDetail.showAgeDropdown
+                          ? "Digitar idade"
+                          : "Não sei"}
+                      </button>
+                    </div>
+                  </label>
+                ))}
 
-                <button
-                  className="ff-btn-delete"
-                  type="button"
-                  onClick={() => handleRemovePrimo(index)}
-                >
-                  <img src={DeleteIcon} alt="Deletar" />
-                </button>
-              </div>
-            ))}
-            <button
-              type="button"
-              className="nn-btn-add"
-              onClick={handleAddPrimo}
-            >
-              Informar +
-            </button>
-          </>
-        )}
-      </div>
+              <button
+                className="ff-btn-delete"
+                type="button"
+                onClick={() => handleRemovePrimo(index)}
+              >
+                <img src={DeleteIcon} alt="Deletar" />
+              </button>
+            </div>
+          ))}
+          <button type="button" className="nn-btn-add" onClick={handleAddPrimo}>
+            Informar +
+          </button>
+        </div>
+      )}
     </div>
   );
 }

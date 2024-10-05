@@ -1,14 +1,16 @@
-import { useState, useEffect } from "react";
+"use client";
+
+import { useState, useEffect, useCallback } from "react";
 import Select from "react-select";
+import PropTypes from "prop-types";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
 import InfoIcon from "../../assets/information-2-fill.svg";
-import PropTypes from "prop-types";
 import DeleteIcon from "../../assets/trash.svg";
-import "./AvosMaternos2.css"
+import "./AvosMaternos2.css";
 
 export default function AvosMaternos2({ onFormChange, initialData = {} }) {
-  const [tooltipIndex, setTooltipIndex] = useState(null);
+  const [showTooltip, setShowTooltip] = useState(false);
   const [noKnowledge, setNoKnowledge] = useState(() => {
     const stored = localStorage.getItem("am2_noKnowledge");
     return stored ? JSON.parse(stored) : initialData?.noKnowledge || false;
@@ -58,23 +60,26 @@ export default function AvosMaternos2({ onFormChange, initialData = {} }) {
     }
   );
 
-  const handleCancerTypeChangeGrandmother = (selectedOptions) => {
-    const updatedDetails = selectedOptions.map((option) => {
-      const existingDetail = grandmotherCancerDetails.find(
-        (detail) => detail.type.value === option.value
+  const handleCancerTypeChangeGrandmother = useCallback(
+    (selectedOptions) => {
+      const updatedDetails = selectedOptions.map((option) => {
+        const existingDetail = grandmotherCancerDetails.find(
+          (detail) => detail.type.value === option.value
+        );
+        return (
+          existingDetail || { type: option, age: "", showAgeDropdown: false }
+        );
+      });
+      setGrandmotherCancerDetails(updatedDetails);
+      localStorage.setItem(
+        "am2_grandmotherCancerDetails",
+        JSON.stringify(updatedDetails)
       );
-      return (
-        existingDetail || { type: option, age: "", showAgeDropdown: false }
-      );
-    });
-    setGrandmotherCancerDetails(updatedDetails);
-    localStorage.setItem(
-      "am2_grandmotherCancerDetails",
-      JSON.stringify(updatedDetails)
-    );
-  };
+    },
+    [grandmotherCancerDetails]
+  );
 
-  const handleDeleteCancerDetail = (index, isGrandmother) => {
+  const handleDeleteCancerDetail = useCallback((index, isGrandmother) => {
     if (isGrandmother) {
       setGrandmotherCancerDetails((prevDetails) => {
         const newDetails = prevDetails.filter((_, i) => i !== index);
@@ -94,25 +99,28 @@ export default function AvosMaternos2({ onFormChange, initialData = {} }) {
         return newDetails;
       });
     }
-  };
+  }, []);
 
-  const handleCancerTypeChangeGrandfather = (selectedOptions) => {
-    const updatedDetails = selectedOptions.map((option) => {
-      const existingDetail = grandfatherCancerDetails.find(
-        (detail) => detail.type.value === option.value
+  const handleCancerTypeChangeGrandfather = useCallback(
+    (selectedOptions) => {
+      const updatedDetails = selectedOptions.map((option) => {
+        const existingDetail = grandfatherCancerDetails.find(
+          (detail) => detail.type.value === option.value
+        );
+        return (
+          existingDetail || { type: option, age: "", showAgeDropdown: false }
+        );
+      });
+      setGrandfatherCancerDetails(updatedDetails);
+      localStorage.setItem(
+        "am2_grandfatherCancerDetails",
+        JSON.stringify(updatedDetails)
       );
-      return (
-        existingDetail || { type: option, age: "", showAgeDropdown: false }
-      );
-    });
-    setGrandfatherCancerDetails(updatedDetails);
-    localStorage.setItem(
-      "am2_grandfatherCancerDetails",
-      JSON.stringify(updatedDetails)
-    );
-  };
+    },
+    [grandfatherCancerDetails]
+  );
 
-  const handleNoKnowledgeChange = () => {
+  const handleNoKnowledgeChange = useCallback(() => {
     const updatedValue = !noKnowledge;
     setNoKnowledge(updatedValue);
     localStorage.setItem("am2_noKnowledge", JSON.stringify(updatedValue));
@@ -126,18 +134,18 @@ export default function AvosMaternos2({ onFormChange, initialData = {} }) {
       localStorage.setItem("am2_grandmotherCancerDetails", JSON.stringify([]));
       localStorage.setItem("am2_grandfatherCancerDetails", JSON.stringify([]));
     }
-  };
+  }, [noKnowledge]);
 
-  const handleNoGrandparentsCancerChange = () => {
+  const handleNoGrandparentsCancerChange = useCallback(() => {
     setGrandmotherHadCancer(false);
     setGrandfatherHadCancer(false);
     setNoKnowledge(false);
     localStorage.setItem("am2_grandmotherHadCancer", JSON.stringify(false));
     localStorage.setItem("am2_grandfatherHadCancer", JSON.stringify(false));
     localStorage.setItem("am2_noKnowledge", JSON.stringify(false));
-  };
+  }, []);
 
-  const handleAgeToggle = (index, isGrandmother) => {
+  const handleAgeToggle = useCallback((index, isGrandmother) => {
     const setter = isGrandmother
       ? setGrandmotherCancerDetails
       : setGrandfatherCancerDetails;
@@ -150,46 +158,52 @@ export default function AvosMaternos2({ onFormChange, initialData = {} }) {
       localStorage.setItem(storageKey, JSON.stringify(newDetails));
       return newDetails;
     });
-  };
+  }, []);
+
+  const toggleTooltip = useCallback(() => {
+    setShowTooltip((prev) => !prev);
+  }, []);
 
   useEffect(() => {
     let updatedAvosListMaterno = [];
+    let nextId = 0;
 
     if (noKnowledge || (!grandmotherHadCancer && !grandfatherHadCancer)) {
       updatedAvosListMaterno = [
         {
-          id: 0,
+          id: nextId,
           teveCancer: false,
           sexo: "",
-          ladoPaterno: "materno",
+          ladoPaterno: "",
           outroCancerList: [],
         },
       ];
     } else {
       if (grandmotherHadCancer) {
         updatedAvosListMaterno.push({
-          id: 0,
+          id: nextId,
           teveCancer: true,
           sexo: "feminino",
           ladoPaterno: "materno",
           outroCancerList: grandmotherCancerDetails.map((detail) => ({
-            id: 0,
+            id: nextId,
             idadeDiagnostico: detail.age
               ? parseInt(detail.age.label || detail.age, 10)
               : 0,
             tipoCancer: detail.type.label,
           })),
         });
+        nextId++;
       }
 
       if (grandfatherHadCancer) {
         updatedAvosListMaterno.push({
-          id: 1,
+          id: nextId,
           teveCancer: true,
           sexo: "masculino",
           ladoPaterno: "materno",
           outroCancerList: grandfatherCancerDetails.map((detail) => ({
-            id: 0,
+            id: nextId,
             idadeDiagnostico: detail.age
               ? parseInt(detail.age.label || detail.age, 10)
               : 0,
@@ -211,64 +225,87 @@ export default function AvosMaternos2({ onFormChange, initialData = {} }) {
 
   return (
     <div className="avosm-form-container">
-      <div className="avosm-grupo">
+      <div className="question-with-tooltip">
         <label className="avosm-label">
-          Os seus avós maternos já tiveram câncer ou neoplasia?
-          <div className="avosm-checkbox-group">
-            <label>
-              <input
-                type="checkbox"
-                checked={grandmotherHadCancer}
-                onChange={() => {
-                  const updatedValue = !grandmotherHadCancer;
-                  setGrandmotherHadCancer(updatedValue);
-                  localStorage.setItem(
-                    "am2_grandmotherHadCancer",
-                    JSON.stringify(updatedValue)
-                  );
-                }}
-                className="avosm-checkbox"
-              />
-              Minha avó teve câncer
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                checked={grandfatherHadCancer}
-                onChange={() => {
-                  const updatedValue = !grandfatherHadCancer;
-                  setGrandfatherHadCancer(updatedValue);
-                  localStorage.setItem(
-                    "am2_grandfatherHadCancer",
-                    JSON.stringify(updatedValue)
-                  );
-                }}
-                className="avosm-checkbox"
-              />
-              Meu avô teve câncer
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                checked={
-                  !grandmotherHadCancer && !grandfatherHadCancer && !noKnowledge
-                }
-                onChange={handleNoGrandparentsCancerChange}
-                className="avosm-checkbox"
-              />
-              Nenhum dos meus avós maternos foram acometidos
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                checked={noKnowledge}
-                onChange={handleNoKnowledgeChange}
-                className="avosm-checkbox"
-              />
-              Não tenho conhecimento da saúde dos meus avós maternos
-            </label>
+          <div className="top-tooltip">
+            <div>Os seus avós maternos já tiveram câncer ou neoplasia?</div>
+            <div>
+              <button
+                type="button"
+                className="info-button"
+                onClick={toggleTooltip}
+                aria-label="Informações adicionais"
+              >
+                <img src={InfoIcon} alt="" className="info-icon" />
+              </button>
+              {showTooltip && (
+                <div className="tooltip" role="tooltip">
+                  Caso seu paciente não saiba a idade exata do diagnóstico de
+                  câncer em um familiar, questione se foi antes ou depois dos 50
+                  anos. Essa estimativa é mais fácil de lembrar e ainda oferece
+                  um corte de idade útil para a avaliação de risco.
+                </div>
+              )}
+            </div>
           </div>
         </label>
+      </div>
+
+      <div className="avosm-grupo">
+        <div className="avosm-checkbox-group">
+          <label>
+            <input
+              type="checkbox"
+              checked={grandmotherHadCancer}
+              onChange={() => {
+                const updatedValue = !grandmotherHadCancer;
+                setGrandmotherHadCancer(updatedValue);
+                localStorage.setItem(
+                  "am2_grandmotherHadCancer",
+                  JSON.stringify(updatedValue)
+                );
+              }}
+              className="avosm-checkbox"
+            />
+            Minha avó teve câncer
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              checked={grandfatherHadCancer}
+              onChange={() => {
+                const updatedValue = !grandfatherHadCancer;
+                setGrandfatherHadCancer(updatedValue);
+                localStorage.setItem(
+                  "am2_grandfatherHadCancer",
+                  JSON.stringify(updatedValue)
+                );
+              }}
+              className="avosm-checkbox"
+            />
+            Meu avô teve câncer
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              checked={
+                !grandmotherHadCancer && !grandfatherHadCancer && !noKnowledge
+              }
+              onChange={handleNoGrandparentsCancerChange}
+              className="avosm-checkbox"
+            />
+            Nenhum dos meus avós maternos teve câncer ou neoplasia
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              checked={noKnowledge}
+              onChange={handleNoKnowledgeChange}
+              className="avosm-checkbox"
+            />
+            Não tenho conhecimento da saúde dos meus avós maternos
+          </label>
+        </div>
 
         {!noKnowledge && (
           <>
@@ -291,7 +328,7 @@ export default function AvosMaternos2({ onFormChange, initialData = {} }) {
                 {grandmotherCancerDetails.map((detail, index) => (
                   <div key={index}>
                     <label className="avos-idade">
-                      <div>
+                      <div className="avos-width">
                         Idade do diagnóstico para ({detail.type.label}):
                         {detail.showAgeDropdown ? (
                           <Select
@@ -337,23 +374,6 @@ export default function AvosMaternos2({ onFormChange, initialData = {} }) {
                       >
                         {detail.showAgeDropdown ? "Digitar idade" : "Não sei"}
                       </button>
-                      <img
-                        src={InfoIcon}
-                        alt="Info"
-                        className="info-icon-idade"
-                        onClick={() =>
-                          setTooltipIndex(index === tooltipIndex ? null : index)
-                        }
-                      />
-                      {tooltipIndex === index && (
-                        <div className="tooltip-idade">
-                          Caso seu paciente não saiba a idade exata do
-                          diagnóstico de câncer em um familiar, questione se foi
-                          antes ou depois dos 50 anos. Essa estimativa é mais
-                          fácil de lembrar e ainda oferece um corte de idade
-                          útil para a avaliação de risco.
-                        </div>
-                      )}
                     </label>
                     <button
                       className="avosm-btn-delete"
@@ -432,23 +452,6 @@ export default function AvosMaternos2({ onFormChange, initialData = {} }) {
                       >
                         {detail.showAgeDropdown ? "Digitar idade" : "Não sei"}
                       </button>
-                      <img
-                        src={InfoIcon}
-                        alt="Info"
-                        className="info-icon-idade"
-                        onClick={() =>
-                          setTooltipIndex(index === tooltipIndex ? null : index)
-                        }
-                      />
-                      {tooltipIndex === index && (
-                        <div className="tooltip-idade">
-                          Caso seu paciente não saiba a idade exata do
-                          diagnóstico de câncer em um familiar, questione se foi
-                          antes ou depois dos 50 anos. Essa estimativa é mais
-                          fácil de lembrar e ainda oferece um corte de idade
-                          útil para a avaliação de risco.
-                        </div>
-                      )}
                     </label>
                     <button
                       className="avosm-btn-delete"

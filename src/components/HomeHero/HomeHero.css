@@ -2,34 +2,43 @@
   background-image: url('../../assets/background.png');
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: right; /* Alinha a imagem ao canto direito */
+  background-position: right;
+  /* Alinha a imagem ao canto direito */
   height: calc(100vh - 96px);
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* Alinha o conteúdo à esquerda */
-  padding: 30px; /* Aplica padding de 30px */
+  justify-content: flex-start;
+  /* Alinha o conteúdo à esquerda */
+  padding: 30px;
+  /* Aplica padding de 30px */
 }
 
 .homeHero__content {
   color: var(--white);
-  width: 100%; /* Usa toda a largura */
-  max-width: 30rem; /* Mantém a largura máxima */
+  width: 100%;
+  /* Usa toda a largura */
+  max-width: 30rem;
+  /* Mantém a largura máxima */
   padding: 2rem 0;
+  font-family: 'Poppins', sans-serif;
 }
 
 .homeHero__title {
-  font-size: 2.5rem; /* Tamanho do título */
+  font-size: 2.5rem;
+  /* Tamanho do título */
   margin-bottom: 1rem;
 }
 
 .homeHero__paragraph {
-  font-size: 1.125rem; /* Tamanho do parágrafo */
+  font-size: 1.125rem;
+  /* Tamanho do parágrafo */
   margin-bottom: 2rem;
   color: var(--white);
 }
 
 .homeHero__list {
-  padding-left: 2rem; /* Padding à esquerda */
+  padding-left: 2rem;
+  /* Padding à esquerda */
   margin-bottom: 2rem;
 }
 
@@ -39,10 +48,13 @@
 
 .homeHero__startButton {
   border-radius: 4px;
-  width: 100%; /* Largura total para dispositivos móveis */
-  max-width: 15rem; /* Mantém a largura máxima */
+  width: 100%;
+  /* Largura total para dispositivos móveis */
+  max-width: 15rem;
+  /* Mantém a largura máxima */
   height: 48px;
-  padding: 8px 0; /* Ajusta o padding */
+  padding: 8px 0;
+  /* Ajusta o padding */
   color: var(--primary-700);
   background-color: var(--white);
   border-style: none;
@@ -56,14 +68,17 @@
 
 @media (max-width: 768px) {
   .homeHero__title {
-    font-size: 2rem; /* Ajusta o tamanho do título para dispositivos móveis */
+    font-size: 2rem;
+    /* Ajusta o tamanho do título para dispositivos móveis */
   }
 
   .homeHero__paragraph {
-    font-size: 1rem; /* Ajusta o tamanho do parágrafo para dispositivos móveis */
+    font-size: 1rem;
+    /* Ajusta o tamanho do parágrafo para dispositivos móveis */
   }
 
   .homeHero__list {
-    padding-left: 0; /* Remove o padding nos dispositivos móveis */
+    padding-left: 0;
+    /* Remove o padding nos dispositivos móveis */
   }
 }

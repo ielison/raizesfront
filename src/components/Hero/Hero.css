@@ -4,7 +4,7 @@
   background-repeat: no-repeat;
   background-position: right;
   overflow: hidden;
-  height: calc(100vh - 98px);
+  height: calc(100vh - 96px);
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -21,6 +21,7 @@
   align-items: flex-start;
   justify-content: center;
   text-align: left;
+  font-family: 'Poppins', sans-serif;
 }
 
 .hero-title {

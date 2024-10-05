@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Select from "react-select";
 import PropTypes from "prop-types";
 import { cancerOptions } from "../../data/cancerOptions";
@@ -33,7 +33,7 @@ export default function FilhosFilhas2({ onFormChange }) {
     return storedChildren || [];
   });
 
-  const [tooltipIndex, setTooltipIndex] = useState(null);
+  const [showTooltip, setShowTooltip] = useState(false);
 
   useEffect(() => {
     localStorage.setItem("hasChildren", JSON.stringify(hasChildren));
@@ -109,33 +109,60 @@ export default function FilhosFilhas2({ onFormChange }) {
     setChildren(newChildren);
   };
 
+  const toggleTooltip = useCallback(() => {
+    setShowTooltip((prev) => !prev);
+  }, []);
+
   return (
     <div className="ff-form-container">
-      <label>
-        O(A) Sr(a) tem filhos e filhas?
-        <div className="checkbox-group">
-          <label>
-            <input
-              type="radio"
-              name="hasChildren"
-              value="sim"
-              checked={hasChildren === true}
-              onChange={() => setHasChildren(true)}
-            />
-            Sim
-          </label>
-          <label>
-            <input
-              type="radio"
-              name="hasChildren"
-              value="nao"
-              checked={hasChildren === false}
-              onChange={() => setHasChildren(false)}
-            />
-            Não
-          </label>
-        </div>
-      </label>
+      <div className="question-with-tooltip">
+        <label>
+          <div className="top-tooltip">
+            <div>O(A) Sr(a) tem filhos e filhas?</div>
+            <div>
+              <button
+                type="button"
+                className="info-button"
+                onClick={toggleTooltip}
+                aria-label="Informações adicionais"
+              >
+                <img src={InfoIcon} alt="" className="info-icon" />
+              </button>
+              {showTooltip && (
+                <div className="tooltip" role="tooltip">
+                  Caso seu paciente não saiba a idade exata do diagnóstico de
+                  câncer em um familiar, questione se foi antes ou depois dos 50
+                  anos. Essa estimativa é mais fácil de lembrar e ainda oferece
+                  um corte de idade útil para a avaliação de risco.
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="checkbox-group">
+            <label>
+              <input
+                type="radio"
+                name="hasChildren"
+                value="sim"
+                checked={hasChildren === true}
+                onChange={() => setHasChildren(true)}
+              />
+              Sim
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="hasChildren"
+                value="nao"
+                checked={hasChildren === false}
+                onChange={() => setHasChildren(false)}
+              />
+              Não
+            </label>
+          </div>
+        </label>
+      </div>
 
       {hasChildren === true && (
         <>
@@ -232,12 +259,21 @@ export default function FilhosFilhas2({ onFormChange }) {
                       value={child.type}
                       onChange={(selectedOptions) => {
                         const newChildren = [...children];
-                        newChildren[index].type = selectedOptions.map(
-                          (opt) => ({
+                        const existingTypes = new Set(
+                          child.type.map((t) => t.value)
+                        );
+                        newChildren[index].type = selectedOptions.map((opt) => {
+                          if (existingTypes.has(opt.value)) {
+                            // Manter a idade existente se o tipo já estava selecionado
+                            return child.type.find(
+                              (t) => t.value === opt.value
+                            );
+                          }
+                          return {
                             ...opt,
                             age: "",
-                          })
-                        );
+                          };
+                        });
                         setChildren(newChildren);
                       }}
                     />
@@ -246,7 +282,7 @@ export default function FilhosFilhas2({ onFormChange }) {
                   {child.type.map((cancerType, typeIndex) => (
                     <label key={typeIndex} className="ff-idade">
                       <div className="ff">
-                        Idade do diagnóstico ({cancerType.label})
+                        Idade do diagnóstico para ({cancerType.label})
                         {child.showAgeDropdowns?.[cancerType.value] ? (
                           <Select
                             placeholder="Selecione..."
@@ -283,24 +319,6 @@ export default function FilhosFilhas2({ onFormChange }) {
                           ? "Digitar idade"
                           : "Não sei"}
                       </button>
-                      <img
-                        src={InfoIcon}
-                        alt="Info"
-                        className="info-icon-idade"
-                        onClick={() =>
-                          setTooltipIndex(index === tooltipIndex ? null : index)
-                        }
-                      />
-
-                      {tooltipIndex === index && (
-                        <div className="tooltip-idade">
-                          Caso seu paciente não saiba a idade exata do
-                          diagnóstico de câncer em um familiar, questione se foi
-                          antes ou depois dos 50 anos. Essa estimativa é mais
-                          fácil de lembrar e ainda oferece um corte de idade
-                          útil para a avaliação de risco.
-                        </div>
-                      )}
                     </label>
                   ))}
 

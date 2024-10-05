@@ -8,6 +8,11 @@
   overflow: hidden;
 }
 
+.fdp-content {
+  width: 97%;
+  margin-top: 24px;
+}
+
 .fdm-form-container {
   display: flex;
   flex-direction: column;

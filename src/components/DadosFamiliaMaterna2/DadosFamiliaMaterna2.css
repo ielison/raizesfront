@@ -88,8 +88,9 @@
 .dfm-idade span {
   display: flex;
   flex-direction: column;
+  width: 80%;
 }
 
-.dfm-cancer-detail{
+.dfm-cancer-detail {
   margin-bottom: 16px;
 }
