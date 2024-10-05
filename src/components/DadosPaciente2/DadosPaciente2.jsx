@@ -9,7 +9,9 @@ import { cancerOptions } from "../../data/cancerOptions";
 export default function DadosPaciente2({ onFormChange, initialData }) {
   const [diagnoses, setDiagnoses] = useState(() => {
     const storedDiagnoses = localStorage.getItem("dp2_diagnoses");
-    return storedDiagnoses ? JSON.parse(storedDiagnoses) : [{ type: [], age: "" }];
+    return storedDiagnoses
+      ? JSON.parse(storedDiagnoses)
+      : [{ type: [], age: "" }];
   });
 
   const [hasCancer, setHasCancer] = useState(() => {
@@ -18,8 +20,12 @@ export default function DadosPaciente2({ onFormChange, initialData }) {
   });
 
   const [hasOtherDiagnosis, setHasOtherDiagnosis] = useState(() => {
-    const storedHasOtherDiagnosis = localStorage.getItem("dp2_hasOtherDiagnosis");
-    return storedHasOtherDiagnosis ? JSON.parse(storedHasOtherDiagnosis) : false;
+    const storedHasOtherDiagnosis = localStorage.getItem(
+      "dp2_hasOtherDiagnosis"
+    );
+    return storedHasOtherDiagnosis
+      ? JSON.parse(storedHasOtherDiagnosis)
+      : false;
   });
 
   const [userData, setUserData] = useState(() => {
@@ -40,34 +46,50 @@ export default function DadosPaciente2({ onFormChange, initialData }) {
 
   useEffect(() => {
     if (initialData) {
-      setUserData(prevData => ({
+      setUserData((prevData) => ({
         ...prevData,
         ...initialData.usuariPrincipal,
+        idade: initialData.usuariPrincipal?.idade
+          ? initialData.usuariPrincipal.idade.toString()
+          : "",
+        idadeDiagnostico: initialData.usuariPrincipal?.idadeDiagnostico
+          ? initialData.usuariPrincipal.idadeDiagnostico.toString()
+          : "",
         qualCancer: initialData.usuariPrincipal?.qualCancer
-          ? initialData.usuariPrincipal.qualCancer.split(", ").map(cancer => ({ value: cancer, label: cancer }))
-          : []
+          ? initialData.usuariPrincipal.qualCancer
+              .split(", ")
+              .map((cancer) => ({ value: cancer, label: cancer }))
+          : [],
       }));
       setHasCancer(initialData.usuariPrincipal?.teveCancer || false);
       setHasOtherDiagnosis(initialData.usuariPrincipal?.outroCancer || false);
       if (initialData.usuariPrincipal?.outroCancerList) {
         setDiagnoses(
           initialData.usuariPrincipal.outroCancerList.map((cancer) => ({
-            type: cancer.tipoCancer.split(", ").map(type => ({ value: type, label: type })),
+            type: cancer.tipoCancer
+              .split(", ")
+              .map((type) => ({ value: type, label: type })),
             age: cancer.idadeDiagnostico.toString(),
           }))
         );
       }
     }
-  }, [initialData]);useEffect(() => {
+  }, [initialData]);
+  useEffect(() => {
     localStorage.setItem("dp2_userData", JSON.stringify(userData));
     localStorage.setItem("dp2_diagnoses", JSON.stringify(diagnoses));
     localStorage.setItem("dp2_hasCancer", JSON.stringify(hasCancer));
-    localStorage.setItem("dp2_hasOtherDiagnosis", JSON.stringify(hasOtherDiagnosis));
+    localStorage.setItem(
+      "dp2_hasOtherDiagnosis",
+      JSON.stringify(hasOtherDiagnosis)
+    );
 
     onFormChange({
       usuariPrincipal: {
         ...userData,
-        qualCancer: userData.qualCancer.map(cancer => cancer.label).join(", "),
+        qualCancer: userData.qualCancer
+          .map((cancer) => cancer.label)
+          .join(", "),
         outroCancer: hasOtherDiagnosis,
         outroCancerList: diagnoses.map((d) => ({
           idCancer: 0,
@@ -101,7 +123,8 @@ export default function DadosPaciente2({ onFormChange, initialData }) {
     if (field === "telefone") {
       processedValue = value.replace(/\D/g, "");
     } else if (field === "idade" || field === "idadeDiagnostico") {
-      processedValue = value === "" ? "" : Math.max(0, parseInt(value, 10));
+      processedValue =
+        value === "" ? "" : Math.max(0, parseInt(value, 10)).toString();
     }
     setUserData((prev) => ({
       ...prev,
@@ -109,10 +132,11 @@ export default function DadosPaciente2({ onFormChange, initialData }) {
     }));
   };
 
-  const handleDiagnosisChange= (index, field, value) => {
+  const handleDiagnosisChange = (index, field, value) => {
     const updatedDiagnoses = [...diagnoses];
     if (field === "age") {
-      updatedDiagnoses[index][field] = value === "" ? "" : Math.max(0, parseInt(value, 10));
+      updatedDiagnoses[index][field] =
+        value === "" ? "" : Math.max(0, parseInt(value, 10));
     } else {
       updatedDiagnoses[index][field] = value;
     }
@@ -165,7 +189,7 @@ export default function DadosPaciente2({ onFormChange, initialData }) {
           <input
             type="number"
             min="0"
-            value={userData.idade}
+            value={userData.idade === "0" ? "" : userData.idade}
             onChange={(e) => handleFieldChange("idade", e.target.value)}
           />
         </label>
@@ -214,9 +238,9 @@ export default function DadosPaciente2({ onFormChange, initialData }) {
                 placeholder="Selecione..."
                 value={userData.qualCancer}
                 onChange={(selectedOptions) => {
-                  setUserData(prev => ({
+                  setUserData((prev) => ({
                     ...prev,
-                    qualCancer: selectedOptions
+                    qualCancer: selectedOptions,
                   }));
                 }}
               />
@@ -226,8 +250,14 @@ export default function DadosPaciente2({ onFormChange, initialData }) {
               <input
                 type="number"
                 min="0"
-                value={userData.idadeDiagnostico}
-                onChange={(e) => handleFieldChange("idadeDiagnostico", e.target.value)}
+                value={
+                  userData.idadeDiagnostico === "0"
+                    ? ""
+                    : userData.idadeDiagnostico
+                }
+                onChange={(e) =>
+                  handleFieldChange("idadeDiagnostico", e.target.value)
+                }
               />
             </label>
           </div>
@@ -281,7 +311,9 @@ export default function DadosPaciente2({ onFormChange, initialData }) {
                         type="number"
                         min="0"
                         value={diagnosis.age}
-                        onChange={(e) => handleDiagnosisChange(index, "age", e.target.value)}
+                        onChange={(e) =>
+                          handleDiagnosisChange(index, "age", e.target.value)
+                        }
                       />
                     </label>
                   </div>
