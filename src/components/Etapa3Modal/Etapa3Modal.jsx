@@ -1,12 +1,7 @@
 import PropTypes from "prop-types";
 import "./Etapa3Modal.css";
 
-export default function Etapa3Modal({ onClose, onBack, onAdvance }) {
-  const handleBackClick = () => {
-    console.log("Back button clicked");
-    onBack();
-  };
-
+export default function Etapa3Modal({ onClose, onAdvance }) {
   const handleAdvanceClick = () => {
     console.log("Advance button clicked");
     onAdvance();
@@ -21,9 +16,6 @@ export default function Etapa3Modal({ onClose, onBack, onAdvance }) {
         <h2>Etapa3 - Análise da Família Paterna</h2>
         <p>Nesta fase iremos analisar sua família paterna.</p>
         <div className="em3-form-buttons">
-          <button className="btn-back-em3" onClick={handleBackClick}>
-            Voltar
-          </button>
           <button className="btn-next-em3" onClick={handleAdvanceClick}>
             Avançar
           </button>
@@ -35,6 +27,5 @@ export default function Etapa3Modal({ onClose, onBack, onAdvance }) {
 
 Etapa3Modal.propTypes = {
   onClose: PropTypes.func.isRequired,
-  onBack: PropTypes.func.isRequired,
   onAdvance: PropTypes.func.isRequired,
 };

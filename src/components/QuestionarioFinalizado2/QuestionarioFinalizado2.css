@@ -67,5 +67,5 @@ p {
 
 .btn-open-report:hover,
 .btn-download-report:hover {
-  background-color: #0056b3;
+  background-color: var(--primary-700);
 }

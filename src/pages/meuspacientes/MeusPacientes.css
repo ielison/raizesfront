@@ -117,7 +117,7 @@
 .pagination button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
-  color:#494949;
+  color: #494949;
 }
 
 .pagination span {
@@ -128,7 +128,7 @@
   border-radius: 4px;
 }
 
-.pagination button:hover{
+.pagination button:hover {
   background-color: var(--secondary-500);
 }
 
@@ -158,18 +158,24 @@
 /* MeusPacientes.css */
 
 .alto-risco {
-  color: red; /* Cor para alto risco */
-  font-weight: bold; /* Negrito */
+  color: red;
+  /* Cor para alto risco */
+  font-weight: bold;
+  /* Negrito */
 }
 
 .baixo-risco {
-  color: green; /* Cor para baixo risco */
-  font-weight: bold; /* Normal */
+  color: green;
+  /* Cor para baixo risco */
+  font-weight: bold;
+  /* Normal */
 }
 
 .sem-consulta {
-  color: gray; /* Cor para sem consulta */
-  font-style: italic; /* Itálico */
+  color: gray;
+  /* Cor para sem consulta */
+  font-style: italic;
+  /* Itálico */
 }
 
 
@@ -178,15 +184,20 @@
   .paciente-card {
     flex-direction: column;
     align-items: flex-start;
-    height: auto; /* Para acomodar mais conteúdo */
+    height: auto;
+    /* Para acomodar mais conteúdo */
   }
 
-  .paciente-info, .paciente-details, .paciente-contato {
-    width: 100%; /* Fazer com que ocupem toda a largura */
+  .paciente-info,
+  .paciente-details,
+  .paciente-contato {
+    width: 100%;
+    /* Fazer com que ocupem toda a largura */
   }
 
   .divider {
-    display: none; /* Remover a linha divisória em tablets */
+    display: none;
+    /* Remover a linha divisória em tablets */
   }
 }
 
@@ -199,13 +210,15 @@
 
   .search-box {
     padding: 8px;
-    font-size: 14px; /* Texto menor para dispositivos móveis */
+    font-size: 14px;
+    /* Texto menor para dispositivos móveis */
   }
 
   .paciente-card {
     padding: 10px;
     gap: 10px;
-    height: auto; /* Ajustar a altura automática */
+    height: auto;
+    /* Ajustar a altura automática */
   }
 
   .paciente-icon {
@@ -213,15 +226,20 @@
   }
 
   .paciente-nome {
-    font-size: 16px; /* Ajustar o tamanho da fonte */
+    font-size: 16px;
+    /* Ajustar o tamanho da fonte */
   }
 
   .consulta-oncogenetica {
-    font-size: 14px;
+    width: 100%;
+    font-size: 18px;
+    margin: 14px 0px;
+    text-align: center;
   }
 
   .report-buttons {
     width: 100%;
-    justify-content: space-around; /* Espaçar os botões no mobile */
+    justify-content: space-around;
+    /* Espaçar os botões no mobile */
   }
 }

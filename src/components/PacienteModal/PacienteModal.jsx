@@ -14,6 +14,8 @@ import FamiliaresDistantesMaterno2 from "../FamiliaresDistantesMaterno2/Familiar
 import AvosPaternos2 from "../AvosPaternos2/AvosPaternos2";
 import DadosFamiliaPaterna2 from "../DadosFamiliaPaterna2/DadosFamiliaPaterna2";
 import FamiliaresDistantesPaterno2 from "../FamiliaresDistantesPaterno2/FamiliaresDistantesPaterno2";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import { useAuth } from "../../context/AuthContext";
 
@@ -24,6 +26,9 @@ export default function PacienteModal({ onClose }) {
   const [expandedStep, setExpandedStep] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
+  const [showQuestionarioFinalizado2, setShowQuestionarioFinalizado2] =
+    useState(false);
+  const [isHighRisk, setIsHighRisk] = useState(false);
   const modalRef = useRef(null);
 
   const [data, setData] = useState({
@@ -513,7 +518,6 @@ export default function PacienteModal({ onClose }) {
         })
         .finally(() => {
           setIsLoading(false);
-          onClose();
           localStorage.removeItem("formData");
           // Clear all localStorage items
           Object.keys(localStorage).forEach((key) => {
@@ -568,98 +572,341 @@ export default function PacienteModal({ onClose }) {
     setCurrentSubItem(subItemId);
   };
 
+  const handleAdvanceToQuestionarioFinalizado2 = async () => {
+    try {
+      const response = await fetch(
+        `https://testserver-2p40.onrender.com/api/quiz/getPacientes/${idUser}`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch patient data");
+      }
+      const data = await response.json();
+
+      console.log("API Response:", data); // Log the entire API response
+
+      if (!Array.isArray(data) || data.length === 0) {
+        console.error("No quiz data found for this user");
+        return;
+      }
+
+      // Get the last item of the array
+      const latestEntry = data[data.length - 1];
+
+      console.log("Latest Entry:", latestEntry); // Log the latest entry
+      console.log("ID do Quiz:", latestEntry.idQuestionario); // Log do ID do quiz
+      console.log("Resultado (risco):", latestEntry.risco); // Log do valor de "resultado" (risco)
+
+      setIsHighRisk(latestEntry.risco === true);
+      setShowQuestionarioFinalizado2(true);
+    } catch (error) {
+      console.error("Error fetching patient data:", error);
+    }
+  };
+
+  const handleDownloadReport = async () => {
+    console.log("Iniciando download do relatório...");
+    toast.success("O download foi iniciado e terminará em poucos instantes!");
+  
+    try {
+      // Fetch the latest quiz data
+      const response = await fetch(
+        `https://testserver-2p40.onrender.com/api/quiz/getPacientes/${idUser}`
+      );
+      if (!response.ok) {
+        throw new Error(`Failed to fetch patient data: ${response.status}`);
+      }
+      const data = await response.json();
+  
+      console.log("API Response:", data); // Log the entire API response
+  
+      if (!Array.isArray(data) || data.length === 0) {
+        throw new Error("No quiz data found for this user");
+      }
+  
+      // Get the last item of the array
+      const latestEntry = data[data.length - 1];
+  
+      console.log("Latest Entry:", latestEntry); // Log the latest entry
+      console.log("ID do Quiz:", latestEntry.idQuestionario); // Log do ID do quiz
+      console.log("Resultado (risco):", latestEntry.risco); // Log do valor de "resultado" (risco)
+  
+      const pacienteId = latestEntry.idQuestionario; // Use idQuestionario instead of id
+  
+      // Chamada para obter o resultado do quiz
+      const resultadoUrl = `https://testserver-2p40.onrender.com/api/quiz/resultado/${pacienteId}/${idUser}`;
+      console.log("Fetching quiz result from:", resultadoUrl);
+      const resultadoResponse = await fetch(resultadoUrl);
+  
+      if (!resultadoResponse.ok) {
+        throw new Error(
+          `Erro ao obter resultado do quiz: ${resultadoResponse.status}`
+        );
+      }
+  
+      const resultadoData = await resultadoResponse.json();
+      console.log("Resultado do quiz:", resultadoData);
+      const precisaPesquisaOncogenetica = resultadoData;
+  
+      // Fetch patient data
+      const pacienteUrl = `https://testserver-2p40.onrender.com/api/quiz/${pacienteId}`;
+      console.log("Fetching patient data from:", pacienteUrl);
+      const pacienteResponse = await fetch(pacienteUrl);
+  
+      if (!pacienteResponse.ok) {
+        throw new Error(`Erro ao baixar relatório: ${pacienteResponse.status}`);
+      }
+  
+      const pacienteData = await pacienteResponse.json();
+      console.log("Dados do paciente:", pacienteData);
+  
+      // Adaptar os dados para o formato desejado
+      const relatorio = {
+        nome: pacienteData.usuariPrincipal.nome,
+        idade: pacienteData.usuariPrincipal.idade,
+        historicoPessoal: [],
+        familiares: [],
+        precisaPesquisaOncogenetica,
+      };
+  
+      // Adicionar histórico pessoal de câncer do usuário principal
+      if (pacienteData.usuariPrincipal.teveCancer) {
+        relatorio.historicoPessoal.push(
+          `${pacienteData.usuariPrincipal.qualCancer} aos ${pacienteData.usuariPrincipal.idadeDiagnostico} anos`
+        );
+      }
+  
+      // Adicionar outros tipos de câncer do usuário principal
+      if (
+        pacienteData.usuariPrincipal.outroCancerList &&
+        pacienteData.usuariPrincipal.outroCancerList.length > 0
+      ) {
+        pacienteData.usuariPrincipal.outroCancerList.forEach((cancer) => {
+          relatorio.historicoPessoal.push(
+            `${cancer.tipoCancer} aos ${cancer.idadeDiagnostico} anos`
+          );
+        });
+      }
+  
+      // Se não houver histórico de câncer
+      if (relatorio.historicoPessoal.length === 0) {
+        relatorio.historicoPessoal.push("Sem histórico pessoal de câncer");
+      }
+  
+      // Adicionar informações dos familiares (exemplo simplificado)
+      if (pacienteData.mae && pacienteData.mae.teveCancer) {
+        relatorio.familiares.push(`Mãe: ${pacienteData.mae.qualCancer}`);
+      }
+      if (pacienteData.pai && pacienteData.pai.teveCancer) {
+        relatorio.familiares.push(`Pai: ${pacienteData.pai.qualCancer}`);
+      }
+      // Adicione mais familiares conforme necessário
+  
+      // Enviar os dados formatados para o endpoint desejado
+      const pdfResponse = await fetch(
+        "https://testserver-2p40.onrender.com/generatepdf",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(relatorio),
+        }
+      );
+  
+      if (!pdfResponse.ok) {
+        throw new Error(`Erro ao gerar PDF: ${pdfResponse.status}`);
+      }
+  
+      // Aqui obtemos o blob do PDF
+      const blob = await pdfResponse.blob();
+      const url = window.URL.createObjectURL(blob);
+  
+      // Criar um elemento <a> para iniciar o download
+      const a = document.createElement("a");
+      a.style.display = "none";
+      a.href = url;
+      a.download = `Relatorio_${relatorio.nome}.pdf`;
+  
+      document.body.appendChild(a);
+      a.click();
+  
+      // Remover o link do DOM após o download
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+  
+      toast.success("Download finalizado!");
+    } catch (error) {
+      console.error(`Erro ao baixar o relatório: ${error}`);
+      toast.error("Erro ao realizar download de relatório!");
+    }
+  };
+
   useEffect(() => {
     console.log(`Step: ${currentStep}, Subitem: ${currentSubItem}`);
   }, [currentStep, currentSubItem]);
 
   return (
-    <div className="pacienteModal__overlay">
-      <div className="pacienteModal__container" ref={modalRef}>
-        <button className="pacienteModal__close" onClick={handleModalClose}>
-          &times;
-        </button>
+    <div>
+      <ToastContainer />
+      <div className="pacienteModal__overlay">
+        <div
+          className={`pacienteModal__container ${
+            isCompleted ? "pacienteModal__container--completed" : ""
+          }`}
+          ref={modalRef}
+        >
+          <button className="pacienteModal__close" onClick={handleModalClose}>
+            &times;
+          </button>
 
-        <div className="pacienteModal__content">
-          {isCompleted ? (
-            <div className="completion-message">
-              <h2>Questionário finalizado!</h2>
-              <p>Com base nas respostas obtidas pudemos gerar um relatório.</p>
-              <button onClick={onClose}>Abrir relatório</button>
-            </div>
-          ) : (
-            <>
-              <nav className="pacienteModal__nav">
-                <ul>
-                  {steps.map((step) => (
-                    <li key={step.id} className="step-item">
-                      <button
-                        onClick={() => handleStepClick(step.id)}
-                        className="step-label"
-                      >
-                        {step.label}
-                        <span
-                          className={`expand-icon ${
-                            expandedStep === step.id ? "expanded" : ""
-                          }`}
-                        >
-                          {expandedStep === step.id ? "▲" : "▼"}
-                        </span>
-                      </button>
-                      {expandedStep === step.id && (
-                        <ul className="subitems-list">
-                          {step.subItems.map((subItem) => (
-                            <li
-                              key={subItem.id}
-                              className={
-                                subItem.id === currentSubItem
-                                  ? "active"
-                                  : "itemsub"
-                              }
-                              onClick={() =>
-                                handleSubItemClick(step.id, subItem.id)
-                              }
-                            >
-                              {subItem.label}
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-
-              <div className="pacienteModal__form">
-                {isLoading ? (
-                  <div className="loading-message">
-                    <p>Estamos salvando os dados do paciente...</p>
+          <div
+            className={`pacienteModal__content ${
+              isCompleted ? "pacienteModal__content--completed" : ""
+            }`}
+          >
+            {isCompleted ? (
+              showQuestionarioFinalizado2 ? (
+                <div className="modal-content-questionario__finalizado2">
+                  <div
+                    className="alert-icon"
+                    style={{ display: isHighRisk ? "block" : "none" }}
+                  >
+                    ⚠️
                   </div>
-                ) : (
-                  steps[currentStep].subItems[currentSubItem].component
-                )}
-
-                <div className="pacienteModal__footer">
-                  <button
-                    onClick={handleBack}
-                    disabled={currentSubItem === 0 && currentStep === 0}
-                  >
-                    Voltar
-                  </button>
-                  <button
-                    onClick={handleNext}
-                    disabled={
-                      isLoading &
-                      (currentStep === steps.length - 1 &&
-                        currentSubItem ===
-                          steps[currentStep].subItems.length - 1)
-                    }
-                  >
-                    Avançar
+                  <h2 className="resultado-h2">
+                    {isHighRisk
+                      ? "Atenção, pode haver risco!"
+                      : "Resultado da Avaliação"}
+                  </h2>
+                  {isHighRisk ? (
+                    <p>
+                      Seu paciente atende aos critérios que indicam um alto
+                      risco para câncer hereditário. Recomendamos encaminhá-lo a
+                      um serviço especializado. Consulte a aba &apos;links
+                      úteis&apos; para obter mais informações sobre
+                      profissionais e serviços especializados.
+                    </p>
+                  ) : (
+                    <p>
+                      Com base na avaliação realizada, observamos que seu
+                      paciente não atende aos critérios que indicariam um alto
+                      risco para câncer hereditário.
+                    </p>
+                  )}
+                  <p>
+                    É importante destacar que muitos casos de câncer estão
+                    relacionados ao estilo de vida e a fatores ambientais.
+                    Recomendamos enfatizar a importância de hábitos saudáveis,
+                    como dieta equilibrada, exercícios físicos regulares,
+                    abstenção de tabagismo e consumo moderado de álcool, para
+                    ajudar a reduzir o risco de desenvolver câncer.
+                  </p>
+                  <p>
+                    Além disso, é fundamental estar atento a outros fatores de
+                    risco, como exposição a agentes carcinogênicos no ambiente
+                    de trabalho, histórico pessoal de doenças prévias, idade e
+                    outros aspectos relevantes à saúde do paciente.
+                  </p>
+                  <p>
+                    Continue monitorando e incentivando hábitos de vida
+                    saudáveis em seus pacientes, pois isso desempenha um papel
+                    significativo na prevenção do câncer e na promoção da saúde.
+                  </p>
+                  <div className="qf2-form-buttons">
+                    <button
+                      className="btn-download-report"
+                      onClick={handleDownloadReport}
+                    >
+                      Baixar relatório detalhado
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="completion-message">
+                  <h2>Questionário finalizado!</h2>
+                  <p>
+                    Com base nas respostas obtidas pudemos gerar um relatório.
+                  </p>
+                  <button onClick={handleAdvanceToQuestionarioFinalizado2}>
+                    Abrir relatório
                   </button>
                 </div>
-              </div>
-            </>
-          )}
+              )
+            ) : (
+              <>
+                <nav className="pacienteModal__nav">
+                  <ul>
+                    {steps.map((step) => (
+                      <li key={step.id} className="step-item">
+                        <button
+                          onClick={() => handleStepClick(step.id)}
+                          className="step-label"
+                        >
+                          {step.label}
+                          <span
+                            className={`expand-icon ${
+                              expandedStep === step.id ? "expanded" : ""
+                            }`}
+                          >
+                            {expandedStep === step.id ? "▲" : "▼"}
+                          </span>
+                        </button>
+                        {expandedStep === step.id && (
+                          <ul className="subitems-list">
+                            {step.subItems.map((subItem) => (
+                              <li
+                                key={subItem.id}
+                                className={
+                                  subItem.id === currentSubItem
+                                    ? "active"
+                                    : "itemsub"
+                                }
+                                onClick={() =>
+                                  handleSubItemClick(step.id, subItem.id)
+                                }
+                              >
+                                {subItem.label}
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+
+                <div className="pacienteModal__form">
+                  {isLoading ? (
+                    <div className="loading-message">
+                      <p>Estamos salvando os dados do paciente...</p>
+                    </div>
+                  ) : (
+                    steps[currentStep].subItems[currentSubItem].component
+                  )}
+
+                  <div className="pacienteModal__footer">
+                    <button
+                      onClick={handleBack}
+                      disabled={currentSubItem === 0 && currentStep === 0}
+                    >
+                      Voltar
+                    </button>
+                    <button
+                      onClick={handleNext}
+                      disabled={
+                        isLoading &
+                        (currentStep === steps.length - 1 &&
+                          currentSubItem ===
+                            steps[currentStep].subItems.length - 1)
+                      }
+                    >
+                      Avançar
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>
