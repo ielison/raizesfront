@@ -3,6 +3,7 @@ import "./MeusPacientes.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Tooltip from "../../components/Tooltip/Tooltip.jsx";
+import DownloadIcon from "../../assets/download-box.svg"
 import { useAuth } from "../../context/AuthContext.jsx";
 
 export default function MeusPacientes() {
@@ -75,11 +76,11 @@ export default function MeusPacientes() {
     return `${day}/${month}/${year}`;
   };
 
-  // Funções de ação para os botões
+  /* // Funções de ação para os botões
   const editarRelatorio = (pacienteId) => {
     console.log(`Editar relatório do paciente com ID: ${pacienteId}`);
     // Implementar lógica para abrir dadosPaciente com dados da API
-  };
+  }; */
 
   const baixarRelatorio = async (pacienteId) => {
     console.log(`Baixar relatório do paciente com ID: ${pacienteId}`);
@@ -243,18 +244,11 @@ export default function MeusPacientes() {
               </div>
               <div className="divider"></div>
               <div className="report-buttons">
-                <Tooltip text="Editar relatório">
-                  <button
-                    onClick={() => editarRelatorio(paciente.idQuestionario)}
-                  >
-                    ✏️
-                  </button>
-                </Tooltip>
                 <Tooltip text="Baixar relatório">
-                  <button
+                  <button className="btn-relatorio"
                     onClick={() => baixarRelatorio(paciente.idQuestionario)}
                   >
-                    ⬇️
+                    <img src={DownloadIcon} alt="Baixar relatório" />
                   </button>
                 </Tooltip>
               </div>

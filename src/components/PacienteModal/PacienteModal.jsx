@@ -16,6 +16,7 @@ import DadosFamiliaPaterna2 from "../DadosFamiliaPaterna2/DadosFamiliaPaterna2";
 import FamiliaresDistantesPaterno2 from "../FamiliaresDistantesPaterno2/FamiliaresDistantesPaterno2";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AlertIcon from "../../assets/error.svg";
 
 import { useAuth } from "../../context/AuthContext";
 
@@ -606,7 +607,7 @@ export default function PacienteModal({ onClose }) {
   const handleDownloadReport = async () => {
     console.log("Iniciando download do relatório...");
     toast.success("O download foi iniciado e terminará em poucos instantes!");
-  
+
     try {
       // Fetch the latest quiz data
       const response = await fetch(
@@ -616,49 +617,49 @@ export default function PacienteModal({ onClose }) {
         throw new Error(`Failed to fetch patient data: ${response.status}`);
       }
       const data = await response.json();
-  
+
       console.log("API Response:", data); // Log the entire API response
-  
+
       if (!Array.isArray(data) || data.length === 0) {
         throw new Error("No quiz data found for this user");
       }
-  
+
       // Get the last item of the array
       const latestEntry = data[data.length - 1];
-  
+
       console.log("Latest Entry:", latestEntry); // Log the latest entry
       console.log("ID do Quiz:", latestEntry.idQuestionario); // Log do ID do quiz
       console.log("Resultado (risco):", latestEntry.risco); // Log do valor de "resultado" (risco)
-  
+
       const pacienteId = latestEntry.idQuestionario; // Use idQuestionario instead of id
-  
+
       // Chamada para obter o resultado do quiz
       const resultadoUrl = `https://testserver-2p40.onrender.com/api/quiz/resultado/${pacienteId}/${idUser}`;
       console.log("Fetching quiz result from:", resultadoUrl);
       const resultadoResponse = await fetch(resultadoUrl);
-  
+
       if (!resultadoResponse.ok) {
         throw new Error(
           `Erro ao obter resultado do quiz: ${resultadoResponse.status}`
         );
       }
-  
+
       const resultadoData = await resultadoResponse.json();
       console.log("Resultado do quiz:", resultadoData);
       const precisaPesquisaOncogenetica = resultadoData;
-  
+
       // Fetch patient data
       const pacienteUrl = `https://testserver-2p40.onrender.com/api/quiz/${pacienteId}`;
       console.log("Fetching patient data from:", pacienteUrl);
       const pacienteResponse = await fetch(pacienteUrl);
-  
+
       if (!pacienteResponse.ok) {
         throw new Error(`Erro ao baixar relatório: ${pacienteResponse.status}`);
       }
-  
+
       const pacienteData = await pacienteResponse.json();
       console.log("Dados do paciente:", pacienteData);
-  
+
       // Adaptar os dados para o formato desejado
       const relatorio = {
         nome: pacienteData.usuariPrincipal.nome,
@@ -667,14 +668,14 @@ export default function PacienteModal({ onClose }) {
         familiares: [],
         precisaPesquisaOncogenetica,
       };
-  
+
       // Adicionar histórico pessoal de câncer do usuário principal
       if (pacienteData.usuariPrincipal.teveCancer) {
         relatorio.historicoPessoal.push(
           `${pacienteData.usuariPrincipal.qualCancer} aos ${pacienteData.usuariPrincipal.idadeDiagnostico} anos`
         );
       }
-  
+
       // Adicionar outros tipos de câncer do usuário principal
       if (
         pacienteData.usuariPrincipal.outroCancerList &&
@@ -686,12 +687,12 @@ export default function PacienteModal({ onClose }) {
           );
         });
       }
-  
+
       // Se não houver histórico de câncer
       if (relatorio.historicoPessoal.length === 0) {
         relatorio.historicoPessoal.push("Sem histórico pessoal de câncer");
       }
-  
+
       // Adicionar informações dos familiares (exemplo simplificado)
       if (pacienteData.mae && pacienteData.mae.teveCancer) {
         relatorio.familiares.push(`Mãe: ${pacienteData.mae.qualCancer}`);
@@ -700,7 +701,7 @@ export default function PacienteModal({ onClose }) {
         relatorio.familiares.push(`Pai: ${pacienteData.pai.qualCancer}`);
       }
       // Adicione mais familiares conforme necessário
-  
+
       // Enviar os dados formatados para o endpoint desejado
       const pdfResponse = await fetch(
         "https://testserver-2p40.onrender.com/generatepdf",
@@ -712,28 +713,28 @@ export default function PacienteModal({ onClose }) {
           body: JSON.stringify(relatorio),
         }
       );
-  
+
       if (!pdfResponse.ok) {
         throw new Error(`Erro ao gerar PDF: ${pdfResponse.status}`);
       }
-  
+
       // Aqui obtemos o blob do PDF
       const blob = await pdfResponse.blob();
       const url = window.URL.createObjectURL(blob);
-  
+
       // Criar um elemento <a> para iniciar o download
       const a = document.createElement("a");
       a.style.display = "none";
       a.href = url;
       a.download = `Relatorio_${relatorio.nome}.pdf`;
-  
+
       document.body.appendChild(a);
       a.click();
-  
+
       // Remover o link do DOM após o download
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
-  
+
       toast.success("Download finalizado!");
     } catch (error) {
       console.error(`Erro ao baixar o relatório: ${error}`);
@@ -752,6 +753,10 @@ export default function PacienteModal({ onClose }) {
         <div
           className={`pacienteModal__container ${
             isCompleted ? "pacienteModal__container--completed" : ""
+          } ${
+            showQuestionarioFinalizado2
+              ? "pacienteModal__container--questionario-finalizado"
+              : ""
           }`}
           ref={modalRef}
         >
@@ -771,7 +776,7 @@ export default function PacienteModal({ onClose }) {
                     className="alert-icon"
                     style={{ display: isHighRisk ? "block" : "none" }}
                   >
-                    ⚠️
+                    <img src={AlertIcon} alt="Alerta" />
                   </div>
                   <h2 className="resultado-h2">
                     {isHighRisk
@@ -782,8 +787,8 @@ export default function PacienteModal({ onClose }) {
                     <p>
                       Seu paciente atende aos critérios que indicam um alto
                       risco para câncer hereditário. Recomendamos encaminhá-lo a
-                      um serviço especializado. Consulte a aba &apos;links
-                      úteis&apos; para obter mais informações sobre
+                      um serviço especializado. Consulte a aba &apos;Links
+                      Úteis&apos; para obter mais informações sobre
                       profissionais e serviços especializados.
                     </p>
                   ) : (

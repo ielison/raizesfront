@@ -21,25 +21,24 @@
   flex-direction: column;
   overflow: hidden;
   transition: all 0.3s ease-in-out;
+  border-radius: 8px;
 }
 
-.pacienteModal__container--completed {
+.pacienteModal__container--completed,
+.pacienteModal__container--questionario-finalizado {
   height: auto;
-  min-height: 300px; /* Minimum height for the completed state */
+  min-height: 300px;
   max-height: 90vh;
   overflow-y: auto;
-  width: 50%;
+  width: 40%;
+  transition: all 0.3s ease-in-out;
 }
 
 .pacienteModal__container.questionario-finalizado {
   width: 80%;
-  /* ou o tamanho desejado */
   height: auto;
-  /* ou uma altura específica, se necessário */
   max-height: 90vh;
-  /* limita a altura máxima a 90% da altura da viewport */
   overflow-y: auto;
-  /* adiciona rolagem vertical se o conteúdo exceder a altura */
 }
 
 .step-label {
@@ -238,6 +237,7 @@
   text-align: left;
   display: flex;
   flex-direction: column;
+  transition: all 0.3s ease-in-out;
 }
 
 .close-button {
