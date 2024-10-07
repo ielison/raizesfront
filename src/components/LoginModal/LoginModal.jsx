@@ -27,18 +27,16 @@ export default function LoginModal({ isOpen, onClose, handleRegisterClick }) {
 
       if (response.ok) {
         const data = await response.json();
-        login(data.idUser, data.nome); // Passa o idUser e nome para o AuthContext
-        navigate("/home");
-        console.log("Dados retornados pela API:", data);
+        login(data.idUser, data.nome);
+        onClose(); // Close the modal
+        navigate("/home"); // Redirect to home page
       } else {
         const data = await response.json();
         setErrorMessage(data.error || "E-mail ou senha inválidos.");
-        alert("E-mail ou senha incorretos.");
       }
     } catch (error) {
       setErrorMessage("Erro ao realizar login. Tente novamente.");
       console.error("Erro ao realizar login:", error);
-      alert("Erro ao realizar login. Tente novamente dentro de alguns instantes.");
     }
   };
 

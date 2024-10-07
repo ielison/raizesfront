@@ -8,7 +8,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 5000;
+  z-index: 10000
 }
 
 .pacienteModal__container {
@@ -22,6 +22,7 @@
   overflow: hidden;
   transition: all 0.3s ease-in-out;
   border-radius: 8px;
+  z-index: 10001;
 }
 
 .pacienteModal__container--completed,

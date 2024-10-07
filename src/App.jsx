@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import { useModals } from "./context/ModalContext";
 import { useAuth } from "./context/AuthContext";
-import { useState } from "react"; // Import useState
+import { useState } from "react";
 import Inicio from "./pages/inicio/Inicio";
 import Home from "./pages/home/Home";
 import LinksUteis from "./pages/LinksUteis/LinksUteis";
@@ -13,12 +13,13 @@ import HomeTopbar from "./components/HomeTopbar/HomeTopbar";
 import Topbar from "./components/Topbar/Topbar";
 import LoginModal from "./components/LoginModal/LoginModal";
 import MeusPacientes from "./pages/meuspacientes/MeusPacientes";
+import ProtectedRoute from "./ProtectedRoute";
 import "./App.css"
 
 function App() {
   const { currentModal, openModal, closeModal, modalData } = useModals();
-  const { isLoggedIn } = useAuth();
-  const [formData, setFormData] = useState({}); // Define formData state
+  const { isLoggedIn, isLoading } = useAuth();
+  const [formData, setFormData] = useState({});
 
   const handleCloseAllModals = () => {
     closeModal();
@@ -27,7 +28,7 @@ function App() {
   const handleModalClose = (modalToOpen) => {
     closeModal();
     if (modalToOpen) {
-      openModal(modalToOpen, formData); // Passa formData ao abrir o modal
+      openModal(modalToOpen, formData);
     }
   };
 
@@ -35,15 +36,27 @@ function App() {
     openModal("register1");
   };
 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <UserProvider>
       {isLoggedIn ? <HomeTopbar /> : <Topbar />}
       <Routes>
         <Route path="/" element={<Inicio openModal={openModal} />} />
-        <Route path="/home" element={<Home openModal={openModal} />} />
+        <Route path="/home" element={
+          <ProtectedRoute>
+            <Home openModal={openModal} />
+          </ProtectedRoute>
+        } />
         <Route path="/linksuteis" element={<LinksUteis />} />
         <Route path="/sobre" element={<Sobre />} />
-        <Route path="/pacientes" element={<MeusPacientes />} />
+        <Route path="/pacientes" element={
+          <ProtectedRoute>
+            <MeusPacientes />
+          </ProtectedRoute>
+        } />
       </Routes>
       <LoginModal
         isOpen={currentModal === "loginModal"}
@@ -55,7 +68,7 @@ function App() {
           isOpen={true}
           onClose={handleCloseAllModals}
           onAdvance={() => handleModalClose("register2")}
-          formData={modalData} // Recebe os dados do modal
+          formData={modalData}
           setFormData={setFormData}
         />
       )}
@@ -64,11 +77,9 @@ function App() {
           isOpen={true}
           onClose={handleCloseAllModals}
           onBack={() => handleModalClose("register1")}
-          formData={modalData} // Recebe os dados do modal
+          formData={modalData}
         />
       )}
-      
-     
       
     </UserProvider>
   );

@@ -1,5 +1,5 @@
-import PropTypes from "prop-types";
-import { createContext, useContext, useState } from "react";
+import PropTypes from 'prop-types';
+import { createContext, useContext, useState } from 'react';
 
 // Context for modals
 const ModalContext = createContext();
@@ -7,14 +7,6 @@ const ModalContext = createContext();
 export function ModalProvider({ children }) {
   const [currentModal, setCurrentModal] = useState(null);
   const [modalData, setModalData] = useState({}); // Adiciona estado para dados do modal
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-
-  const openLoginModal = () => {
-    setIsLoginModalOpen(true);
-  };
-  const closeLoginModal = () => {
-    setIsLoginModalOpen(false);
-  };
 
   const openModal = (modalName, data = {}) => {
     setCurrentModal(modalName);
@@ -33,9 +25,6 @@ export function ModalProvider({ children }) {
         modalData, // Adiciona dados do modal ao contexto
         openModal,
         closeModal,
-        isLoginModalOpen,
-        openLoginModal,
-        closeLoginModal,
       }}
     >
       {children}
