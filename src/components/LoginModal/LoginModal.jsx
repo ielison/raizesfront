@@ -48,7 +48,7 @@ export default function LoginModal({ isOpen, onClose, handleRegisterClick }) {
         <button className="login-modal-close-button" onClick={onClose}>
           &times;
         </button>
-        <h2>Olá, seja bem-vindo!</h2>
+        <h2 className="h2-login">Olá, seja bem-vindo!</h2>
         <p>
           Identificar e gerenciar pacientes de alto risco de câncer é crucial
           para oferecer cuidados personalizados e eficazes. Com nossa
@@ -62,9 +62,7 @@ export default function LoginModal({ isOpen, onClose, handleRegisterClick }) {
           acessar as informações dos seus pacientes e continuar a fornecer o
           melhor cuidado possível:
         </p>
-        {errorMessage && (
-          <p className="login-modal-error-message">{errorMessage}</p>
-        )}
+        
         <form onSubmit={handleLoginSubmit}>
           <div className="login-modal-form-group">
             <label htmlFor="email">E-mail:</label>
@@ -98,6 +96,9 @@ export default function LoginModal({ isOpen, onClose, handleRegisterClick }) {
               </button>
             </div>
           </div>
+          {errorMessage && (
+            <p className="login-modal-error-message">{errorMessage}</p>
+          )}
           <a href="#" className="login-modal-forgot-password">
             Esqueci a senha
           </a>

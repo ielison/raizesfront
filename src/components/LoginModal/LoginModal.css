@@ -51,6 +51,18 @@
   /* Habilita rolagem caso o conteúdo ultrapasse a altura */
 }
 
+.login-modal-error-message{
+  color: red;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.h2-login{
+  color: var(--primary-700);
+  font-weight: bold;
+  
+}
+
 .login-modal-close-button {
   position: absolute;
   top: 10px;
