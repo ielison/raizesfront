@@ -170,6 +170,14 @@ export default function PacienteModal({ onClose }) {
 
   const handleModalClose = () => {
     localStorage.setItem("formData", JSON.stringify(data));
+
+    if (showQuestionarioFinalizado2) {
+      // If showQuestionarioFinalizado2 is true, refresh the page after a short delay
+      setTimeout(() => {
+        window.location.reload();
+      }, 100); // 100 milliseconds delay
+    }
+
     onClose();
   };
 
@@ -432,13 +440,27 @@ export default function PacienteModal({ onClose }) {
   }; */
 
   const clearAllStorageData = () => {
-    // Clear all localStorage items
-    localStorage.clear();
+    // Save the auth data
+    const authData = localStorage.getItem("auth");
+
+    // Clear all localStorage items except 'auth'
+    Object.keys(localStorage).forEach((key) => {
+      if (key !== "auth") {
+        localStorage.removeItem(key);
+      }
+    });
+
+    // Restore the auth data if it existed
+    if (authData) {
+      localStorage.setItem("auth", authData);
+    }
 
     // Clear all sessionStorage items
     sessionStorage.clear();
 
-    console.log("All localStorage and sessionStorage data has been cleared.");
+    console.log(
+      "All localStorage (except 'auth') and sessionStorage data has been cleared."
+    );
   };
 
   const handleNext = () => {
