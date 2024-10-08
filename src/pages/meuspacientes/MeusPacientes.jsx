@@ -3,7 +3,7 @@ import "./MeusPacientes.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Tooltip from "../../components/Tooltip/Tooltip.jsx";
-import DownloadIcon from "../../assets/download-box.svg"
+import DownloadIcon from "../../assets/download-box.svg";
 import { useAuth } from "../../context/AuthContext.jsx";
 
 export default function MeusPacientes() {
@@ -245,7 +245,8 @@ export default function MeusPacientes() {
               <div className="divider"></div>
               <div className="report-buttons">
                 <Tooltip text="Baixar relatório">
-                  <button className="btn-relatorio"
+                  <button
+                    className="btn-relatorio"
                     onClick={() => baixarRelatorio(paciente.idQuestionario)}
                   >
                     <img src={DownloadIcon} alt="Baixar relatório" />
@@ -274,6 +275,9 @@ export default function MeusPacientes() {
           ))}
         </div>
         <div className="pagination">
+          <button onClick={() => paginate(1)} disabled={currentPage === 1}>
+            Primeira
+          </button>
           <button
             onClick={() => paginate(currentPage - 1)}
             disabled={currentPage === 1}
@@ -288,6 +292,12 @@ export default function MeusPacientes() {
             disabled={currentPage === totalPages}
           >
             Próximo
+          </button>
+          <button
+            onClick={() => paginate(totalPages)}
+            disabled={currentPage === totalPages}
+          >
+            Última
           </button>
         </div>
       </div>
