@@ -626,11 +626,9 @@ export default function PacienteModal({ onClose }) {
     }
   };
 
-  //download do relatorio no final do cadastro
   const handleDownloadReport = async () => {
     console.log("Iniciando download do relatório...");
     toast.success("O download foi iniciado e terminará em poucos instantes!");
-    setIsLoading(true);
 
     try {
       // Fetch the latest quiz data
@@ -640,20 +638,22 @@ export default function PacienteModal({ onClose }) {
       if (!response.ok) {
         throw new Error(`Failed to fetch patient data: ${response.status}`);
       }
-      const quizData = await response.json();
+      const data = await response.json();
 
-      console.log("API Response:", quizData);
+      console.log("API Response:", data); // Log the entire API response
 
-      if (!Array.isArray(quizData) || quizData.length === 0) {
+      if (!Array.isArray(data) || data.length === 0) {
         throw new Error("No quiz data found for this user");
       }
 
-      const latestEntry = quizData[quizData.length - 1];
-      console.log("Latest Entry:", latestEntry);
-      console.log("ID do Quiz:", latestEntry.idQuestionario);
-      console.log("Resultado (risco):", latestEntry.risco);
+      // Get the last item of the array
+      const latestEntry = data[data.length - 1];
 
-      const pacienteId = latestEntry.idQuestionario;
+      console.log("Latest Entry:", latestEntry); // Log the latest entry
+      console.log("ID do Quiz:", latestEntry.idQuestionario); // Log do ID do quiz
+      console.log("Resultado (risco):", latestEntry.risco); // Log do valor de "resultado" (risco)
+
+      const pacienteId = latestEntry.idQuestionario; // Use idQuestionario instead of id
 
       // Chamada para obter o resultado do quiz
       const resultadoUrl = `https://testserver-2p40.onrender.com/api/quiz/resultado/${pacienteId}/${idUser}`;
@@ -682,155 +682,47 @@ export default function PacienteModal({ onClose }) {
       const pacienteData = await pacienteResponse.json();
       console.log("Dados do paciente:", pacienteData);
 
-      // Função auxiliar para formatar o histórico de câncer
-      const formatarHistoricoCancer = (familiar) => {
-        if (!familiar || !familiar.teveCancer) return [];
-        let historico = [];
-        if (familiar.qualCancer && familiar.idadeDiagnostico) {
-          historico.push(`${familiar.qualCancer} aos ${familiar.idadeDiagnostico} anos`);
-        }
-        if (familiar.outroCancerList && familiar.outroCancerList.length > 0) {
-          familiar.outroCancerList.forEach(cancer => {
-            historico.push(`${cancer.tipoCancer} aos ${cancer.idadeDiagnostico} anos`);
-          });
-        }
-        return historico;
-      };
-
-      // Função auxiliar para adicionar familiares ao relatório
-      const adicionarFamiliares = (familiares, tipo) => {
-        let familiaresFormatados = [];
-        familiares.forEach((familiar, index) => {
-          if (familiar.teveCancer) {
-            const historico = formatarHistoricoCancer(familiar);
-            historico.forEach(h => {
-              const [tipoCancer, idade] = h.split(' aos ');
-              let grau = tipo;
-              if (tipo === 'Filho(a)') {
-                grau = familiar.sexo === 'masculino' ? 'Filho' : 'Filha';
-              } else if (tipo === 'Neto(a)') {
-                grau = familiar.sexo === 'masculino' ? 'Neto' : 'Neta';
-              }
-              familiaresFormatados.push({
-                grau: `${grau} ${index + 1}`,
-                tipoCancer: tipoCancer,
-                idadeDiagnostico: parseInt(idade)
-              });
-            });
-          }
-        });
-        return familiaresFormatados;
-      };
-
-      // Adaptar os dados para o formato esperado pelo servidor
+      // Adaptar os dados para o formato desejado
       const relatorio = {
         nome: pacienteData.usuariPrincipal.nome,
         idade: pacienteData.usuariPrincipal.idade,
-        historicoPessoal: formatarHistoricoCancer(pacienteData.usuariPrincipal).join(', '),
+        historicoPessoal: [],
         familiares: [],
         precisaPesquisaOncogenetica,
-        temFamiliaresComCancer: false
       };
+
+      // Adicionar histórico pessoal de câncer do usuário principal
+      if (pacienteData.usuariPrincipal.teveCancer) {
+        relatorio.historicoPessoal.push(
+          `${pacienteData.usuariPrincipal.qualCancer} aos ${pacienteData.usuariPrincipal.idadeDiagnostico} anos`
+        );
+      }
+
+      // Adicionar outros tipos de câncer do usuário principal
+      if (
+        pacienteData.usuariPrincipal.outroCancerList &&
+        pacienteData.usuariPrincipal.outroCancerList.length > 0
+      ) {
+        pacienteData.usuariPrincipal.outroCancerList.forEach((cancer) => {
+          relatorio.historicoPessoal.push(
+            `${cancer.tipoCancer} aos ${cancer.idadeDiagnostico} anos`
+          );
+        });
+      }
 
       // Se não houver histórico de câncer
       if (relatorio.historicoPessoal.length === 0) {
-        relatorio.historicoPessoal = "Sem histórico pessoal de câncer";
+        relatorio.historicoPessoal.push("Sem histórico pessoal de câncer");
       }
 
-      // Adicionar histórico familiar
+      // Adicionar informações dos familiares (exemplo simplificado)
       if (pacienteData.mae && pacienteData.mae.teveCancer) {
-        relatorio.familiares.push(...formatarHistoricoCancer(pacienteData.mae).map(h => {
-          const [tipoCancer, idade] = h.split(' aos ');
-          return { grau: 'Mãe', tipoCancer, idadeDiagnostico: parseInt(idade) };
-        }));
+        relatorio.familiares.push(`Mãe: ${pacienteData.mae.qualCancer}`);
       }
       if (pacienteData.pai && pacienteData.pai.teveCancer) {
-        relatorio.familiares.push(...formatarHistoricoCancer(pacienteData.pai).map(h => {
-          const [tipoCancer, idade] = h.split(' aos ');
-          return { grau: 'Pai', tipoCancer, idadeDiagnostico: parseInt(idade) };
-        }));
+        relatorio.familiares.push(`Pai: ${pacienteData.pai.qualCancer}`);
       }
-      relatorio.familiares.push(...adicionarFamiliares(pacienteData.filhosList || [], 'Filho(a)'));
-      relatorio.familiares.push(...adicionarFamiliares(pacienteData.netosList || [], 'Neto(a)'));
-      relatorio.familiares.push(...adicionarFamiliares(pacienteData.irmaosList || [], 'Irmão(ã)'));
-      relatorio.familiares.push(...adicionarFamiliares(pacienteData.sobrinhosList || [], 'Sobrinho(a)'));
-      
-      // Adicionar tios maternos e paternos
-      if (pacienteData.tiosList) {
-        pacienteData.tiosList.forEach((tio) => {
-          if (tio.teveCancer) {
-            const historico = formatarHistoricoCancer(tio);
-            historico.forEach(h => {
-              const [tipoCancer, idade] = h.split(' aos ');
-              const grau = tio.sexo === 'masculino' ? 'Tio' : 'Tia';
-              relatorio.familiares.push({
-                grau: `${grau} ${tio.ladoPaterno ? 'do lado paterno' : 'do lado materno'}`,
-                tipoCancer: tipoCancer,
-                idadeDiagnostico: parseInt(idade)
-              });
-            });
-          }
-        });
-      }
-
-      // Adicionar avós maternos e paternos
-      if (pacienteData.avosList) {
-        pacienteData.avosList.forEach((avo) => {
-          if (avo.teveCancer) {
-            const historico = formatarHistoricoCancer(avo);
-            historico.forEach(h => {
-              const [tipoCancer, idade] = h.split(' aos ');
-              const grau = avo.sexo === 'masculino' ? 'Avô' : 'Avó';
-              relatorio.familiares.push({
-                grau: `${grau} ${avo.ladoPaterno === 'paterno' ? 'do lado paterno' : 'do lado materno'}`,
-                tipoCancer: tipoCancer,
-                idadeDiagnostico: parseInt(idade)
-              });
-            });
-          }
-        });
-      }
-
-      // Adicionar primos maternos e paternos
-      if (pacienteData.primosList) {
-        pacienteData.primosList.forEach((primo) => {
-          if (primo.teveCancer) {
-            const historico = formatarHistoricoCancer(primo);
-            historico.forEach(h => {
-              const [tipoCancer, idade] = h.split(' aos ');
-              const grau = primo.sexo === 'masculino' ? 'Primo' : 'Prima';
-              relatorio.familiares.push({
-                grau: `${grau} ${primo.ladoPaterno ? 'do lado paterno' : 'do lado materno'}`,
-                tipoCancer: tipoCancer,
-                idadeDiagnostico: parseInt(idade)
-              });
-            });
-          }
-        });
-      }
-
-      // Adicionar outros familiares
-      if (pacienteData.outroFamiliarList && pacienteData.outroFamiliarList.length > 0) {
-        pacienteData.outroFamiliarList.forEach(familiar => {
-          if (familiar.teveCancer) {
-            const historico = formatarHistoricoCancer(familiar);
-            historico.forEach(h => {
-              const [tipoCancer, idade] = h.split(' aos ');
-              relatorio.familiares.push({
-                grau: `${familiar.qualFamiliar} ${familiar.ladoPaterno ? 'do lado paterno' : 'do lado materno'}`,
-                tipoCancer: tipoCancer,
-                idadeDiagnostico: parseInt(idade)
-              });
-            });
-          }
-        });
-      }
-
-      // Verificar se há familiares com câncer
-      relatorio.temFamiliaresComCancer = relatorio.familiares.length > 0;
-
-      // Log: Preview of PDF content
-      console.log("Prévia do conteúdo do PDF:", relatorio);
+      // Adicione mais familiares conforme necessário
 
       // Enviar os dados formatados para o endpoint desejado
       const pdfResponse = await fetch(
@@ -869,8 +761,6 @@ export default function PacienteModal({ onClose }) {
     } catch (error) {
       console.error(`Erro ao baixar o relatório: ${error}`);
       toast.error("Erro ao realizar download de relatório!");
-    } finally {
-      setIsLoading(false);
     }
   };
 
