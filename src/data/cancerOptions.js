@@ -37,7 +37,6 @@ export const cancerOptions = [
   { value: "linfoma_nao_especificado", label: "linfoma não especificado" },
   { value: "linfoma_nao_hodgkin", label: "linfoma não-hodgkin" },
   { value: "mama", label: "mama" },
-  { value: "mama_bilateral", label: "mama bilateral" },
   { value: "melanoma", label: "melanoma" },
   { value: "mieloma_multiplo", label: "mieloma múltiplo" },
   { value: "neurofibromatose", label: "neurofibromatose" },
