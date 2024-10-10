@@ -13,7 +13,7 @@ export default function Sobre() {
           <section className="sobre-section1">
             <div className="section1-text">
               <p className="p-sobre">
-                O Projeto Raízes surgiu em 2024, como fruto do trabalho de
+                O Projeto Raízes foi idealizado em 2020, como fruto do trabalho de
                 doutorado de Thalita Targino, enfermeira oncogeneticista, que
                 sempre teve sua trajetória profissional conectada à genética. Ao
                 longo da graduação, Thalita foi iniciação científica em um
