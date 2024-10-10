@@ -15,8 +15,8 @@
 .pacienteModal__container {
   background: white;
   width: 60%;
-  height: 250px;
-  max-height: 650px;
+  height: 650px;
+  max-height: 90vh;
   position: relative;
   display: flex;
   flex-direction: column;
