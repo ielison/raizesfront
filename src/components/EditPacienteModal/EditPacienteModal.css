@@ -8,15 +8,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 10000;
-  transition: all 0.2s ease-in-out;
+  z-index: 10000
 }
 
 .pacienteModal__container {
   background: white;
   width: 60%;
-  height: 250px;
-  max-height: 650px;
+  height: 650px;
+  max-height: 90vh;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -301,62 +300,7 @@ p {
 .resultado-h2 {
   color: var(--primary-700);
   font-weight: bold;
-  text-align: center;
-  margin-bottom: 20px;
 }
-
-.modal-content-questionario__finalizado2 p {
-  font-size: 16px;
-  color: #666;
-  margin-bottom: 15px;
-  text-align: justify;
-}
-
-.pacienteModal__container--initial {
-  width: 40%;
-  max-width: 500px;
-  height: 300px !important;
-}
-
-.pacienteModal__content--initial {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
-}
-
-.initial-message {
-  text-align: center;
-}
-
-.initial-message h2 {
-  margin-bottom: 1rem;
-  font-size: 1.5rem;
-  color: var(--primary-700);
-}
-
-.initial-message p {
-  margin-bottom: 1.5rem;
-  font-size: 1rem;
-  color: var(--gray-600);
-}
-
-.btn-start-assessment {
-  padding: 0.75rem 1.5rem;
-  background-color: var(--primary-500);
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
-}
-
-.btn-start-assessment:hover {
-  background-color: var(--primary-700);
-}
-
 
 /* Responsividade para tablets */
 @media screen and (max-width: 1024px) {
@@ -375,10 +319,6 @@ p {
 
   .pacienteModal__container--completed {
     width: 90%;
-  }
-
-  .pacienteModal__container--questionario-finalizado {
-    width: 60%;
   }
 }
 

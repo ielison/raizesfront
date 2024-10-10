@@ -7,7 +7,7 @@ import { ageOptions } from "../../data/ageOptions";
 import "./FamiliaresDistantesPaterno2.css";
 import DeleteIcon from "../../assets/trash.svg";
 import PropTypes from "prop-types";
-import InfoIcon from "../../assets/information-2-fill.svg";
+import InfoIcon from "../../assets/infoicon.svg";
 
 const relationshipOptions = [
   { value: "meio-tio paterno", label: "Meio-Tio Paterno" },

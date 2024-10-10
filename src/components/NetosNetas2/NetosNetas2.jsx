@@ -5,7 +5,7 @@ import Select from "react-select";
 import PropTypes from "prop-types";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
-import InfoIcon from "../../assets/information-2-fill.svg";
+import InfoIcon from "../../assets/infoicon.svg";
 import DeleteIcon from "../../assets/trash.svg";
 import "./NetosNetas2.css";
 
@@ -19,7 +19,9 @@ export default function NetosNetas2({ onFormChange }) {
   });
 
   const [grandchildCount, setGrandchildCount] = useState(() => {
-    const storedGrandchildCount = JSON.parse(localStorage.getItem("grandchildCount"));
+    const storedGrandchildCount = JSON.parse(
+      localStorage.getItem("grandchildCount")
+    );
     return storedGrandchildCount
       ? {
           grandsons: storedGrandchildCount.grandsons || "",
@@ -29,7 +31,9 @@ export default function NetosNetas2({ onFormChange }) {
   });
 
   const [grandchildren, setGrandchildren] = useState(() => {
-    const storedGrandchildren = JSON.parse(localStorage.getItem("grandchildren"));
+    const storedGrandchildren = JSON.parse(
+      localStorage.getItem("grandchildren")
+    );
     return storedGrandchildren || [];
   });
 
@@ -83,7 +87,8 @@ export default function NetosNetas2({ onFormChange }) {
             (parseInt(grandchildCount.granddaughters) || 0),
           teveCancer: false,
           qtdNetosCancer: 0,
-          sexo: parseInt(grandchildCount.grandsons) > 0 ? "masculino" : "feminino",
+          sexo:
+            parseInt(grandchildCount.grandsons) > 0 ? "masculino" : "feminino",
           mesmoPais: true,
           outroCancerList: [],
         },
@@ -91,14 +96,25 @@ export default function NetosNetas2({ onFormChange }) {
     }
 
     onFormChange({ netosList });
-  }, [grandchildren, hasCancer, hasGrandchildren, grandchildCount, onFormChange]);
+  }, [
+    grandchildren,
+    hasCancer,
+    hasGrandchildren,
+    grandchildCount,
+    onFormChange,
+  ]);
 
   const handleAddGrandchild = useCallback(() => {
-    setGrandchildren((prevGrandchildren) => [...prevGrandchildren, { sex: "", type: [], showAgeDropdowns: {} }]);
+    setGrandchildren((prevGrandchildren) => [
+      ...prevGrandchildren,
+      { sex: "", type: [], showAgeDropdowns: {} },
+    ]);
   }, []);
 
   const handleDeleteGrandchild = useCallback((indexToDelete) => {
-    setGrandchildren((prevGrandchildren) => prevGrandchildren.filter((_, index) => index !== indexToDelete));
+    setGrandchildren((prevGrandchildren) =>
+      prevGrandchildren.filter((_, index) => index !== indexToDelete)
+    );
   }, []);
 
   const toggleAgeDropdown = useCallback((index, typeId) => {
@@ -193,7 +209,10 @@ export default function NetosNetas2({ onFormChange }) {
                     e.target.value === ""
                       ? ""
                       : Math.max(0, parseInt(e.target.value) || 0);
-                  setGrandchildCount((prev) => ({ ...prev, granddaughters: value }));
+                  setGrandchildCount((prev) => ({
+                    ...prev,
+                    granddaughters: value,
+                  }));
                 }}
               />
             </label>
@@ -240,7 +259,8 @@ export default function NetosNetas2({ onFormChange }) {
                         grandchild.sex
                           ? {
                               value: grandchild.sex,
-                              label: grandchild.sex === "neto" ? "Neto" : "Neta",
+                              label:
+                                grandchild.sex === "neto" ? "Neto" : "Neta",
                             }
                           : null
                       }
@@ -264,17 +284,19 @@ export default function NetosNetas2({ onFormChange }) {
                         const existingTypes = new Set(
                           grandchild.type.map((t) => t.value)
                         );
-                        newGrandchildren[index].type = selectedOptions.map((opt) => {
-                          if (existingTypes.has(opt.value)) {
-                            return grandchild.type.find(
-                              (t) => t.value === opt.value
-                            );
+                        newGrandchildren[index].type = selectedOptions.map(
+                          (opt) => {
+                            if (existingTypes.has(opt.value)) {
+                              return grandchild.type.find(
+                                (t) => t.value === opt.value
+                              );
+                            }
+                            return {
+                              ...opt,
+                              age: "",
+                            };
                           }
-                          return {
-                            ...opt,
-                            age: "",
-                          };
-                        });
+                        );
                         setGrandchildren(newGrandchildren);
                       }}
                     />

@@ -5,7 +5,7 @@ import Select from "react-select";
 import PropTypes from "prop-types";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
-import InfoIcon from "../../assets/information-2-fill.svg";
+import InfoIcon from "../../assets/infoicon.svg";
 import DeleteIcon from "../../assets/trash.svg";
 import "./AvosPaternos2.css";
 
@@ -390,7 +390,7 @@ export default function AvosPaternos2({ onFormChange, initialData = {} }) {
             {grandfatherHadCancer && (
               <>
                 <label className="avosm-label">
-                  Tipo de câncer ou neoplasia do avô: 
+                  Tipo de câncer ou neoplasia do avô:
                   <Select
                     isMulti
                     placeholder="Selecione o tipo de câncer"

@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
-import InfoIcon from "../../assets/information-2-fill.svg";
+import InfoIcon from "../../assets/infoicon.svg";
 import DeleteIcon from "../../assets/trash.svg";
 import "./DadosFamiliaMaterna2.css";
 

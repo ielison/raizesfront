@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import Select from "react-select";
 import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
-import InfoIcon from "../../assets/information-2-fill.svg";
+import InfoIcon from "../../assets/infoicon.svg";
 import DeleteIcon from "../../assets/trash.svg";
 import PropTypes from "prop-types";
 import "./PrimosPrimasMaternos2.css";

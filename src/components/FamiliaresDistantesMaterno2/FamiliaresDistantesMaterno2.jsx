@@ -7,7 +7,7 @@ import { ageOptions } from "../../data/ageOptions";
 import "./FamiliaresDistantesMaterno2.css";
 import DeleteIcon from "../../assets/trash.svg";
 import PropTypes from "prop-types";
-import InfoIcon from "../../assets/information-2-fill.svg";
+import InfoIcon from "../../assets/infoicon.svg";
 
 const relationshipOptions = [
   { value: "meio-tio materno", label: "Meio-Tio Materno" },
@@ -204,8 +204,8 @@ export default function FamiliaresDistantesMaterno2({ onFormChange }) {
         <label>
           <div className="top-tooltip">
             <div>
-              Algum outro familiar do seu lado materno já teve câncer ou outro tipo de
-              neoplasia?
+              Algum outro familiar do seu lado materno já teve câncer ou outro
+              tipo de neoplasia?
               <div className="fdm-subtitle">
                 Familiares distantes como tios-avôs e primos de segundo grau
               </div>

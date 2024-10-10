@@ -5,7 +5,7 @@ import { cancerOptions } from "../../data/cancerOptions";
 import { ageOptions } from "../../data/ageOptions";
 import "./SobrinhoSobrinha2.css";
 import DeleteIcon from "../../assets/trash.svg";
-import InfoIcon from "../../assets/information-2-fill.svg";
+import InfoIcon from "../../assets/infoicon.svg";
 
 export default function SobrinhosSobrinhas2({ onFormChange }) {
   const [relationships, setRelationships] = useState(() => {

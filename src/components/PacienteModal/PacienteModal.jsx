@@ -17,7 +17,7 @@ import FamiliaresDistantesPaterno2 from "../FamiliaresDistantesPaterno2/Familiar
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AlertIcon from "../../assets/error.svg";
-
+import InfoIcon from "../../assets/infoicon.svg";
 import { useAuth } from "../../context/AuthContext";
 
 export default function PacienteModal({ onClose }) {
@@ -31,6 +31,7 @@ export default function PacienteModal({ onClose }) {
     useState(false);
   const [isHighRisk, setIsHighRisk] = useState(false);
   const modalRef = useRef(null);
+  const [showInitialModal, setShowInitialModal] = useState(true);
 
   const [data, setData] = useState({
     idUser: idUser,
@@ -687,11 +688,15 @@ export default function PacienteModal({ onClose }) {
         if (!familiar || !familiar.teveCancer) return [];
         let historico = [];
         if (familiar.qualCancer && familiar.idadeDiagnostico) {
-          historico.push(`${familiar.qualCancer} aos ${familiar.idadeDiagnostico} anos`);
+          historico.push(
+            `${familiar.qualCancer} aos ${familiar.idadeDiagnostico} anos`
+          );
         }
         if (familiar.outroCancerList && familiar.outroCancerList.length > 0) {
-          familiar.outroCancerList.forEach(cancer => {
-            historico.push(`${cancer.tipoCancer} aos ${cancer.idadeDiagnostico} anos`);
+          familiar.outroCancerList.forEach((cancer) => {
+            historico.push(
+              `${cancer.tipoCancer} aos ${cancer.idadeDiagnostico} anos`
+            );
           });
         }
         return historico;
@@ -703,18 +708,18 @@ export default function PacienteModal({ onClose }) {
         familiares.forEach((familiar, index) => {
           if (familiar.teveCancer) {
             const historico = formatarHistoricoCancer(familiar);
-            historico.forEach(h => {
-              const [tipoCancer, idade] = h.split(' aos ');
+            historico.forEach((h) => {
+              const [tipoCancer, idade] = h.split(" aos ");
               let grau = tipo;
-              if (tipo === 'Filho(a)') {
-                grau = familiar.sexo === 'masculino' ? 'Filho' : 'Filha';
-              } else if (tipo === 'Neto(a)') {
-                grau = familiar.sexo === 'masculino' ? 'Neto' : 'Neta';
+              if (tipo === "Filho(a)") {
+                grau = familiar.sexo === "masculino" ? "Filho" : "Filha";
+              } else if (tipo === "Neto(a)") {
+                grau = familiar.sexo === "masculino" ? "Neto" : "Neta";
               }
               familiaresFormatados.push({
                 grau: `${grau} ${index + 1}`,
                 tipoCancer: tipoCancer,
-                idadeDiagnostico: parseInt(idade)
+                idadeDiagnostico: parseInt(idade),
               });
             });
           }
@@ -726,10 +731,12 @@ export default function PacienteModal({ onClose }) {
       const relatorio = {
         nome: pacienteData.usuariPrincipal.nome,
         idade: pacienteData.usuariPrincipal.idade,
-        historicoPessoal: formatarHistoricoCancer(pacienteData.usuariPrincipal).join(', '),
+        historicoPessoal: formatarHistoricoCancer(
+          pacienteData.usuariPrincipal
+        ).join(", "),
         familiares: [],
         precisaPesquisaOncogenetica,
-        temFamiliaresComCancer: false
+        temFamiliaresComCancer: false,
       };
 
       // Se não houver histórico de câncer
@@ -739,34 +746,56 @@ export default function PacienteModal({ onClose }) {
 
       // Adicionar histórico familiar
       if (pacienteData.mae && pacienteData.mae.teveCancer) {
-        relatorio.familiares.push(...formatarHistoricoCancer(pacienteData.mae).map(h => {
-          const [tipoCancer, idade] = h.split(' aos ');
-          return { grau: 'Mãe', tipoCancer, idadeDiagnostico: parseInt(idade) };
-        }));
+        relatorio.familiares.push(
+          ...formatarHistoricoCancer(pacienteData.mae).map((h) => {
+            const [tipoCancer, idade] = h.split(" aos ");
+            return {
+              grau: "Mãe",
+              tipoCancer,
+              idadeDiagnostico: parseInt(idade),
+            };
+          })
+        );
       }
       if (pacienteData.pai && pacienteData.pai.teveCancer) {
-        relatorio.familiares.push(...formatarHistoricoCancer(pacienteData.pai).map(h => {
-          const [tipoCancer, idade] = h.split(' aos ');
-          return { grau: 'Pai', tipoCancer, idadeDiagnostico: parseInt(idade) };
-        }));
+        relatorio.familiares.push(
+          ...formatarHistoricoCancer(pacienteData.pai).map((h) => {
+            const [tipoCancer, idade] = h.split(" aos ");
+            return {
+              grau: "Pai",
+              tipoCancer,
+              idadeDiagnostico: parseInt(idade),
+            };
+          })
+        );
       }
-      relatorio.familiares.push(...adicionarFamiliares(pacienteData.filhosList || [], 'Filho(a)'));
-      relatorio.familiares.push(...adicionarFamiliares(pacienteData.netosList || [], 'Neto(a)'));
-      relatorio.familiares.push(...adicionarFamiliares(pacienteData.irmaosList || [], 'Irmão(ã)'));
-      relatorio.familiares.push(...adicionarFamiliares(pacienteData.sobrinhosList || [], 'Sobrinho(a)'));
-      
+      relatorio.familiares.push(
+        ...adicionarFamiliares(pacienteData.filhosList || [], "Filho(a)")
+      );
+      relatorio.familiares.push(
+        ...adicionarFamiliares(pacienteData.netosList || [], "Neto(a)")
+      );
+      relatorio.familiares.push(
+        ...adicionarFamiliares(pacienteData.irmaosList || [], "Irmão(ã)")
+      );
+      relatorio.familiares.push(
+        ...adicionarFamiliares(pacienteData.sobrinhosList || [], "Sobrinho(a)")
+      );
+
       // Adicionar tios maternos e paternos
       if (pacienteData.tiosList) {
         pacienteData.tiosList.forEach((tio) => {
           if (tio.teveCancer) {
             const historico = formatarHistoricoCancer(tio);
-            historico.forEach(h => {
-              const [tipoCancer, idade] = h.split(' aos ');
-              const grau = tio.sexo === 'masculino' ? 'Tio' : 'Tia';
+            historico.forEach((h) => {
+              const [tipoCancer, idade] = h.split(" aos ");
+              const grau = tio.sexo === "masculino" ? "Tio" : "Tia";
               relatorio.familiares.push({
-                grau: `${grau} ${tio.ladoPaterno ? 'do lado paterno' : 'do lado materno'}`,
+                grau: `${grau} ${
+                  tio.ladoPaterno ? "do lado paterno" : "do lado materno"
+                }`,
                 tipoCancer: tipoCancer,
-                idadeDiagnostico: parseInt(idade)
+                idadeDiagnostico: parseInt(idade),
               });
             });
           }
@@ -778,13 +807,17 @@ export default function PacienteModal({ onClose }) {
         pacienteData.avosList.forEach((avo) => {
           if (avo.teveCancer) {
             const historico = formatarHistoricoCancer(avo);
-            historico.forEach(h => {
-              const [tipoCancer, idade] = h.split(' aos ');
-              const grau = avo.sexo === 'masculino' ? 'Avô' : 'Avó';
+            historico.forEach((h) => {
+              const [tipoCancer, idade] = h.split(" aos ");
+              const grau = avo.sexo === "masculino" ? "Avô" : "Avó";
               relatorio.familiares.push({
-                grau: `${grau} ${avo.ladoPaterno === 'paterno' ? 'do lado paterno' : 'do lado materno'}`,
+                grau: `${grau} ${
+                  avo.ladoPaterno === "paterno"
+                    ? "do lado paterno"
+                    : "do lado materno"
+                }`,
                 tipoCancer: tipoCancer,
-                idadeDiagnostico: parseInt(idade)
+                idadeDiagnostico: parseInt(idade),
               });
             });
           }
@@ -796,13 +829,15 @@ export default function PacienteModal({ onClose }) {
         pacienteData.primosList.forEach((primo) => {
           if (primo.teveCancer) {
             const historico = formatarHistoricoCancer(primo);
-            historico.forEach(h => {
-              const [tipoCancer, idade] = h.split(' aos ');
-              const grau = primo.sexo === 'masculino' ? 'Primo' : 'Prima';
+            historico.forEach((h) => {
+              const [tipoCancer, idade] = h.split(" aos ");
+              const grau = primo.sexo === "masculino" ? "Primo" : "Prima";
               relatorio.familiares.push({
-                grau: `${grau} ${primo.ladoPaterno ? 'do lado paterno' : 'do lado materno'}`,
+                grau: `${grau} ${
+                  primo.ladoPaterno ? "do lado paterno" : "do lado materno"
+                }`,
                 tipoCancer: tipoCancer,
-                idadeDiagnostico: parseInt(idade)
+                idadeDiagnostico: parseInt(idade),
               });
             });
           }
@@ -810,16 +845,21 @@ export default function PacienteModal({ onClose }) {
       }
 
       // Adicionar outros familiares
-      if (pacienteData.outroFamiliarList && pacienteData.outroFamiliarList.length > 0) {
-        pacienteData.outroFamiliarList.forEach(familiar => {
+      if (
+        pacienteData.outroFamiliarList &&
+        pacienteData.outroFamiliarList.length > 0
+      ) {
+        pacienteData.outroFamiliarList.forEach((familiar) => {
           if (familiar.teveCancer) {
             const historico = formatarHistoricoCancer(familiar);
-            historico.forEach(h => {
-              const [tipoCancer, idade] = h.split(' aos ');
+            historico.forEach((h) => {
+              const [tipoCancer, idade] = h.split(" aos ");
               relatorio.familiares.push({
-                grau: `${familiar.qualFamiliar} ${familiar.ladoPaterno ? 'do lado paterno' : 'do lado materno'}`,
+                grau: `${familiar.qualFamiliar} ${
+                  familiar.ladoPaterno ? "do lado paterno" : "do lado materno"
+                }`,
                 tipoCancer: tipoCancer,
-                idadeDiagnostico: parseInt(idade)
+                idadeDiagnostico: parseInt(idade),
               });
             });
           }
@@ -878,6 +918,10 @@ export default function PacienteModal({ onClose }) {
     console.log(`Step: ${currentStep}, Subitem: ${currentSubItem}`);
   }, [currentStep, currentSubItem]);
 
+  const handleStartAssessment = () => {
+    setShowInitialModal(false);
+  };
+
   return (
     <div>
       <ToastContainer />
@@ -889,6 +933,8 @@ export default function PacienteModal({ onClose }) {
             showQuestionarioFinalizado2
               ? "pacienteModal__container--questionario-finalizado"
               : ""
+          } ${
+            showInitialModal ? "pacienteModal__container--initial" : ""
           }`}
           ref={modalRef}
         >
@@ -896,154 +942,178 @@ export default function PacienteModal({ onClose }) {
             &times;
           </button>
 
-          <div
-            className={`pacienteModal__content ${
-              isCompleted ? "pacienteModal__content--completed" : ""
-            }`}
-          >
-            {isCompleted ? (
-              showQuestionarioFinalizado2 ? (
-                <div className="modal-content-questionario__finalizado2">
-                  <div
-                    className="alert-icon"
-                    style={{ display: isHighRisk ? "block" : "none" }}
-                  >
-                    <img src={AlertIcon} alt="Alerta" />
-                  </div>
-                  <h2 className="resultado-h2">
-                    {isHighRisk
-                      ? "Atenção, pode haver risco!"
-                      : "Resultado da Avaliação"}
-                  </h2>
-                  {isHighRisk ? (
-                    <p>
-                      Seu paciente atende aos critérios que indicam um alto
-                      risco para câncer hereditário. Recomendamos encaminhá-lo a
-                      um serviço especializado. Consulte a aba &apos;Links
-                      Úteis&apos; para obter mais informações sobre
-                      profissionais e serviços especializados.
-                    </p>
-                  ) : (
-                    <p>
-                      Com base na avaliação realizada, observamos que seu
-                      paciente não atende aos critérios que indicariam um alto
-                      risco para câncer hereditário.
-                    </p>
-                  )}
-                  <p>
-                    É importante destacar que muitos casos de câncer estão
-                    relacionados ao estilo de vida e a fatores ambientais.
-                    Recomendamos enfatizar a importância de hábitos saudáveis,
-                    como dieta equilibrada, exercícios físicos regulares,
-                    abstenção de tabagismo e consumo moderado de álcool, para
-                    ajudar a reduzir o risco de desenvolver câncer.
-                  </p>
-                  <p>
-                    Além disso, é fundamental estar atento a outros fatores de
-                    risco, como exposição a agentes carcinogênicos no ambiente
-                    de trabalho, histórico pessoal de doenças prévias, idade e
-                    outros aspectos relevantes à saúde do paciente.
-                  </p>
-                  <p>
-                    Continue monitorando e incentivando hábitos de vida
-                    saudáveis em seus pacientes, pois isso desempenha um papel
-                    significativo na prevenção do câncer e na promoção da saúde.
-                  </p>
-                  <div className="qf2-form-buttons">
-                    <button
-                      className="btn-download-report"
-                      onClick={handleDownloadReport}
+          {showInitialModal ? (
+            <div className="pacienteModal__content pacienteModal__content--initial">
+              <div className="initial-message">
+                <h2>Olá, leia com atenção!</h2>
+                <p>
+                  O questionário a seguir oferece sugestões de perguntas
+                  direcionadas, auxiliando na coleta e registro da história
+                  pessoal e familiar de câncer do seu paciente. Em certas
+                  questões, você encontrará o símbolo{" "}
+                  <img src={InfoIcon} alt="Info" className="info-icon" />, com
+                  dicas e informações adicionais para aprimorar ainda mais sua
+                  abordagem.
+                </p>
+                <button
+                  className="btn-start-assessment"
+                  onClick={handleStartAssessment}
+                >
+                  Iniciar avaliação
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div
+              className={`pacienteModal__content ${
+                isCompleted ? "pacienteModal__content--completed" : ""
+              }`}
+            >
+              {isCompleted ? (
+                showQuestionarioFinalizado2 ? (
+                  <div className="modal-content-questionario__finalizado2">
+                    <div
+                      className="alert-icon"
+                      style={{ display: isHighRisk ? "block" : "none" }}
                     >
-                      Baixar relatório detalhado
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <div className="completion-message">
-                  <h2>Questionário finalizado!</h2>
-                  <p>
-                    Com base nas respostas obtidas pudemos gerar um relatório.
-                  </p>
-                  <button onClick={handleAdvanceToQuestionarioFinalizado2}>
-                    Abrir relatório
-                  </button>
-                </div>
-              )
-            ) : (
-              <>
-                <nav className="pacienteModal__nav">
-                  <ul>
-                    {steps.map((step) => (
-                      <li key={step.id} className="step-item">
-                        <button
-                          onClick={() => handleStepClick(step.id)}
-                          className="step-label"
-                        >
-                          {step.label}
-                          <span
-                            className={`expand-icon ${
-                              expandedStep === step.id ? "expanded" : ""
-                            }`}
-                          >
-                            {expandedStep === step.id ? "▲" : "▼"}
-                          </span>
-                        </button>
-                        {expandedStep === step.id && (
-                          <ul className="subitems-list">
-                            {step.subItems.map((subItem) => (
-                              <li
-                                key={subItem.id}
-                                className={
-                                  subItem.id === currentSubItem
-                                    ? "active"
-                                    : "itemsub"
-                                }
-                                onClick={() =>
-                                  handleSubItemClick(step.id, subItem.id)
-                                }
-                              >
-                                {subItem.label}
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                </nav>
-
-                <div className="pacienteModal__form">
-                  {isLoading ? (
-                    <div className="loading-message">
-                      <p>Estamos salvando os dados do paciente...</p>
+                      <img src={AlertIcon} alt="Alerta" />
                     </div>
-                  ) : (
-                    steps[currentStep].subItems[currentSubItem].component
-                  )}
-
-                  <div className="pacienteModal__footer">
-                    <button
-                      onClick={handleBack}
-                      disabled={currentSubItem === 0 && currentStep === 0}
-                    >
-                      Voltar
-                    </button>
-                    <button
-                      onClick={handleNext}
-                      disabled={
-                        isLoading &
-                        (currentStep === steps.length - 1 &&
-                          currentSubItem ===
-                            steps[currentStep].subItems.length - 1)
-                      }
-                    >
-                      Avançar
+                    <h2 className="resultado-h2">
+                      {isHighRisk
+                        ? "Atenção, pode haver risco!"
+                        : "Resultado da Avaliação"}
+                    </h2>
+                    {isHighRisk ? (
+                      <p>
+                        Seu paciente atende aos critérios que indicam um alto
+                        risco para câncer hereditário. Recomendamos encaminhá-lo
+                        a um serviço especializado. Consulte a aba &apos;Links
+                        Úteis&apos; para obter mais informações sobre
+                        profissionais e serviços especializados.
+                      </p>
+                    ) : (
+                      <p>
+                        Com base na avaliação realizada, observamos que seu
+                        paciente não atende aos critérios que indicariam um alto
+                        risco para câncer hereditário.
+                      </p>
+                    )}
+                    <p>
+                      É importante destacar que muitos casos de câncer estão
+                      relacionados ao estilo de vida e a fatores ambientais.
+                      Recomendamos enfatizar a importância de hábitos saudáveis,
+                      como dieta equilibrada, exercícios físicos regulares,
+                      abstenção de tabagismo e consumo moderado de álcool, para
+                      ajudar a reduzir o risco de desenvolver câncer.
+                    </p>
+                    <p>
+                      Além disso, é fundamental estar atento a outros fatores de
+                      risco, como exposição a agentes carcinogênicos no ambiente
+                      de trabalho, histórico pessoal de doenças prévias, idade e
+                      outros aspectos relevantes à saúde do paciente.
+                    </p>
+                    <p>
+                      Continue monitorando e incentivando hábitos de vida
+                      saudáveis em seus pacientes, pois isso desempenha um papel
+                      significativo na prevenção do câncer e na promoção da
+                      saúde.
+                    </p>
+                    <div className="qf2-form-buttons">
+                      <button
+                        className="btn-download-report"
+                        onClick={handleDownloadReport}
+                      >
+                        Baixar relatório detalhado
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="completion-message">
+                    <h2>Questionário finalizado!</h2>
+                    <p>
+                      Com base nas respostas obtidas pudemos gerar um relatório.
+                    </p>
+                    <button onClick={handleAdvanceToQuestionarioFinalizado2}>
+                      Abrir relatório
                     </button>
                   </div>
-                </div>
-              </>
-            )}
-          </div>
+                )
+              ) : (
+                <>
+                  <nav className="pacienteModal__nav">
+                    <ul>
+                      {steps.map((step) => (
+                        <li key={step.id} className="step-item">
+                          <button
+                            onClick={() => handleStepClick(step.id)}
+                            className="step-label"
+                          >
+                            {step.label}
+                            <span
+                              className={`expand-icon ${
+                                expandedStep === step.id ? "expanded" : ""
+                              }`}
+                            >
+                              {expandedStep === step.id ? "▲" : "▼"}
+                            </span>
+                          </button>
+                          {expandedStep === step.id && (
+                            <ul className="subitems-list">
+                              {step.subItems.map((subItem) => (
+                                <li
+                                  key={subItem.id}
+                                  className={
+                                    subItem.id === currentSubItem
+                                      ? "active"
+                                      : "itemsub"
+                                  }
+                                  onClick={() =>
+                                    handleSubItemClick(step.id, subItem.id)
+                                  }
+                                >
+                                  {subItem.label}
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </nav>
+
+                  <div className="pacienteModal__form">
+                    {isLoading ? (
+                      <div className="loading-message">
+                        <p>Estamos salvando os dados do paciente...</p>
+                      </div>
+                    ) : (
+                      steps[currentStep].subItems[currentSubItem].component
+                    )}
+
+                    <div className="pacienteModal__footer">
+                      <button
+                        onClick={handleBack}
+                        disabled={currentSubItem === 0 && currentStep === 0}
+                      >
+                        Voltar
+                      </button>
+                      <button
+                        onClick={handleNext}
+                        disabled={
+                          isLoading &
+                          (currentStep === steps.length - 1 &&
+                            currentSubItem ===
+                              steps[currentStep].subItems.length - 1)
+                        }
+                      >
+                        Avançar
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -1175,7 +1245,6 @@ function SubItem13({ onFormChange }) {
 
 PacienteModal.propTypes = {
   onClose: PropTypes.func.isRequired,
-  idUser: PropTypes.number.isRequired,
 };
 
 SubItem1.propTypes,
