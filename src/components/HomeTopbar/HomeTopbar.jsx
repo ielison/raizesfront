@@ -1,5 +1,5 @@
 import { useModals } from "../../context/ModalContext";
-import Logo from "../../assets/logo.svg";
+import Logo from "../../assets/LOGO 1.png";
 import "./HomeTopbar.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
