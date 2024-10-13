@@ -1,0 +1,199 @@
+/* Estilos gerais */
+.topbar__header {
+  background-color: var(--white);
+  padding: 3rem 5rem;
+  width: 100vw;
+  height: 6rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font: var(--font);
+  box-shadow: 0px 5px 10px 4px rgba(0, 0, 0, 0.2);
+  gap: 70px;
+  position: relative;
+  /* Ensure the stacking context is set */
+  z-index: 10;
+  /* Lower z-index than the bar */
+}
+
+.topbar__logo {
+  height: 4rem;
+}
+
+.topbar__logo:hover {
+  cursor: pointer;
+}
+
+.topbar__nav ul {
+  list-style-type: none;
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.topbar__nav a:link {
+  text-decoration: none;
+  color: var(--primary-500);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.topbar__nav a:hover {
+  color: var(--secondary-500);
+}
+
+.topbar__nav a:active {
+  color: var(--tertiary-500);
+}
+
+.topbar__div {
+  display: flex;
+  gap: 1rem;
+}
+
+.topbar__login {
+  border-radius: 4px;
+  width: 88px;
+  height: 40px;
+  padding: 8px 20px;
+  color: var(--white);
+  background-color: var(--primary-500);
+  border-style: none;
+  font: var(--font);
+}
+
+.topbar__login:hover {
+  background-color: var(--secondary-500);
+  cursor: pointer;
+  border: solid 2px var(--secondary-500);
+}
+
+.topbar__login:active {
+  background-color: var(--tertiary-500);
+}
+
+.topbar__register {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  width: 8rem;
+  height: 40px;
+  padding: 8px 20px;
+  color: var(--primary-500);
+  background-color: var(--white);
+  border-style: solid 2px;
+  border-color: var(--primary-500);
+  font: var(--font);
+  text-align: center;
+}
+
+.topbar__register:hover {
+  color: var(--secondary-500);
+  border-color: var(--secondary-500);
+  cursor: pointer;
+}
+
+.topbar__register:active {
+  color: var(--tertiary-500);
+  border-color: var(--tertiary-500);
+}
+
+.topbar__nav li a {
+  color: var(--primary-500);
+}
+
+.botoes_topbar {
+  display: none;
+}
+
+
+/* Menu styles for mobile */
+.topbar__menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: var(--primary-500);
+  cursor: pointer;
+  z-index: 900;
+  /* Certifique-se de que esteja acima do menu */
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .topbar__menu-toggle {
+    display: block;
+    /* Exibe o menu hambúrguer em telas pequenas */
+  }
+
+  .topbar__nav {
+    display: none;
+    /* Oculta o menu em telas pequenas */
+    flex-direction: column;
+    /* Exibe em coluna quando aberto */
+    position: absolute;
+    top: 6rem;
+    /* Posiciona abaixo do cabeçalho */
+    left: 0;
+    right: 0;
+    background-color: var(--white);
+    padding: 1rem;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    /* Certifique-se de que o menu esteja acima dos outros elementos */
+  }
+
+  .topbar__nav.open {
+    display: flex;
+    /* Exibe o menu quando estiver aberto */
+    flex-direction: column;
+    /* Garante que os itens no menu estejam em coluna */
+  }
+
+  .topbar__nav ul {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .topbar__div {
+    display: none;
+    /* Oculta os botões fora do menu em telas pequenas */
+  }
+
+  .topbar__nav.open .topbar__register,
+  .topbar__nav.open .topbar__login {
+    display: flex;
+    width: 100%;
+    margin-top: 1rem;
+    padding: 1rem;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .botoes_topbar {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+/* Estilos para tablet e desktop */
+@media (min-width: 769px) {
+  .topbar__div {
+    display: flex;
+  }
+
+  .topbar__nav {
+    display: flex !important;
+    /* Garante que o menu fique sempre visível */
+  }
+
+  .topbar__login,
+  .topbar__register {
+    width: auto;
+    padding: 8px 20px;
+    border: solid 2px var(--primary-500);
+  }
+}

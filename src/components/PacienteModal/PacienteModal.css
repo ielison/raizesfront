@@ -1,0 +1,458 @@
+.pacienteModal__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  transition: all 0.2s ease-in-out;
+}
+
+.pacienteModal__container {
+  background: white;
+  width: 60%;
+  height: 650px;
+  max-height: 90vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+  border-radius: 8px;
+  z-index: 10001;
+}
+
+.pacienteModal__container--completed,
+.pacienteModal__container--questionario-finalizado {
+  height: auto;
+  min-height: 300px;
+  max-height: 90vh;
+  overflow-y: auto;
+  width: 40%;
+  transition: all 0.3s ease-in-out;
+}
+
+.pacienteModal__container.questionario-finalizado {
+  width: 80%;
+  height: auto;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.step-label {
+  background-color: var(--primary-500);
+  width: 190px;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-right: 10px;
+  height: 50px;
+}
+
+.step-label:hover {
+  background-color: var(--primary-700);
+}
+
+.pacienteModal__close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #222222;
+  z-index: 1001;
+}
+
+.pacienteModal__content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.pacienteModal__content--completed {
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.pacienteModal__content--questionario-finalizado {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.pacienteModal__nav {
+  width: 25%;
+  background-color: #f0f0f0;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.pacienteModal__nav ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pacienteModal__nav li {
+  cursor: pointer;
+  padding: 10px;
+  margin: 5px 0;
+}
+
+.itemsub {
+  color: var(--primary-500);
+}
+
+.itemsub:hover {
+  background-color: #dadada;
+}
+
+.pacienteModal__nav li.active {
+  background-color: #dadada;
+  color: var(--primary-700);
+  font-weight: bold;
+}
+
+.paciente-modal-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--primary-700);
+}
+
+.pacienteModal__form {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  padding-bottom: 60px;
+  overflow-x: hidden;
+}
+
+.pacienteModal__footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  background: white;
+  padding: 10px;
+  box-shadow: 0 -1px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.pacienteModal__footer button:hover {
+  background-color: var(--secondary-500);
+}
+
+.pacienteModal__footer button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.expand-icon {
+  margin-left: 8px;
+  transition: transform 0.3s ease;
+  display: inline-block;
+}
+
+.loading-message {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 1.2em;
+}
+
+.completion-message {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.completion-message button {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--primary-500);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.completion-message button:hover {
+  background-color: var(--primary-700);
+}
+
+.completion-message h2 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  color: var(--primary-700);
+}
+
+.completion-message p {
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  color: var(--gray-600);
+}
+
+.completion-message,
+.questionario-finalizado .pacienteModal__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.questionario-finalizado .pacienteModal__close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  /* ... outros estilos existentes ... */
+}
+
+.modal-content-questionario__finalizado2 {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease-in-out;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
+}
+
+.alert-icon {
+  font-size: 40px;
+  text-align: center;
+  color: #ffcc00;
+  margin-bottom: 20px;
+}
+
+h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333;
+  text-align: center;
+}
+
+p {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 15px;
+  text-align: justify;
+}
+
+.qf2-form-buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-top: 30px;
+  gap: 16px;
+}
+
+.btn-open-report,
+.btn-download-report {
+  background-color: var(--primary-500);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.btn-open-report:hover,
+.btn-download-report:hover {
+  background-color: var(--primary-700);
+}
+
+.resultado-h2 {
+  color: var(--primary-700);
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.modal-content-questionario__finalizado2 p {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 15px;
+  text-align: justify;
+}
+
+.pacienteModal__container--initial {
+  width: 40%;
+  max-width: 500px;
+  height: 300px !important;
+}
+
+.pacienteModal__content--initial {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.initial-message {
+  text-align: center;
+}
+
+.initial-message h2 {
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+  color: var(--primary-700);
+}
+
+.initial-message p {
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  color: var(--gray-600);
+}
+
+.btn-start-assessment {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--primary-500);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.btn-start-assessment:hover {
+  background-color: var(--primary-700);
+}
+
+
+/* Responsividade para tablets */
+@media screen and (max-width: 1024px) {
+  .pacienteModal__container {
+    width: 80%;
+  }
+
+  .pacienteModal__nav {
+    width: 30%;
+  }
+
+  .step-label {
+    width: 150px;
+    font-size: 14px;
+  }
+
+  .pacienteModal__container--completed {
+    width: 90%;
+  }
+
+  .pacienteModal__container--questionario-finalizado {
+    width: 60%;
+  }
+}
+
+/* Responsividade para celulares pequenos */
+@media screen and (max-width: 768px) {
+  .pacienteModal__overlay {
+    align-items: flex-start;
+  }
+
+  .pacienteModal__container {
+    width: 95%;
+    height: auto;
+    max-height: 95vh;
+  }
+
+  .pacienteModal__container--completed {
+    width: 95%;
+  }
+
+  .pacienteModal__content--completed {
+    padding: 1rem;
+  }
+
+  .pacienteModal__content {
+    flex-direction: column;
+  }
+
+  .pacienteModal__nav {
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    padding: 0;
+  }
+
+  .pacienteModal__nav.show {
+    max-height: 300px;
+    padding: 20px;
+  }
+
+  .pacienteModal__form {
+    padding-top: 60px;
+  }
+
+  .step-label {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .mobile-nav-toggle {
+    display: block;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 1001;
+    background: var(--primary-500);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .pacienteModal__close {
+    top: 10px;
+    right: 10px;
+    font-size: 28px;
+  }
+
+  .pacienteModal__footer {
+    padding: 15px;
+  }
+
+  .pacienteModal__container--questionario-finalizado {
+    width: 90%;
+  }
+}

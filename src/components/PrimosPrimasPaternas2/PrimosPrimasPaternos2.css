@@ -1,0 +1,112 @@
+.ppp-modal-content {
+  display: flex;
+  flex-direction: row;
+  background: #fff;
+  border-radius: 8px;
+  width: 760px;
+  /* Largura fixa */
+  height: 650px;
+  /* Altura fixa */
+  /* Esconde o conteúdo que ultrapassar */
+}
+
+.pp-parentesco {
+  display: flex;
+  flex-direction: column;
+}
+
+.pp-idade {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.pp-parentesco-select {
+  font-size: 16px;
+  font-family: 'Inter', sans-serif;
+}
+
+
+.pp-parentesco select {
+  height: 42px;
+  border-radius: 4px;
+  border: 1px solid hsl(0, 0%, 80%);
+  /* Adiciona uma borda para combinar com o input */
+  padding: 0 8px;
+  /* Adiciona padding para um melhor espaçamento Interno */
+}
+
+.ppp-form-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 20px;
+}
+
+.ppp-close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background: transparent;
+  font-size: 24px;
+  cursor: poInter;
+}
+
+.ppp-title {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.ppp-label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.ppp-input[type="number"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.ppp-checkbox {
+  margin-right: 10px;
+}
+
+.ppp-toggle-button {
+  background: var(--primary-500);
+  color: white;
+  border: 1px solid var(--primary-500);
+  padding: 5px 10px;
+  margin-top: 5px;
+  width: 124px;
+  height: 32px;
+}
+
+.ppp-toggle-button:hover {
+  background: var(--primary-700);
+}
+
+.ppp-form-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.ppp-checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.ppp-checkbox-group label {
+  margin-right: 15px;
+}
+
+.ppp-grupo {
+  display: flex;
+  flex-direction: column;
+}
