@@ -83,13 +83,13 @@ export default function MeusPacientes() {
   }; */
 
   const baixarRelatorio = async (pacienteId) => {
-    //console.log(`Baixar relatório do paciente com ID: ${pacienteId}`);
+    console.log(`Baixar relatório do paciente com ID: ${pacienteId}`);
 
     toast.success("O download foi iniciado e terminará em poucos instantes!");
 
     try {
       // Log: Data being sent to API
-      //console.log("Dados enviados para a API:", { pacienteId, idUser });
+      console.log("Dados enviados para a API:", { pacienteId, idUser });
 
       // Chamada para obter o resultado do quiz
       const resultadoResponse = await fetch(
@@ -103,7 +103,7 @@ export default function MeusPacientes() {
       }
 
       const resultadoData = await resultadoResponse.json();
-      //console.log("Resultado do quiz recebido da API:", resultadoData);
+      console.log("Resultado do quiz recebido da API:", resultadoData);
       const precisaPesquisaOncogenetica = resultadoData;
 
       const response = await fetch(
@@ -115,7 +115,7 @@ export default function MeusPacientes() {
       }
 
       const data = await response.json();
-      //console.log("Dados do paciente recebidos da API:", data);
+      console.log("Dados do paciente recebidos da API:", data);
 
       // Função auxiliar para formatar o histórico de câncer
       const formatarHistoricoCancer = (familiar) => {
@@ -265,7 +265,7 @@ export default function MeusPacientes() {
       relatorio.temFamiliaresComCancer = relatorio.familiares.length > 0;
 
       // Log: Preview of PDF content
-     // console.log("Prévia do conteúdo do PDF:", relatorio);
+      console.log("Prévia do conteúdo do PDF:", relatorio);
 
       // Enviar os dados formatados para o endpoint desejado
       const pdfResponse = await fetch(
@@ -302,7 +302,7 @@ export default function MeusPacientes() {
 
       toast.success("Download finalizado!");
     } catch (error) {
-      //console.error(`Erro ao baixar o relatório: ${error}`);
+      console.error(`Erro ao baixar o relatório: ${error}`);
       toast.error("Erro ao realizar download de relatório!");
     }
   };

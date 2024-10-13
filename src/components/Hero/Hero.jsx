@@ -26,7 +26,44 @@ export default function Hero() {
     setIsRegisterModalOpen(false);
   };
 
- 
+  useEffect(() => {
+    console.log("Hero component mounted"); // Verificar se o componente foi montado
+
+    // Função para fazer o ping ao servidor
+    const pingServer = () => {
+      console.log("Attempting to ping server..."); // Indicar que a função de ping foi chamada
+
+      fetch("https://testserver-2p40.onrender.com/teste")
+        .then((response) => {
+          if (response.ok) {
+            return response.text(); // Pegar o corpo da resposta como texto
+          } else {
+            console.error("Erro no ping ao servidor:", response.status);
+          }
+        })
+        .then((data) => {
+          if (data) {
+            console.log("Resposta da API:", data); // Exibir a resposta da API no console
+          }
+        })
+        .catch((error) => {
+          console.error("Erro ao fazer o ping:", error);
+        });
+    };
+
+    // Fazer o ping inicial
+    pingServer();
+
+    // Configurar o intervalo para fazer o ping a cada 2 minutos (120.000 ms)
+    const intervalId = setInterval(pingServer, 120000);
+
+    // Limpar o intervalo ao desmontar o componente
+    return () => {
+      console.log("Cleaning up interval");
+      clearInterval(intervalId);
+    };
+  }, []); // O array vazio garante que o efeito só será executado uma vez, após o componente ser montado
+
   return (
     <div className="hero-container">
       <div className="hero-content">

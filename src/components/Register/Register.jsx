@@ -13,7 +13,7 @@ const Register = ({ onClose }) => {
   };
 
   const handleFinish = () => {
-    //console.log("Registro concluído com os dados:", formData);
+    console.log("Registro concluído com os dados:", formData);
     onClose(); // Fecha o modal após finalizar o registro
   };
 

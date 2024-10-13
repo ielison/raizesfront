@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import Logo from "../../assets/LOGO 1.png";
+import Logo from "../../assets/logo.svg";
 import LoginModal from "../LoginModal/LoginModal";
 import Register1 from "../Register1/Register1";
 import "./Topbar.css";
