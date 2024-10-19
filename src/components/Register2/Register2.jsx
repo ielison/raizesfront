@@ -52,7 +52,7 @@ const Register2 = ({ isOpen, onClose, formData }) => {
       receberEmail: subscribeNews,
     };
   
-    console.log("Payload enviado para a API:", userData);
+    //console.log("Payload enviado para a API:", userData);
   
     try {
       setIsLoading(true); // Inicia o carregamento
@@ -69,11 +69,11 @@ const Register2 = ({ isOpen, onClose, formData }) => {
         }
       );
   
-      console.log("Resposta da API ao registrar o usuário:", response);
+      //console.log("Resposta da API ao registrar o usuário:", response);
   
       // Verifica se o status da resposta é 204 (sem conteúdo)
       if (response.status === 204) {
-        console.log("Usuário registrado com sucesso. Aguardando para fazer login...");
+        //console.log("Usuário registrado com sucesso. Aguardando para fazer login...");
   
         // Delay antes do login
         await new Promise(resolve => setTimeout(resolve, 2000)); // Aguarda 2 segundos
@@ -88,12 +88,12 @@ const Register2 = ({ isOpen, onClose, formData }) => {
           }
         );
   
-        console.log("Resposta da API ao fazer login:", loginResponse);
+        //console.log("Resposta da API ao fazer login:", loginResponse);
   
         // Verifica se o login foi bem-sucedido
         if (loginResponse.status === 200) {
           const { idUser, nome } = loginResponse.data;
-          console.log("Login bem-sucedido. ID do usuário:", idUser);
+          //console.log("Login bem-sucedido. ID do usuário:", idUser);
           setUser({ nome }); // Atualiza o estado do usuário
           login(idUser, nome); // Passa idUser e nome para useAuth
           navigate("/home");
