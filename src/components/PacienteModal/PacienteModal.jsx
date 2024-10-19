@@ -187,7 +187,7 @@ export default function PacienteModal({ onClose }) {
   };
 
   const handleFormChange = (updatedFields) => {
-    console.log("Updating Form Fields:", updatedFields);
+    //console.log("Updating Form Fields:", updatedFields);
 
     setData((prevData) => ({
       ...prevData,
@@ -459,13 +459,13 @@ export default function PacienteModal({ onClose }) {
     // Clear all sessionStorage items
     sessionStorage.clear();
 
-    console.log(
+    /* console.log(
       "All localStorage (except 'auth') and sessionStorage data has been cleared."
-    );
+    ); */
   };
 
   const handleNext = () => {
-    console.log(`Step: ${currentStep}, Subitem: ${currentSubItem}`);
+    //console.log(`Step: ${currentStep}, Subitem: ${currentSubItem}`);
 
     const currentDate = new Date().toISOString();
 
@@ -507,10 +507,10 @@ export default function PacienteModal({ onClose }) {
       delete payloadData.outroFamiliarListMaterno;
       delete payloadData.outroFamiliarListPaterno;
 
-      console.log(
+      /* console.log(
         "Payload to be sent to /quiz:",
         JSON.stringify(payloadData, null, 2)
-      );
+      ); */
 
       // Send data to /quiz
       fetch("https://testserver-2p40.onrender.com/api/quiz", {
@@ -521,9 +521,9 @@ export default function PacienteModal({ onClose }) {
         body: JSON.stringify(payloadData),
       })
         .then((response) => {
-          console.log("Response status from /quiz:", response.status);
+          //console.log("Response status from /quiz:", response.status);
           if (response.ok) {
-            console.log("Resposta OK da API /quiz.");
+            //console.log("Resposta OK da API /quiz.");
             return "OK";
           } else {
             throw new Error(
@@ -531,8 +531,8 @@ export default function PacienteModal({ onClose }) {
             );
           }
         })
-        .then((message) => {
-          console.log("Resposta da API /quiz:", message);
+        .then(() => {
+          //console.log("Resposta da API /quiz:", message);
           setIsCompleted(true);
           setIsLoading(false);
         })
@@ -564,7 +564,7 @@ export default function PacienteModal({ onClose }) {
             }
           });
           clearAllStorageData();
-          console.log("Cadastro finalizado, aguarde");
+          //console.log("Cadastro finalizado, aguarde");
         });
     } else {
       if (currentSubItem < steps[currentStep].subItems.length - 1) {
@@ -606,7 +606,7 @@ export default function PacienteModal({ onClose }) {
       }
       const data = await response.json();
 
-      console.log("API Response:", data); // Log the entire API response
+      //("API Response:", data); // Log the entire API response
 
       if (!Array.isArray(data) || data.length === 0) {
         console.error("No quiz data found for this user");
@@ -616,9 +616,9 @@ export default function PacienteModal({ onClose }) {
       // Get the last item of the array
       const latestEntry = data[data.length - 1];
 
-      console.log("Latest Entry:", latestEntry); // Log the latest entry
-      console.log("ID do Quiz:", latestEntry.idQuestionario); // Log do ID do quiz
-      console.log("Resultado (risco):", latestEntry.risco); // Log do valor de "resultado" (risco)
+      //console.log("Latest Entry:", latestEntry); // Log the latest entry
+      //console.log("ID do Quiz:", latestEntry.idQuestionario); // Log do ID do quiz
+      //console.log("Resultado (risco):", latestEntry.risco); // Log do valor de "resultado" (risco)
 
       setIsHighRisk(latestEntry.risco === true);
       setShowQuestionarioFinalizado2(true);
@@ -629,7 +629,7 @@ export default function PacienteModal({ onClose }) {
 
   //download do relatorio no final do cadastro
   const handleDownloadReport = async () => {
-    console.log("Iniciando download do relatório...");
+   // console.log("Iniciando download do relatório...");
     toast.success("O download foi iniciado e terminará em poucos instantes!");
     setIsLoading(true);
 
@@ -643,22 +643,22 @@ export default function PacienteModal({ onClose }) {
       }
       const quizData = await response.json();
 
-      console.log("API Response:", quizData);
+      //console.log("API Response:", quizData);
 
       if (!Array.isArray(quizData) || quizData.length === 0) {
         throw new Error("No quiz data found for this user");
       }
 
       const latestEntry = quizData[quizData.length - 1];
-      console.log("Latest Entry:", latestEntry);
-      console.log("ID do Quiz:", latestEntry.idQuestionario);
-      console.log("Resultado (risco):", latestEntry.risco);
+      //console.log("Latest Entry:", latestEntry);
+      //console.log("ID do Quiz:", latestEntry.idQuestionario);
+      //console.log("Resultado (risco):", latestEntry.risco);
 
       const pacienteId = latestEntry.idQuestionario;
 
       // Chamada para obter o resultado do quiz
       const resultadoUrl = `https://testserver-2p40.onrender.com/api/quiz/resultado/${pacienteId}/${idUser}`;
-      console.log("Fetching quiz result from:", resultadoUrl);
+      //console.log("Fetching quiz result from:", resultadoUrl);
       const resultadoResponse = await fetch(resultadoUrl);
 
       if (!resultadoResponse.ok) {
@@ -668,12 +668,12 @@ export default function PacienteModal({ onClose }) {
       }
 
       const resultadoData = await resultadoResponse.json();
-      console.log("Resultado do quiz:", resultadoData);
+      //console.log("Resultado do quiz:", resultadoData);
       const precisaPesquisaOncogenetica = resultadoData;
 
       // Fetch patient data
       const pacienteUrl = `https://testserver-2p40.onrender.com/api/quiz/${pacienteId}`;
-      console.log("Fetching patient data from:", pacienteUrl);
+      //console.log("Fetching patient data from:", pacienteUrl);
       const pacienteResponse = await fetch(pacienteUrl);
 
       if (!pacienteResponse.ok) {
@@ -681,7 +681,7 @@ export default function PacienteModal({ onClose }) {
       }
 
       const pacienteData = await pacienteResponse.json();
-      console.log("Dados do paciente:", pacienteData);
+      //console.log("Dados do paciente:", pacienteData);
 
       // Função auxiliar para formatar o histórico de câncer
       const formatarHistoricoCancer = (familiar) => {
@@ -870,7 +870,7 @@ export default function PacienteModal({ onClose }) {
       relatorio.temFamiliaresComCancer = relatorio.familiares.length > 0;
 
       // Log: Preview of PDF content
-      console.log("Prévia do conteúdo do PDF:", relatorio);
+      //console.log("Prévia do conteúdo do PDF:", relatorio);
 
       // Enviar os dados formatados para o endpoint desejado
       const pdfResponse = await fetch(
@@ -915,7 +915,7 @@ export default function PacienteModal({ onClose }) {
   };
 
   useEffect(() => {
-    console.log(`Step: ${currentStep}, Subitem: ${currentSubItem}`);
+    //console.log(`Step: ${currentStep}, Subitem: ${currentSubItem}`);
   }, [currentStep, currentSubItem]);
 
   const handleStartAssessment = () => {
